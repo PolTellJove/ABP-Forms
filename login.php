@@ -20,7 +20,7 @@ session_start();
 
                 <div class="inputContainer">
                     <input type="text" name="passlog" class="input" placeholder=" ">
-                    <label for="" class="label">Contransenya</label>
+                    <label for="" class="label">Contrasenya</label>
                 </div>
 
                 <input type="submit" class="submitBtn" value="Entra">
