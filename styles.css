@@ -1,32 +1,63 @@
-header p{
-    border-style: groove;
-    text-align: center;
-    position: top;
-    bottom: 0;
-    width: 100%;
+body { 
+    background-color: #C6C5B9;    
+    min-height: 100vh; 
+    margin: 0px;
 }
-footer p{
-    border-style: groove;
-    text-align: center;
-    position: absolute;
-    bottom: 0;
+
+header{
+    background-color: #7cae7a;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer{
+    background-color: #7cae7a;
+    grid-row: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header p, footer p{
+    height: 100%;
     width: 100%;
+    text-align: center;
+    color: white;
+}
+
+
+#dashboard{
+    display: grid;
+    grid-template-rows: 5% 90% 5%;
 }
 
 #dashboard button{
+    display: inline-block;
     background-color: #62929E;
     color: white;
-    padding: 15px 32px;
-    text-align: center;
-    display: inline;
-    justify-content: space-around;
+    border-radius: 6px;
+    cursor: pointer;
     font-size: 16px;
+    justify-content: space-around;
+    padding: 15px 30px;
+    min-width: 30%;
+}
+#dashboard #divDashboard{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
 }
 
-#dashboard #dashButtons{
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    border: 5px solid black;
+#dashboard #divButtons{
+    width: auto;
+    border-radius: 8px;
+    display: flex;
     justify-content: space-around;
+    align-items: center;  
+}
+
+#dashboard h1{
+    text-align: center;
 }

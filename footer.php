@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="styles.css">
-<footer>
+<footer id="footer">
     <p name="producer">ABP Web Technology</p>
 </footer>

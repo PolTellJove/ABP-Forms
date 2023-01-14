@@ -3,7 +3,7 @@
  include 'utilities.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlDashboard">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,10 +11,10 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<?php include 'header.php';?>
 <body id='dashboard'>
+<?php include 'header.php';?>
     <?php 
-        $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.username = 'Alex';");
+        $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.username = 'Lean';");
         //$startSession->bindParam(':username', 'Alex');
         $startSession->execute();
 
@@ -23,21 +23,34 @@
             $user = logUser();
         }
     ?>
-    <div id='dashButtons'>
-        <button onclick="window.location.href='stats.php'">ESTADISTIQUES</button>
-        <?php
+    <div id='divDashboard'>
+    <?php   
         if($user['role'] == 1){
             ?>
-            <button onclick="window.location.href='teacher.php'">PROFESORS</button>
-            <button onclick="window.location.href='poll.php'">ENQUESTES</button>
+            <h1>Admin: <?php echo $user['username']?></h1>
             <?php
         }else{
             ?>
-            <button onclick="window.location.href='profile.php'">PROFILE</button>
+            <h1>Professor: <?php echo $user['username']?></h1>
             <?php
         } 
         ?>
+        <div id="divButtons">
+            <button onclick="window.location.href='stats.php'">ESTADISTÍQUES</button>
+            <?php
+            if($user['role'] == 1){
+                ?>
+                <button onclick="window.location.href='teacher.php'">USUARIS</button>
+                <button onclick="window.location.href='poll.php'">ENQUESTES</button>
+                <?php
+            }else{
+                ?>
+                <button onclick="window.location.href='profile.php'">PERFIL</button>
+                <?php
+            } 
+        ?>
+        </div>
     </div>
+    <?php include 'footer.php';?>
 </body>
-<?php include 'footer.php';?>
 </html>
