@@ -96,4 +96,89 @@
     background-color: #2a463a;
     transform: translateY(-2px);
 }
+
+.missageBox{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+}
+
+.displayMessage {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    min-width: 250px;
+    margin-left: -125px;
+    animation: fadein 0.5s;
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    font-size: 17px;
+}
+
+.displayMessage.remove {
+    animation:  fadeout 1s;
+} 
+
+.displayMessage.success{
+    background-color: rgba(148, 184, 148,0.5);
+}
+
+.displayMessage.success i{
+    color: green;
+}
+
+.displayMessage.info{
+    background-color: rgba(129, 170, 245,0.5);
+}
+
+.displayMessage.info i{
+    color: blue;
+}
+
+.displayMessage.warning{
+    background-color: rgba(248, 207, 131,0.5);
+}
+
+.displayMessage.warning i{
+    color: orange;
+}
+
+.displayMessage.error{
+    background-color: rgba(241, 138, 138,0.5);
+}
+
+.displayMessage.error i{
+    color: red;
+}
   
+.closeMessageBtn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+i.fa.fa-close{
+    color: black;
+}
+.closeMessageBtn:hover i{
+    color: rgb(65, 65, 65);
+}
+
+
+
+
+/* Animations to make messages (displayMessages) */
+@keyframes fadein {
+from {bottom: 0; opacity: 0;}
+to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+from {bottom: 30px; opacity: 1;}
+to {bottom: 0; opacity: 0;}
+}

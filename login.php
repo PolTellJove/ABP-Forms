@@ -5,27 +5,70 @@ session_start();
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="styles.css">
+        <script src="https://kit.fontawesome.com/277f72a273.js" crossorigin="anonymous"></script>
     </head>
 
     <body class = "login">
-    <?php
+    <script src="./login.js" ></script>
 
+    <?php
+        $errorMissageId = 0;
+        function displayMissage($missageContent, $codeMessage = 3){
+            global $errorMissageId;
+            // CodeMessage: 0 => success, 1 => info,2 => warning,3 => error,
+            switch ($codeMessage) {
+                case 0:
+                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage success'>
+                    <i class='fa fa-check-circle'></i>
+                    ".$missageContent."
+                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
+                </div>";
+                    break;
+                case 1:
+                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage info'>
+                    <i class='fa fa-info'></i>
+                    ".$missageContent."
+                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
+                </div>";
+                    break;
+                case 2:
+                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage warning'>
+                    <i class='fa fa-warning'></i>
+                    ".$missageContent."
+                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
+                </div>";
+                    break;
+                case 3:
+                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage error'>
+                    <i class='fa fa-exclamation-circle'></i>
+                    ".$missageContent."
+                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
+                </div>";
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            $errorMissageId = $errorMissageId + 1;
+
+        }
         function login(){
             //recogida de datos en Variables
             $email = $_POST["userlog"];
             $password = $_POST["passlog"];
 
             try {
-                $dbh = new PDO('mysql:host=localhost; dbname=abp_poll', "admin", "admin123");
+                $dbh = new PDO('mysql:host=localhost; dbname=abp_poll', "root", "");
                 $stmn = $dbh -> prepare("SELECT * FROM user WHERE user.email = :email AND user.password = SHA2(:pw,256);");
                 $stmn -> bindParam(':email', $email);
                 $stmn -> bindParam(':pw', $password);
                 $stmn -> execute();
+
                 while ($row = $stmn->fetch()) {
                     $idUser =  $row["ID"];
                     $username = $row["username"];
                     $idRole =  $row["roleID"];
-                    echo "IdUser:".$idUser."- name;".$username."- IDRole:".$idRole;
                 }
 
                 if (isset($idUser) && empty($idUser) == false){
@@ -33,15 +76,13 @@ session_start();
                     $_SESSION["username"] = $username;
                     $_SESSION["role"] = $idRole;
 
-                    echo "Redireccion";
-
                     header("Location: dashboard.php");
 
 
                 }
-                else{
-                    echo "<p>Credencials incorrectes</p>";
 
+                else{
+                    displayMissage("Credencials incorrectes",2);
                 }
             }
             catch (PDOException $e) {
@@ -70,15 +111,14 @@ session_start();
             </form>
         </div>
 
-        <div class="Errors">
-            <h1>Errors:</h1>
+        <div class = "missageBox">
             <?php
-                if ( (isset($_POST["userlog"]) && (empty($_POST["userlog"]) == false)) && (isset($_POST["passlog"]) && (empty($_POST["passlog"]) == false)) ){
+                if ( (isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))  ){
                     login();
                 }
-            ?>
+            ?>    
         </div>
-
+        
 
     </body>
 
