@@ -1,8 +1,7 @@
 <?php
  session_start();
  include 'utilities.php';
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en" id="htmlDashboard">
 <head>
     <meta charset="UTF-8">
@@ -40,7 +39,7 @@
             <?php
             if($user['role'] == 1){
                 ?>
-                <button onclick="window.location.href='teacher.php'">USUARIS</button>
+                <button onclick="window.location.href=''">USUARIS</button>
                 <button onclick="window.location.href='teacher.php'">ENQUESTES</button>
                 <?php
             }else{
