@@ -15,10 +15,14 @@ if (!isset($_SESSION["ID"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/277f72a273.js" crossorigin="anonymous"></script>
 </head>
 <body id='dashboard'>
 <?php include 'header.php';?>
     <div id='divDashboard'>
+        <div class="containerLogoutBtn">
+            <button  onclick="location.href = './logout.php'" class="btnLogout"> <i class="fa fa-solid fa-right-from-bracket"></i> LogOut</button> 
+        </div>
     <?php   
         if($user['role'] == 1){
             ?>
@@ -30,6 +34,7 @@ if (!isset($_SESSION["ID"])) {
             <?php
         } 
         ?>
+        
         <div id="divButtons">
             <button onclick="window.location.href='stats.php'">ESTADISTÍQUES</button>
             <?php

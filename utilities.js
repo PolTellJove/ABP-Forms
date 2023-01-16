@@ -10,7 +10,7 @@ function removeMissage(idMessage){
 }
 
 var errorMissageId = 0;
-function displayMissage(missageContent, elementFather,codeMessage = 3){
+function displayMessage(missageContent, elementFather,codeMessage = 3){
     // CodeMessage: 0 => success, 1 => info,2 => warning,3 => error,
     switch (codeMessage) {
         case 0:
