@@ -1,11 +1,10 @@
 <?php
- session_start();
- include 'utilities.php';
-if (!isset($_SESSION["ID"])) {
-    header("Location: login.php");
-}
-
- $user = logUser();
+    session_start();
+    include 'utilities.php';
+    if(!isset($_SESSION["ID"])) {
+        header("Location: login.php");
+    }
+    $user = logUser();
 ?>
 <!DOCTYPE html>
 <html lang="en" id="htmlDashboard">
@@ -40,8 +39,8 @@ if (!isset($_SESSION["ID"])) {
             <?php
             if($user['role'] == 1){
                 ?>
-                <button onclick="window.location.href='teacher.php'">USUARIS</button>
-                <button onclick="window.location.href='poll.php'">ENQUESTES</button>
+                <button onclick="window.location.href=''">USUARIS</button>
+                <button onclick="window.location.href='teacher.php'">ENQUESTES</button>
                 <?php
             }else{
                 ?>

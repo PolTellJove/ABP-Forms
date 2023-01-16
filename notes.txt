@@ -1,0 +1,22 @@
+    function newQuestion(){
+        div = document.createElement("div");
+        div.setAttribute("id", "newQuestion");
+
+        input = document.createElement("input");
+        input.setAttribute("type", "text");
+
+        selectType = document.createElement("select");
+
+        <?php $startSession = connToDB()->prepare("SELECT * FROM `type_of_question`;");
+            $startSession->execute();
+            foreach($startSession as $type){ ?>
+                type_option = document.createElement("option");
+                type_option.setAttribute("value", <?php echo $type["ID"];?>);
+                type_option.setAttribute("text", 'Example text');
+                selectType.appendChild(type_option);
+        <?php }?>
+
+        div.append(input);
+        div.append(selectType);
+        $("#divDinamic").append(div);
+    }
