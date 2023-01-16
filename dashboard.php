@@ -1,6 +1,10 @@
 <?php
- session_start();
- include 'utilities.php';
+  session_start();
+  include 'utilities.php';
+  if (!isset($_SESSION["ID"])) {
+      header("Location: login.php");
+  }
+  $user = logUser();
 ?>
 <!DOCTYPE html>
 <html lang="en" id="htmlDashboard">
@@ -13,16 +17,6 @@
 </head>
 <body id='dashboard'>
 <?php include 'header.php';?>
-    <?php 
-        $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.username = 'Alex';");
-        //$startSession->bindParam(':username', 'Alex');
-        $startSession->execute();
-
-        foreach($startSession as $user){
-            $_SESSION['ID'] = $user['ID'];
-            $user = logUser();
-        }
-    ?>
     <div id='divDashboard'>
     <?php   
         if($user['role'] == 1){
@@ -41,7 +35,7 @@
             if($user['role'] == 1){
                 ?>
                 <button onclick="window.location.href='teacher.php'">USUARIS</button>
-                <button onclick="window.location.href='teacher.php'">ENQUESTES</button>
+                <button onclick="window.location.href='poll.php'">ENQUESTES</button>
                 <?php
             }else{
                 ?>
