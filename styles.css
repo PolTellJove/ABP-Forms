@@ -1,13 +1,135 @@
+/* Common Styles */
 
-.login{
-    background-color: #C6C5B9;
+/* General Styles of all pages */
+body { 
+    background-color: #C6C5B9;    
+    min-height: 100vh; 
+    margin: 0px;
+    display: grid;
+    grid-template-rows: 5% 90% 5%;
 }
+
+header{
+    background-color: #7cae7a;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer{
+    background-color: #7cae7a;
+    grid-row: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header p, footer p{
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+/* Styles of messages */
+.missageBox{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 10%;
+    margin: auto;
+}
+
+.displayMessage {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    min-width: 300px;
+    margin-left: -125px;
+    animation: fadein 1s;
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 17px;
+}
+
+.displayMessage i{
+    margin-right: 15px;
+}
+
+.displayMessage button{
+    margin-left: 5px;
+    width: az;
+
+}
+
+.displayMessage.remove {
+    animation:  fadeout 1s;
+} 
+
+.displayMessage.success{
+    background-color: rgba(148, 184, 148,0.5);
+}
+
+.displayMessage.success i{
+    color: green;
+}
+
+.displayMessage.info{
+    background-color: rgba(129, 170, 245,0.5);
+}
+
+.displayMessage.info i{
+    color: blue;
+}
+
+.displayMessage.warning{
+    background-color: rgba(248, 207, 131,0.5);
+}
+
+.displayMessage.warning i{
+    color: orange;
+}
+
+.displayMessage.error{
+    background-color: rgba(241, 138, 138,0.5);
+}
+
+.displayMessage.error i{
+    color: red;
+}
+  
+.closeMessageBtn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+i.fa.fa-close{
+    color: black;
+}
+.closeMessageBtn:hover i{
+    color: rgb(65, 65, 65);
+}
+
+/* End of Messages */
+
+
+
+/* Login CSS */
 .login .title{
     text-align: center;
     font-size: 50px;
 }
-
-
+.login #containerLogin{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
 .login .loginForm {
     margin-top: 10%;
     display: flex;
@@ -97,91 +219,88 @@
     transform: translateY(-2px);
 }
 
-.missageBox{
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    bottom: 30px;
+/* Dashbaord CSS */
+
+#dashboard{
+    display: grid;
+    grid-template-rows: 5% 90% 5%;
 }
 
-.displayMessage {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    min-width: 250px;
-    margin-left: -125px;
-    animation: fadein 1s;
-    color: black;
-    text-align: center;
-    border-radius: 5px;
-    padding: 16px;
-    font-size: 17px;
-}
-
-.displayMessage i{
-    margin-right: 15px;
-}
-
-.displayMessage button{
-    margin-left: 20px;
-    width: auto;
-    padding: 0;
-
-}
-
-.displayMessage.remove {
-    animation:  fadeout 1s;
-} 
-
-.displayMessage.success{
-    background-color: rgba(148, 184, 148,0.5);
-}
-
-.displayMessage.success i{
-    color: green;
-}
-
-.displayMessage.info{
-    background-color: rgba(129, 170, 245,0.5);
-}
-
-.displayMessage.info i{
-    color: blue;
-}
-
-.displayMessage.warning{
-    background-color: rgba(248, 207, 131,0.5);
-}
-
-.displayMessage.warning i{
-    color: orange;
-}
-
-.displayMessage.error{
-    background-color: rgba(241, 138, 138,0.5);
-}
-
-.displayMessage.error i{
-    color: red;
-}
-  
-.closeMessageBtn{
-    background-color: transparent;
-    border: none;
+#dashboard button{
+    display: inline-block;
+    background-color: #62929E;
+    color: white;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
+    justify-content: space-around;
+    padding: 15px 30px;
+    min-width: 30%;
 }
-i.fa.fa-close{
-    color: black;
-}
-.closeMessageBtn:hover i{
-    color: rgb(65, 65, 65);
+#dashboard #divDashboard{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
 }
 
+#dashboard #divButtons{
+    width: auto;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;  
+}
 
+#dashboard h1{
+    text-align: center;
+}
 
+/* Teacher CSS */
+
+#teacher{
+    display: grid;
+    grid-template-rows: 5% 90% 5%;
+}
+
+#teacher #divTeacher{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+
+#teacher #divButtons{
+    margin-top: 5%;
+    width: auto;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;  
+}
+
+#teacher button{
+    display: inline-block;
+    background-color: #62929E;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    justify-content: space-around;
+    padding: 15px 30px;
+    min-width: 20%;
+}
+
+#teacher #divDinamic{
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 5%;
+    text-align: center;
+}
+
+#teacher #divDinamic p{
+    border: 1px solid black;
+    background-color: white;
+    text-transform: uppercase;
+}
 
 /* Animations to make messages (displayMessages) */
 @keyframes fadein {
