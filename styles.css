@@ -33,15 +33,16 @@ header p, footer p{
 }
 
 /* Styles of messages */
-.missageBox{
+.messageBox{
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    bottom: 10%;
+    align-items: center;
     margin: auto;
+    gap: 5px;
+    /* position: fixed; */
+    bottom: 10%;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .displayMessage {
@@ -49,13 +50,14 @@ header p, footer p{
     justify-content: space-between;
     flex-direction: row;
     min-width: 300px;
-    margin-left: -125px;
     animation: fadein 1s;
     color: black;
     text-align: center;
     border-radius: 5px;
     padding: 15px;
     font-size: 17px;
+    width: fit-content;
+    margin: auto;
 }
 
 .displayMessage i{
@@ -64,7 +66,6 @@ header p, footer p{
 
 .displayMessage button{
     margin-left: 5px;
-    width: az;
 
 }
 
@@ -131,7 +132,6 @@ i.fa.fa-close{
     align-items: center;
 }
 .login .loginForm {
-    margin-top: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -141,7 +141,8 @@ i.fa.fa-close{
     width: 400px;
     border-radius: 8px;
     padding: 20px 40px;
-    box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    margin-bottom: 20px;
 }
 
 .login .loginForm .inputContainer {
@@ -162,7 +163,6 @@ i.fa.fa-close{
     padding: 0 20px;
     outline: none;
     background: none;
-    z-index: 1;
 }
 .login .loginForm .inputContainer .input ::placeholder {
     color: transparent;
@@ -177,7 +177,6 @@ i.fa.fa-close{
     color: #4d4e4e;
     font-size: 16px;
     transition: 0.5s;
-    z-index: 0;
 }
 
 .login .loginForm .submitBtn {
@@ -197,7 +196,6 @@ i.fa.fa-close{
 .login .input:focus + .label {
     top: -7px;
     left: 3px;
-    z-index: 10;
     font-size: 14px;
     font-weight: 600;
     color: #62929E;
@@ -209,7 +207,6 @@ i.fa.fa-close{
 .login .input:not(:placeholder-shown)+ .label {
     top: -7px;
     left: 3px;
-    z-index: 10;
     font-size: 14px;
     font-weight: 600;
 }
@@ -253,6 +250,19 @@ i.fa.fa-close{
 
 #dashboard h1{
     text-align: center;
+}
+
+#dashboard .containerLogoutBtn{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+#dashboard .btnLogout{  
+    font-size: 15px;
+    padding: 10px;
+    min-width: 0px;
+    background-color: #C6C5B9;
+    color: black;
 }
 
 /* Teacher CSS */
