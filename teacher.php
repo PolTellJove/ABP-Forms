@@ -16,16 +16,17 @@
 <body id='teacher'>
 <?php include 'header.php';?>
     <div id='divTeacher'>
-    <?php if($user['role'] == 1){   ?>
-        <div id="divButtons">
-            <button id='createQuestion'>CREAR PREGUNTA</button>
-            <button onclick="">CREAR ENQUESTA</button>
-            <button id='questionList'>LLISTAT PREGUNTES</button>
-            <button id='pollList'>LLISTAT ENQUESTA</button>
-        </div>
-    <?php }?>
-        <div id="divDinamic">
-        <?php 
+        <?php if($user['role'] == 1){   ?>
+            <div class = "messageBox"></div>
+            <div id="divButtons">
+                <button id='createQuestion'>CREAR PREGUNTA</button>
+                <button onclick="">CREAR ENQUESTA</button>
+                <button id='questionList'>LLISTAT PREGUNTES</button>
+                <button id='pollList'>LLISTAT ENQUESTA</button>
+            </div>
+            <?php }?>
+            <div id="divDinamic">
+                <?php 
             $startSession = connToDB()->prepare("SELECT * FROM `poll`;");
             $startSession->execute();
             echo '<div id="polls">';
@@ -42,22 +43,24 @@
             }
             echo "\n".'</div>';
 
-            echo '<form action="checkoutForms" id="newQuestion" hidden>';
-                echo '<input type="text" id="questionTitle"><br>';
-                echo '<select id="typeSelect">';
+            echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
+                echo "<input name='questionTitle' type='text' id='questionTitle'><br>";
+                echo '<select name="typeQuestion" id="typeSelect">';
                     echo "\n".'<option id="0" selected></option><br>';
                     $startSession = connToDB()->prepare("SELECT * FROM `type_of_question`;");
                     $startSession->execute();
                     foreach($startSession as $type_option){
-                        echo "\n".'<option id='.$type_option['ID'].'>'.$type_option['name'].'</option>';
+                        echo "\n".'<option id='.$type_option['ID'].' value='.$type_option['ID'].'>'.$type_option['name'].'</option>';
                     }
                 echo "\n".'</select><br><br>';
                 echo '<textarea id="taQuestion" rows="5" cols="33" disabled></textarea>';
                 echo '<div id="radioGroup">';
                     $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
                     $startSession->execute();
+                    $_POST['arrayOptions'] = [];
                     foreach($startSession as $opinion){
                         echo "\n".'<a><input type="radio" id="'.$opinion['ID'].'" name="score" value="'.$opinion['ID'].'" disabled><label for="'.$opinion['ID'].'">'.$opinion['answer'].'</label></a>';
+                        array_push($_POST['arrayOptions'], $opinion['ID']);
                     }
                 echo "\n".'</div>';
                 echo '<br><input id="saveQuestion" type="submit" value="Guardar"/>';
@@ -132,4 +135,15 @@
             });
         });     
     </script>
+    <?php
+        if (isset($_SESSION['errors']) && (!empty($_SESSION["errors"]))) {
+            foreach ($_SESSION['errors'] as $key => $value) {
+                echo "
+                <script>
+                    ".$value."
+                </script>";
+            }
+            $_SESSION['errors'] = [];
+        }
+    ?>
 </html>
