@@ -6,53 +6,13 @@ session_start();
     <head>
         <link rel="stylesheet" type="text/css" href="styles.css">
         <script src="https://kit.fontawesome.com/277f72a273.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     </head>
 
     <body class = "login">
-    <script src="./login.js" ></script>
+    <script src="./utilities.js" ></script>
 
     <?php
-        $errorMissageId = 0;
-        function displayMissage($missageContent, $codeMessage = 3){
-            global $errorMissageId;
-            // CodeMessage: 0 => success, 1 => info,2 => warning,3 => error,
-            switch ($codeMessage) {
-                case 0:
-                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage success'>
-                    <i class='fa fa-check-circle'></i>
-                    ".$missageContent."
-                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
-                </div>";
-                    break;
-                case 1:
-                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage info'>
-                    <i class='fa fa-info'></i>
-                    ".$missageContent."
-                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
-                </div>";
-                    break;
-                case 2:
-                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage warning'>
-                    <i class='fa fa-warning'></i>
-                    ".$missageContent."
-                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
-                </div>";
-                    break;
-                case 3:
-                    echo"<div id='displayMessage".$errorMissageId."' class='displayMessage error'>
-                    <i class='fa fa-exclamation-circle'></i>
-                    ".$missageContent."
-                    <button onclick='removeMissage(displayMessage".$errorMissageId.")' class='closeMessageBtn' ><i class='fa fa-close'></i></button>
-                </div>";
-                
-                default:
-                    # code...
-                    break;
-            }
-
-            $errorMissageId = $errorMissageId + 1;
-
-        }
         function login(){
             //recogida de datos en Variables
             $email = $_POST["userlog"];
@@ -82,11 +42,17 @@ session_start();
                 }
 
                 else{
-                    displayMissage("Credencials incorrectes",2);
+                    echo "
+                    <script>
+                        displayMissage('Credencials incorrectes',$('.missageBox'),3);
+                    </script>";
                 }
             }
             catch (PDOException $e) {
-                print "Error!: " . $e->getMessage() . "<br/>";
+                echo "
+                <script>
+                    displayMissage('Error:".$e->getMessage()."',$('.missageBox'),3);
+                </script>";
                 die();
             }
         }
@@ -115,6 +81,12 @@ session_start();
             <?php
                 if ( (isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))  ){
                     login();
+                }
+                else{
+                    echo "
+                    <script>
+                        displayMissage(' Omple tot el formulari, si us plau',$('.missageBox'),2);
+                    </script>";
                 }
             ?>    
         </div>

@@ -113,12 +113,23 @@
     flex-direction: row;
     min-width: 250px;
     margin-left: -125px;
-    animation: fadein 0.5s;
+    animation: fadein 1s;
     color: black;
     text-align: center;
     border-radius: 5px;
     padding: 16px;
     font-size: 17px;
+}
+
+.displayMessage i{
+    margin-right: 15px;
+}
+
+.displayMessage button{
+    margin-left: 20px;
+    width: auto;
+    padding: 0;
+
 }
 
 .displayMessage.remove {
