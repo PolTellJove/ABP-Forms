@@ -14,7 +14,7 @@
 <body id='dashboard'>
 <?php include 'header.php';?>
     <?php 
-        $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.username = 'Lean';");
+        $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.username = 'Alex';");
         //$startSession->bindParam(':username', 'Alex');
         $startSession->execute();
 
@@ -41,7 +41,7 @@
             if($user['role'] == 1){
                 ?>
                 <button onclick="window.location.href='teacher.php'">USUARIS</button>
-                <button onclick="window.location.href='poll.php'">ENQUESTES</button>
+                <button onclick="window.location.href='teacher.php'">ENQUESTES</button>
                 <?php
             }else{
                 ?>
