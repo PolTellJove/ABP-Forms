@@ -44,28 +44,64 @@
 
     function saveQuestions(){
         try {
-            $startSession  = connToDB()->prepare("INSERT INTO question (question,typeID) values (:title, :typeQuestion);");
-            $stmn -> bindParam(':title', $_POST["questionTitle"]);
-            $stmn -> bindParam(':typeQuestion', $_POST["typeQuestion"]);
-            $startSession->execute();
+            $title = $_POST["questionTitle"];
+            $typeQuestion = $_POST["typeQuestion"];
 
-            echo "HOLA";
-            array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament',$('.messageBox'),0);");
-            header("Location: teacher.php");
- 
-                // array_push($_SESSION['errors'],"displayMessage('La pregunta no ha sigut guardada correctament',$('.messageBox'),3);");
-                // header("Location: teacher.php");
+            $startSession  = connToDB()->prepare("INSERT INTO question (question,typeID) values (:title, :typeQuestion);");
+            $startSession -> bindParam(':title', $title);
+            $startSession -> bindParam(':typeQuestion', $typeQuestion);
+            $done = $startSession->execute();
             
+            if ($done) {
+                array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament',$('.messageBox'),0);");
+            }
+            else {
+                array_push($_SESSION['errors'],"displayMessage('La pregunta no ha sigut guardada correctament',$('.messageBox'),2);");
+            }
         } catch (\Throwable $th) {
-            array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades',$('.messageBox'),3);");
-            header("Location: teacher.php");
+            array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades:".$th."',$('.messageBox'),3);");
         }
 
     }
 
-    // function saveOptions(){
+    function getQuestionIdByQuestion($question){
+        $startSession  = connToDB()->prepare("SELECT ID FROM question WHERE question = :question;");
+        $startSession -> bindParam(':question', $question);
+        $startSession->execute();
+        while ($row = $startSession->fetch()) {
+            $idQuestion =  $row["ID"];
+        }
+        if ($idQuestion) {
+            return $idQuestion;
+        }
+        return "";
+    }
 
-    // }
+    function saveOptions(){
+        try {
+            $idQuestion = getQuestionIdByQuestion($_POST["questionTitle"]);
+            $arrayOptions = $_SESSION["arrayOptions"];
+
+            $stringRes = "";
+            foreach ($arrayOptions as $key => $value) {
+                $stringRes = $stringRes .",". $value;
+            }
+
+            $startSession  = connToDB()->prepare("INSERT INTO question_option (questionID,optionID) values (:questionID, :optionID);");
+            $startSession -> bindParam(':questionID', $idQuestion);
+            $startSession -> bindParam(':optionID', $arrayOptions);
+            $done = $startSession->execute();
+            
+            if ($done) {
+                array_push($_SESSION['errors'],"displayMessage('La o les opcions han sigut guardades correctament',$('.messageBox'),0);");
+            }
+            else {
+                array_push($_SESSION['errors'],"displayMessage('La o les opcions no han sigut guardades correctament',$('.messageBox'),2);");
+            }
+        } catch (\Throwable $th) {
+            array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades: optionID: ".$stringRes." tamaño:".count($arrayOptions).", idQues:".$idQuestion." ".$th."',$('.messageBox'),3);");
+        }
+    }
 
 
     if ( (isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))  ){
@@ -75,11 +111,14 @@
     if ((isset($_POST["questionTitle"]) && (!empty($_POST["questionTitle"]))) && (isset($_POST["typeQuestion"]) && (!empty($_POST["typeQuestion"])))) {
         switch ($_POST["typeQuestion"]) {
             case 1:
+                // saveQuestions();
+                saveOptions();
                 break;
             case 2:
                 saveQuestions();
-            # code...
             break;
         }
+        header("Location: teacher.php");
+
     }
 ?>

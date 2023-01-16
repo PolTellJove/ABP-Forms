@@ -12,11 +12,16 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/277f72a273.js" crossorigin="anonymous"></script>
+    
 </head>
 <body id='teacher'>
+<script src="./utilities.js"></script>
+
 <?php include 'header.php';?>
     <div id='divTeacher'>
         <?php if($user['role'] == 1){   ?>
+            <br>
             <div class = "messageBox"></div>
             <div id="divButtons">
                 <button id='createQuestion'>CREAR PREGUNTA</button>
@@ -57,10 +62,10 @@
                 echo '<div id="radioGroup">';
                     $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
                     $startSession->execute();
-                    $_POST['arrayOptions'] = [];
+                    $_SESSION['arrayOptions'] = [];
                     foreach($startSession as $opinion){
                         echo "\n".'<a><input type="radio" id="'.$opinion['ID'].'" name="score" value="'.$opinion['ID'].'" disabled><label for="'.$opinion['ID'].'">'.$opinion['answer'].'</label></a>';
-                        array_push($_POST['arrayOptions'], $opinion['ID']);
+                        array_push($_SESSION['arrayOptions'], $opinion['ID']);
                     }
                 echo "\n".'</div>';
                 echo '<br><input id="saveQuestion" type="submit" value="Guardar"/>';

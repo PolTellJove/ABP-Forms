@@ -106,12 +106,14 @@ header p, footer p{
 }
   
 .closeMessageBtn{
-    background-color: transparent;
-    border: none;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 5px !important;
     cursor: pointer;
+    min-width: 0px !important; 
 }
 i.fa.fa-close{
-    color: black;
+    color: black !important;
 }
 .closeMessageBtn:hover i{
     color: rgb(65, 65, 65);
