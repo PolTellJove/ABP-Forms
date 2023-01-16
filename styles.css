@@ -1,0 +1,195 @@
+
+.login{
+    background-color: #C6C5B9;
+}
+.login .title{
+    text-align: center;
+    font-size: 50px;
+}
+
+
+.login .loginForm {
+    margin-top: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login .form {
+    background-color: white;
+    width: 400px;
+    border-radius: 8px;
+    padding: 20px 40px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+}
+
+.login .loginForm .inputContainer {
+    position: relative;
+    height: 45px;
+    width: 90%;
+    margin-bottom: 17px;
+}
+.login .loginForm .inputContainer .input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #DADCE0;
+    border-radius: 7px;
+    font-size: 16px;
+    padding: 0 20px;
+    outline: none;
+    background: none;
+    z-index: 1;
+}
+.login .loginForm .inputContainer .input ::placeholder {
+    color: transparent;
+}
+
+.login .loginForm .inputContainer .label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 0 4px;
+    background-color: white;
+    color: #4d4e4e;
+    font-size: 16px;
+    transition: 0.5s;
+    z-index: 0;
+}
+
+.login .loginForm .submitBtn {
+    display: block;
+    width: 40%;
+    margin: auto;
+    padding: 15px 30px;
+    border: none;
+    background-color: #62929E;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 30px;
+}
+
+.login .input:focus + .label {
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: #62929E;
+}
+
+.login .loginForm .input:focus {
+    border: 2px solid #62929E;
+}
+.login .input:not(:placeholder-shown)+ .label {
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+}
+  
+.login .submitBtn:hover {
+    background-color: #2a463a;
+    transform: translateY(-2px);
+}
+
+.missageBox{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+}
+
+.displayMessage {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    min-width: 250px;
+    margin-left: -125px;
+    animation: fadein 1s;
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    font-size: 17px;
+}
+
+.displayMessage i{
+    margin-right: 15px;
+}
+
+.displayMessage button{
+    margin-left: 20px;
+    width: auto;
+    padding: 0;
+
+}
+
+.displayMessage.remove {
+    animation:  fadeout 1s;
+} 
+
+.displayMessage.success{
+    background-color: rgba(148, 184, 148,0.5);
+}
+
+.displayMessage.success i{
+    color: green;
+}
+
+.displayMessage.info{
+    background-color: rgba(129, 170, 245,0.5);
+}
+
+.displayMessage.info i{
+    color: blue;
+}
+
+.displayMessage.warning{
+    background-color: rgba(248, 207, 131,0.5);
+}
+
+.displayMessage.warning i{
+    color: orange;
+}
+
+.displayMessage.error{
+    background-color: rgba(241, 138, 138,0.5);
+}
+
+.displayMessage.error i{
+    color: red;
+}
+  
+.closeMessageBtn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+i.fa.fa-close{
+    color: black;
+}
+.closeMessageBtn:hover i{
+    color: rgb(65, 65, 65);
+}
+
+
+
+
+/* Animations to make messages (displayMessages) */
+@keyframes fadein {
+from {bottom: 0; opacity: 0;}
+to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+from {bottom: 30px; opacity: 1;}
+to {bottom: 0; opacity: 0;}
+}
