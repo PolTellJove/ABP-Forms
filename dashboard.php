@@ -28,7 +28,7 @@ $_GET['bodyClass'] = '';
     ?>
 
     <div id="divButtons">
-        <a class="button" href="stats.php">ESTADISTÍQUES</a>
+        <a class="button" href="">ESTADISTÍQUES</a>
         <?php
         if ($user['role'] == 1) {
         ?>
@@ -37,7 +37,7 @@ $_GET['bodyClass'] = '';
         <?php
         } else {
         ?>
-            <a class="button" href="profile.php">PERFIL</a>
+            <a class="button" href="">PERFIL</a>
         <?php
         }
         ?>

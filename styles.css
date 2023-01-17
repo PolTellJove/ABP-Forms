@@ -268,11 +268,6 @@ i.fa.fa-close{
 
 /* Teacher CSS */
 
-#teacher{
-    display: grid;
-    grid-template-rows: 5% 90% 5%;
-}
-
 #teacher #divTeacher{
     grid-row: 2;
     display: inline; 
@@ -319,6 +314,38 @@ i.fa.fa-close{
 #teacher #radioGroup{
     display: grid;
     grid-template-columns: auto;
+}
+
+/* Landing CSS */
+
+#landing #divLanding{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+
+#landing #buttons{
+    margin-top: 20%;
+    margin-left: 25%;
+    width: 50%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between; 
+}
+
+#landing .button{
+    display: inline;
+    padding: 15px 30px;
+    justify-content: space-around;
+    width: 25%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
 }
 
 /* Animations to make messages (displayMessages) */
