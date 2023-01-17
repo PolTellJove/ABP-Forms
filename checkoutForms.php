@@ -57,7 +57,7 @@
             $lastId = $dbh->lastInsertId();
 
             if ($done) {
-                array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament,$('.messageBox'),0);");
+                array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament',$('.messageBox'),0);");
             }
             else {
                 array_push($_SESSION['errors'],"displayMessage('La pregunta no ha sigut guardada correctament',$('.messageBox'),2);");
