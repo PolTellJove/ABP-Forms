@@ -35,16 +35,16 @@
         ?>
         
         <div id="divButtons">
-            <button onclick="window.location.href='stats.php'">ESTADISTÍQUES</button>
+            <a class="button" href="stats.php">ESTADISTÍQUES</a>
             <?php
             if($user['role'] == 1){
                 ?>
-                <button onclick="window.location.href=''">USUARIS</button>
-                <button onclick="window.location.href='teacher.php'">ENQUESTES</button>
+                <a class="button" href="">USUARIS</a>
+                <a class="button" href="teacher.php">ENQUESTES</a>
                 <?php
             }else{
                 ?>
-                <button onclick="window.location.href='profile.php'">PERFIL</button>
+                <a class="button" href="profile.php">PERFIL</a>
                 <?php
             } 
         ?>

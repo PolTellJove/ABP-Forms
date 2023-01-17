@@ -2,8 +2,7 @@
  session_start();
  include 'utilities.php';
  $user = logUser();
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +12,6 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/277f72a273.js" crossorigin="anonymous"></script>
-    
 </head>
 <body id='teacher'>
 <script src="./utilities.js"></script>
@@ -24,10 +22,10 @@
             <br>
             <div class = "messageBox"></div>
             <div id="divButtons">
-                <button id='createQuestion'>CREAR PREGUNTA</button>
-                <button onclick="">CREAR ENQUESTA</button>
-                <button id='questionList'>LLISTAT PREGUNTES</button>
-                <button id='pollList'>LLISTAT ENQUESTA</button>
+                <a class="button" id='createQuestion'>CREAR PREGUNTA</a>
+                <a class="button">CREAR ENQUESTA</a>
+                <a class="button" id='questionList'>LLISTAT PREGUNTES</a>
+                <a class="button" id='pollList'>LLISTAT ENQUESTA</a>
             </div>
             <?php }?>
             <div id="divDinamic">
@@ -82,7 +80,7 @@
     $("#saveQuestion").hide();
 
     function changeColor(button_id){
-        $('button').css("background-color","#62929E");
+        $('.button').css("background-color","#62929E");
         $(button_id).css("background-color","blue");
     }
 

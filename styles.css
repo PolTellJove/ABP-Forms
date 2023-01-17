@@ -220,17 +220,21 @@ i.fa.fa-close{
 
 /* Dashbaord CSS */
 
-#dashboard button{
+#dashboard .button{
     display: inline-block;
-    background-color: #62929E;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    justify-content: space-around;
     padding: 15px 30px;
-    min-width: 30%;
+    justify-content: space-around;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
 }
+
 #dashboard #divDashboard{
     grid-row: 2;
     display: inline; 
@@ -284,16 +288,19 @@ i.fa.fa-close{
     align-items: center;  
 }
 
-#teacher button{
+#teacher .button{
     display: inline-block;
-    background-color: #62929E;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    justify-content: space-around;
     padding: 15px 30px;
-    min-width: 20%;
+    justify-content: space-around;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
 }
 
 #teacher #divDinamic{
