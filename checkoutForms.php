@@ -47,59 +47,44 @@
             $title = $_POST["questionTitle"];
             $typeQuestion = $_POST["typeQuestion"];
 
-            $startSession  = connToDB()->prepare("INSERT INTO question (question,typeID) values (:title, :typeQuestion);");
+
+            $dbh = connToDB();
+            $startSession  = $dbh->prepare("INSERT INTO question (question,typeID) values (:title, :typeQuestion);");
             $startSession -> bindParam(':title', $title);
             $startSession -> bindParam(':typeQuestion', $typeQuestion);
             $done = $startSession->execute();
             
+            $lastId = $dbh->lastInsertId();
+
             if ($done) {
-                array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament',$('.messageBox'),0);");
+                array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament,$('.messageBox'),0);");
             }
             else {
                 array_push($_SESSION['errors'],"displayMessage('La pregunta no ha sigut guardada correctament',$('.messageBox'),2);");
             }
+            return $lastId;
         } catch (\Throwable $th) {
             array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades:".$th."',$('.messageBox'),3);");
         }
 
     }
 
-    function getQuestionIdByQuestion($question){
-        $startSession  = connToDB()->prepare("SELECT ID FROM question WHERE question = :question;");
-        $startSession -> bindParam(':question', $question);
-        $startSession->execute();
-        while ($row = $startSession->fetch()) {
-            $idQuestion =  $row["ID"];
-        }
-        if ($idQuestion) {
-            return $idQuestion;
-        }
-        return "";
-    }
-
-    function saveOptions(){
+    function saveOptionsofQuestions($lastId,$arrayOptions){
         try {
-            $idQuestion = getQuestionIdByQuestion($_POST["questionTitle"]);
-            $arrayOptions = $_SESSION["arrayOptions"];
-
-            $stringRes = "";
             foreach ($arrayOptions as $key => $value) {
-                $stringRes = $stringRes .",". $value;
+                $startSession  = connToDB()->prepare("INSERT INTO question_option (questionID,optionID) values (:questionID, :optionID);");
+                $startSession -> bindParam(':questionID', $lastId);
+                $startSession -> bindParam(':optionID', $value);
+                $done = $startSession->execute();
             }
-
-            $startSession  = connToDB()->prepare("INSERT INTO question_option (questionID,optionID) values (:questionID, :optionID);");
-            $startSession -> bindParam(':questionID', $idQuestion);
-            $startSession -> bindParam(':optionID', $arrayOptions);
-            $done = $startSession->execute();
-            
             if ($done) {
-                array_push($_SESSION['errors'],"displayMessage('La o les opcions han sigut guardades correctament',$('.messageBox'),0);");
+                array_push($_SESSION['errors'],"displayMessage('Les opcions han sigut guardades correctament',$('.messageBox'),0);");
             }
             else {
-                array_push($_SESSION['errors'],"displayMessage('La o les opcions no han sigut guardades correctament',$('.messageBox'),2);");
+                array_push($_SESSION['errors'],"displayMessage('Les opcions no han sigut guardades correctament',$('.messageBox'),2);");
             }
         } catch (\Throwable $th) {
-            array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades: optionID: ".$stringRes." tamaño:".count($arrayOptions).", idQues:".$idQuestion." ".$th."',$('.messageBox'),3);");
+            array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades: ".$th.",$('.messageBox'),3);");
         }
     }
 
@@ -111,8 +96,7 @@
     if ((isset($_POST["questionTitle"]) && (!empty($_POST["questionTitle"]))) && (isset($_POST["typeQuestion"]) && (!empty($_POST["typeQuestion"])))) {
         switch ($_POST["typeQuestion"]) {
             case 1:
-                // saveQuestions();
-                saveOptions();
+                saveOptionsofQuestions(saveQuestions(),$_SESSION["arrayOptions"]);
                 break;
             case 2:
                 saveQuestions();
