@@ -25,4 +25,14 @@
         }
         return $userInformation;
     }
+
+    function getTable($tableName){
+        $startSession = connToDB()->prepare("SELECT * FROM $tableName;");
+        $startSession->execute();
+        $rows = [];
+        foreach ($startSession as $row) {
+            array_push($rows, $row);
+        }
+        return $rows;
+    }
 ?>

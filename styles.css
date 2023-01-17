@@ -311,11 +311,31 @@ i.fa.fa-close{
     text-transform: uppercase;
 }
 
+#teacher #typeSelect{
+     text-align: center;
+     text-transform: uppercase;
+     margin-bottom: 2%;
+}
+
 #teacher #radioGroup{
     display: grid;
     grid-template-columns: auto;
+    justify-items: self-start;
+    padding-left: 36%;
 }
 
+#teacher #radioButton{
+    padding : 1%;
+}
+
+#teacher #taQuestion, #radioGroup{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#teacher #saveQuestion, #clearForm{
+    margin: 1%;
+}
 /* Landing CSS */
 
 #landing #divLanding{

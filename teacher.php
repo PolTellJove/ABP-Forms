@@ -22,45 +22,60 @@ $user = logUser();
     <?php } ?>
     <div id="divDinamic">
         <?php
-        $startSession = connToDB()->prepare("SELECT * FROM `poll`;");
-        $startSession->execute();
-        echo '<div id="polls">';
-        foreach ($startSession as $poll) {
-            echo "\n" . '<p id=' . $poll['ID'] . '>' . $poll['title'] . '</p>';
+        function getPolls(){
+            $polls = getTable('poll');
+            echo '<div id="polls">';
+            foreach ($polls as $poll) {
+                echo "\n" . '<p id=' . $poll['ID'] . '>' . $poll['title'] . '</p>';
+            }
+            echo "\n" . '</div>';
         }
-        echo "\n" . '</div>';
 
-        $startSession = connToDB()->prepare("SELECT * FROM `question`;");
-        $startSession->execute();
-        echo '<div id="questions" hidden>';
-        foreach ($startSession as $question) {
-            echo "\n" . '<p id=' . $question['ID'] . '>' . $question['question'] . '</p>';
+        function getQuestions(){
+            $questions = getTable('question');
+            echo '<div id="questions" hidden>';
+            foreach ($questions as $question) {
+                echo "\n" . '<p id=' . $question['ID'] . '>' . $question['question'] . '</p>';
+            }
+            echo "\n" . '</div>';
         }
-        echo "\n" . '</div>';
+        
+        function getTypes(){
+            echo '<select name="typeQuestion" id="typeSelect">';
+            echo "\n" . '<option id="0" selected></option><br>';
+            $typesQuestion = getTable('type_of_question');
+            foreach ($typesQuestion as $type_option) {
+                echo "\n" . '<option id=' . $type_option['ID'] . ' value=' . $type_option['ID'] . '>' . $type_option['name'] . '</option>';
+            }
+            echo "\n" . '</select><br>';
+        }
 
-        echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
-        echo "<input name='questionTitle' type='text' id='questionTitle'><br>";
-        echo '<select name="typeQuestion" id="typeSelect">';
-        echo "\n" . '<option id="0" selected></option><br>';
-        $startSession = connToDB()->prepare("SELECT * FROM `type_of_question`;");
-        $startSession->execute();
-        foreach ($startSession as $type_option) {
-            echo "\n" . '<option id=' . $type_option['ID'] . ' value=' . $type_option['ID'] . '>' . $type_option['name'] . '</option>';
+        function getOptions(){
+            echo '<div id="radioGroup">';
+            $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
+            $startSession->execute();
+            $_SESSION['arrayOptions'] = [];
+            foreach ($startSession as $opinion) {
+                echo "\n" . '<a id="radioButton"><input type="radio" id="' . $opinion['ID'] . '" name="score" value="' . $opinion['ID'] . '" disabled><label for="' . $opinion['ID'] . '">' . $opinion['answer'] . '</label></a>';
+                array_push($_SESSION['arrayOptions'], $opinion['ID']);
+            }
+            echo "\n" . '</div>';
         }
-        echo "\n" . '</select><br><br>';
-        echo '<textarea id="taQuestion" rows="5" cols="33" disabled></textarea>';
-        echo '<div id="radioGroup">';
-        $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
-        $startSession->execute();
-        $_SESSION['arrayOptions'] = [];
-        foreach ($startSession as $opinion) {
-            echo "\n" . '<a><input type="radio" id="' . $opinion['ID'] . '" name="score" value="' . $opinion['ID'] . '" disabled><label for="' . $opinion['ID'] . '">' . $opinion['answer'] . '</label></a>';
-            array_push($_SESSION['arrayOptions'], $opinion['ID']);
+
+        function newQuestion(){
+            echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
+            getTypes();
+            echo "<input name='questionTitle' type='text' id='questionTitle'><br>";
+            echo '<textarea id="taQuestion" rows="5" cols="33" disabled></textarea><br>';
+            getOptions();
+            echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
+            echo '<input id="clearForm" type="reset" value="Cancelar"/>';
+            echo "\n" . '</form>';
         }
-        echo "\n" . '</div>';
-        echo '<br><input id="saveQuestion" type="submit" value="Guardar"/>';
-        echo '<input id="clearForm" type="reset" value="Cancelar"/>';
-        echo "\n" . '</form>';
+
+        getPolls();
+        getQuestions();
+        newQuestion();
         ?>
     </div>
 </div>
