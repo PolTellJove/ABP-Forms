@@ -12,21 +12,27 @@ $_GET['bodyClass'] = '';
 <html lang="en">
 <?php include 'header.php'; ?>
 <div id='divDashboard'>
-    <div class="containerLogoutBtn">
-        <button onclick="location.href = './logout.php'" class="btnLogout"> <i class="fa fa-solid fa-right-from-bracket"></i> LogOut</button>
-    </div>
-    <?php
-    if ($user['role'] == 1) {
-    ?>
-        <h1>Admin: <?php echo $user['username'] ?></h1>
-    <?php
-    } else {
-    ?>
-        <h1>Professor: <?php echo $user['username'] ?></h1>
-    <?php
-    }
-    ?>
 
+    <div class="containerLogoutBtn">
+        <a class="buttonLogout" href='./logout.php'>
+            <i class="fa fa-solid fa-right-from-bracket"></i>
+            <div class="logout">LOGOUT</div>
+        </a>
+    </div>
+    <br>
+        <div class="titleContainer">
+        <?php
+        if ($user['role'] == 1) {
+        ?>
+            <h1>Admin: <?php echo $user['username'] ?></h1>
+        <?php
+        } else {
+        ?>
+            <h1>Professor: <?php echo $user['username'] ?></h1>
+        <?php
+        }
+        ?>
+    </div>
     <div id="divButtons">
         <a class="button" href="">ESTADISTÍQUES</a>
         <?php
