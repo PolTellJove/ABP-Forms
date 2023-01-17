@@ -14,5 +14,4 @@ $_GET['bodyClass'] = 'landing';
 </div>
 <?php include 'footer.php'; ?>
 </body>
-
 </html>

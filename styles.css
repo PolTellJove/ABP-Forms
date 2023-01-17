@@ -290,12 +290,21 @@ i.fa.fa-close{
     width: 20%;
     text-align: center;
     text-decoration: none;
-    color: #ffffff;
-    background-color: #62929E;
+    color: white;
+    background-color: #62929e;
     border-radius: 6px;
     outline: none;
     font-size: 16px;
     cursor: pointer
+}
+
+#teacher a.button.active { background-color:#393d3f; }
+
+#teacher a:hover{
+    background-color: #546a7b;
+    padding: 20px 35px;
+    padding-bottom: 15px;
+    font-size: 18px;
 }
 
 #teacher #divDinamic{
