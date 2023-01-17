@@ -42,7 +42,7 @@ $user = logUser();
         
         function getTypes(){
             echo '<select name="typeQuestion" id="typeSelect">';
-            echo "\n" . '<option id="0" selected></option><br>';
+            echo "\n" . '<option id="0" selected disabled>TIPUS DE PREGUNTA</option><br>';
             $typesQuestion = getTable('type_of_question');
             foreach ($typesQuestion as $type_option) {
                 echo "\n" . '<option id=' . $type_option['ID'] . ' value=' . $type_option['ID'] . '>' . $type_option['name'] . '</option>';
@@ -65,14 +65,13 @@ $user = logUser();
         function newQuestion(){
             echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
             getTypes();
-            echo "<input name='questionTitle' type='text' id='questionTitle'><br>";
-            echo '<textarea id="taQuestion" rows="5" cols="33" disabled></textarea><br>';
+            echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
+            echo '<textarea id="taQuestion" rows="10" cols="50" disabled></textarea><br>';
             getOptions();
             echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
             echo '<input id="clearForm" type="reset" value="Cancelar"/>';
             echo "\n" . '</form>';
         }
-
         getPolls();
         getQuestions();
         newQuestion();
@@ -145,7 +144,7 @@ $user = logUser();
             } else {
                 $("#saveQuestion").hide();
             }
-        });
+        }); 
     });
 </script>
 <?php

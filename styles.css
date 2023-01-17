@@ -246,7 +246,8 @@ i.fa.fa-close{
     border-radius: 8px;
     display: flex;
     justify-content: space-around;
-    align-items: center;  
+    align-items: center; 
+    width: 20%; 
 }
 
 #dashboard h1{
@@ -298,14 +299,15 @@ i.fa.fa-close{
     cursor: pointer
 }
 
-#teacher a.button.active { background-color:#393d3f; }
 
-#teacher a:hover{
-    background-color: #546a7b;
+#teacher a:not(.active):hover{
+    background-color: #7cae7a;
     padding: 20px 35px;
     padding-bottom: 15px;
     font-size: 18px;
 }
+
+#teacher a.button.active { background-color:#393d3f; }
 
 #teacher #divDinamic{
     width: 50%;
@@ -345,6 +347,7 @@ i.fa.fa-close{
 #teacher #saveQuestion, #clearForm{
     margin: 1%;
 }
+
 /* Landing CSS */
 
 #landing #divLanding{
