@@ -106,12 +106,14 @@ header p, footer p{
 }
   
 .closeMessageBtn{
-    background-color: transparent;
-    border: none;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 5px !important;
     cursor: pointer;
+    min-width: 0px !important; 
 }
 i.fa.fa-close{
-    color: black;
+    color: black !important;
 }
 .closeMessageBtn:hover i{
     color: rgb(65, 65, 65);
@@ -218,17 +220,21 @@ i.fa.fa-close{
 
 /* Dashbaord CSS */
 
-#dashboard button{
+#dashboard .button{
     display: inline-block;
-    background-color: #62929E;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    justify-content: space-around;
     padding: 15px 30px;
-    min-width: 30%;
+    justify-content: space-around;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
 }
+
 #dashboard #divDashboard{
     grid-row: 2;
     display: inline; 
@@ -262,11 +268,6 @@ i.fa.fa-close{
 
 /* Teacher CSS */
 
-#teacher{
-    display: grid;
-    grid-template-rows: 5% 90% 5%;
-}
-
 #teacher #divTeacher{
     grid-row: 2;
     display: inline; 
@@ -282,16 +283,19 @@ i.fa.fa-close{
     align-items: center;  
 }
 
-#teacher button{
+#teacher .button{
     display: inline-block;
-    background-color: #62929E;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    justify-content: space-around;
     padding: 15px 30px;
-    min-width: 20%;
+    justify-content: space-around;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
 }
 
 #teacher #divDinamic{
@@ -307,9 +311,61 @@ i.fa.fa-close{
     text-transform: uppercase;
 }
 
+#teacher #typeSelect{
+     text-align: center;
+     text-transform: uppercase;
+     margin-bottom: 2%;
+}
+
 #teacher #radioGroup{
     display: grid;
     grid-template-columns: auto;
+    justify-items: self-start;
+    padding-left: 36%;
+}
+
+#teacher #radioButton{
+    padding : 1%;
+}
+
+#teacher #taQuestion, #radioGroup{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#teacher #saveQuestion, #clearForm{
+    margin: 1%;
+}
+/* Landing CSS */
+
+#landing #divLanding{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+
+#landing #buttons{
+    margin-top: 20%;
+    margin-left: 25%;
+    width: 50%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between; 
+}
+
+#landing .button{
+    display: inline;
+    padding: 15px 30px;
+    justify-content: space-around;
+    width: 25%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
 }
 
 /* Animations to make messages (displayMessages) */

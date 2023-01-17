@@ -1,14 +1,18 @@
+<?php
+$_GET['titlePage'] = 'LandingPage';
+$_GET['bodyID'] = 'landing';
+$_GET['bodyClass'] = 'landing';
+?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<?php include 'header.php';?>
-<body>
-    
+<?php include 'header.php'; ?>
+<div id='divLanding'>
+    <div id='buttons'>
+        <a class="button">ALUMNE</a>
+        <a class="button" href="login.php">PROFESSOR</a>
+    </div>
+</div>
+<?php include 'footer.php'; ?>
 </body>
-<?php include 'footer.php';?>
+
 </html>
