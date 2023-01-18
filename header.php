@@ -9,6 +9,6 @@
     <script src="./utilities.js"></script>
 </head>
 <body id='<?php echo $_GET['bodyID'] ?>' class='<?php echo $_GET['bodyClass'] ?>'>
-    <header>
-        <p>IETI ABP POLLS</p>
+    <header class="headerTitle">
+        <h1>IETI ABP POLLS</h1>
     </header>

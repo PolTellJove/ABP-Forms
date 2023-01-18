@@ -1,36 +1,95 @@
 /* Common Styles */
 
 /* General Styles of all pages */
+
+/* Header Styling */
+header.headerTitle h1 {
+    font-size:30px;
+    text-align:center;
+    line-height:1.5em;
+    padding-bottom:45px;
+    color:black;
+}
+
+header.headerTitle h1:before {
+    position: absolute;
+    left: 0;
+    top: 90px;
+    width: 60%;
+    left:50%;
+    margin-left:-30%;
+    height: 1px;
+    content: "";
+    background-color: black;
+    z-index: 4;
+}
+header.headerTitle h1:after {
+    position:relative;
+    width:40px;
+    height:40px;
+    left:50%;
+    margin-left:-20px;
+    content: '\00a7';
+    font-size:30px;
+    line-height:40px;
+    color:#c50000;
+    font-weight:400;
+    display:block;
+    z-index: 5;
+    background-color: #C6C5B9;
+}
+
+/* Footer Styling */
+footer{
+    bottom: -300px;
+    width: 100%;
+    position: absolute;
+    background-color: #b4b2a5;
+    color: #393D3F;
+    grid-row: 3;
+    line-height: 20px;
+}
+footer .containerBody{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 13px;
+    gap: 20px;
+}
+
+footer .containerBody .presentacio{
+    margin: 0;
+    width: 33%;
+    border-right: dashed #C6C5B9;
+}
+
+footer .containerBody .contacte{
+    padding: 0;
+    width: 33%;
+    border-right: dashed #C6C5B9;
+
+}
+
+
+footer .pCopyright{
+    margin-top: 0;
+    padding-top: 15px;
+    border-top: dashed #C6C5B9;
+    text-align: center;
+    color: black;
+}
+
+/* General Body */
 body { 
     background-color: #C6C5B9;    
     min-height: 100vh; 
     margin: 0px;
     display: grid;
-    grid-template-rows: 5% 90% 5%;
+    grid-template-rows: 10% 85% 5%;
+    font-family: Tahoma, sans-serif;
 }
 
-header{
-    background-color: #7cae7a;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-footer{
-    background-color: #7cae7a;
-    grid-row: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-header p, footer p{
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    color: white;
-}
 
 /* Styles of messages */
 .messageBox{
@@ -221,9 +280,10 @@ i.fa.fa-close{
 /* Dashbaord CSS */
 
 #dashboard .button{
-    display: inline-block;
+    display: flex;
     padding: 15px 30px;
     justify-content: space-around;
+    align-items: center;
     width: 20%;
     text-align: center;
     text-decoration: none;
@@ -231,10 +291,17 @@ i.fa.fa-close{
     background-color: #62929E;
     border-radius: 6px;
     outline: none;
-    font-size: 16px;
-    cursor: pointer
+    font-size: 30px;
+    cursor: pointer;
+    height: 100%;
+    transition: all .2s ease-in-out;
 }
-
+#dashboard .button:hover{
+    color: black;
+    background-color: #546A7B;
+    transform: scale(1.2);
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
 #dashboard #divDashboard{
     grid-row: 2;
     display: inline; 
@@ -242,30 +309,64 @@ i.fa.fa-close{
 }
 
 #dashboard #divButtons{
+    margin-top: 10%;
     width: auto;
     border-radius: 8px;
     display: flex;
     justify-content: space-around;
-    align-items: center; 
-    width: 20%; 
+    align-items: center;
+    height: 50%;
 }
 
 #dashboard h1{
+    display: block;
     text-align: center;
 }
 
+
+#dashboard .titleContainer{
+    position: absolute;
+    width: 600px;
+    left: 50%;
+    margin-left: -300px;
+}
+.logout {
+    font-size: 0.8em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s;
+    -webkit-transition: opacity .35s;
+}
 #dashboard .containerLogoutBtn{
-    display: flex;
-    flex-direction: row-reverse;
+    width: 100%;
+}
+#dashboard .buttonLogout i{
+    width: 35%;
+    float: left;
+}
+.buttonLogout {
+    border-radius: 5px;
+	text-decoration: none;
+    float: right;
+    padding: 12px;
+    margin: 15px;
+    color: white;
+    width: 25px;
+    background-color: black;
+    transition: width .35s;
+    -webkit-transition: width .35s;
+    overflow: hidden
+}
+.buttonLogout:hover {
+  width: 100px;
+}
+.buttonLogout:hover .logout{
+  opacity: .9;
 }
 
-#dashboard .btnLogout{  
-    font-size: 15px;
-    padding: 10px;
-    min-width: 0px;
-    background-color: #C6C5B9;
-    color: black;
-}
+
+
 
 /* Teacher CSS */
 
