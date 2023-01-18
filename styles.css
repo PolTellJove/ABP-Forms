@@ -300,17 +300,18 @@ i.fa.fa-close{
 
 
 #teacher a:not(.active):hover{
-    background-color: #7cae7a;
+    background-color: #393d3f;
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }
 
-#teacher a.button.active { background-color:#393d3f; }
+#teacher a.button.active { background-color:#7cae7a; }
 
 #teacher #divDinamic{
     width: 50%;
     margin-left: 25%;
+    margin-top: 5%;
     text-align: center;
-    position: fixed;
-    top: 30%;
 }
 
 #teacher #divDinamic p{
