@@ -5,7 +5,7 @@
             <h5>
                 Qui som?
             </h5>
-            <p>Som una empresa dedicada al desenvolupament d'aplicacions web i de la innovació tecnológica, treballem per innovar i millorar dia a dia per poder donar solucions ràpides i eficients als nostres clients.</p>
+            <p>Som una empresa dedicada al desenvolupament d'aplicacions web i de la innovació tecnològica, treballem per innovar i millorar dia a dia per poder donar solucions ràpides i eficients als nostres clients.</p>
 
         </div>
         <div class="contacte">
@@ -14,7 +14,7 @@
             </h5>
             <ul>
                 <li>Correu: abpwebtech@development.com</li>
-                <li>Teléfon: +34 917 547 010</li>
+                <li>Telèfon: +34 917 547 010</li>
             </ul>
         </div>
         <div class="localitzacio">

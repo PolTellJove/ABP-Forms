@@ -29,12 +29,13 @@
                 header("Location: dashboard.php");
             }
             else{
+                writeInLog("E", "Credencials incorrectes");
                 array_push($_SESSION['errors'],"displayMessage('Credencials incorrectes',$('.messageBox'),3);");
                 header("Location: login.php");
-
             }
         }
         catch (PDOException $e) {
+            writeInLog("E", "Error:".$e->getMessage());
             array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");
             header("Location: login.php");
 
@@ -57,13 +58,16 @@
             $lastId = $dbh->lastInsertId();
 
             if ($done) {
+                writeInLog("S", "La pregunta ha sigut guardada correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament',$('.messageBox'),0);");
             }
             else {
+                writeInLog("W", "La pregunta no ha sigut guardada correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('La pregunta no ha sigut guardada correctament',$('.messageBox'),2);");
             }
             return $lastId;
         } catch (\Throwable $th) {
+            writeInLog("E", "Error en la conexió amb la base de dades:".$th,$_SESSION["ID"]);
             array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades:".$th."',$('.messageBox'),3);");
         }
 
@@ -78,12 +82,15 @@
                 $done = $startSession->execute();
             }
             if ($done) {
+                writeInLog("S", "Les opcions han sigut guardades correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('Les opcions han sigut guardades correctament',$('.messageBox'),0);");
             }
             else {
+                writeInLog("W", "Les opcions no han sigut guardades correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('Les opcions no han sigut guardades correctament',$('.messageBox'),2);");
             }
         } catch (\Throwable $th) {
+            writeInLog("E", "Error en la conexió amb la base de dades:".$th,$_SESSION["ID"]);
             array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades: ".$th.",$('.messageBox'),3);");
         }
     }

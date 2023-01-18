@@ -4,9 +4,11 @@ include 'utilities.php';
 if (!isset($_SESSION["ID"])) {
 
     if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
+        writeInLog("E", "Sessió no iniciada per entrar al dashboard");
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
     }
     else{
+        writeInLog("E", "Sessió no iniciada per entrar al dashboard");
         $_SESSION['errors'] = [];
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
     }
