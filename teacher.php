@@ -10,6 +10,14 @@ $user = logUser();
 <html lang="en">
 <?php include 'header.php'; ?>
 <div id='divTeacher'>
+
+    <div class="containerGoBackAnchor">
+        <a class="anchorGoBack" href='./dashboard.php'>
+        <i class="fa-solid fa-arrow-left-long"></i>
+        <div class="textGoBack">Dashboard</div>
+        </a>
+    </div>
+
     <?php if ($user['role'] == 1) {   ?>
         <br>
         <div class="messageBox"></div>

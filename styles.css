@@ -89,7 +89,48 @@ body {
     font-family: Tahoma, sans-serif;
 }
 
+/* Anchor of going back */
 
+.containerGoBackAnchor{
+    display: flex;
+    align-self: flex-start;
+    width: 100%;
+}
+.anchorGoBack i{
+    width: 30%;
+    float: right;
+}
+.anchorGoBack {
+    border-radius: 5px;
+	text-decoration: none;
+    text-align: center;
+    float: right;
+    padding: 12px 25px 12px 5px;
+    width: 10px;
+    margin: 15px;
+    color: white;
+    background-color: black;
+    transition: width .35s;
+    -webkit-transition: width .35s;
+    overflow: hidden
+}
+.anchorGoBack:hover {
+    background-color: black !important;
+    width: 120px;
+    box-shadow: none !important;
+    padding-left: 15px;
+}
+.textGoBack {
+    font-size: 0.8em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s;
+    -webkit-transition: opacity .35s;
+}
+.anchorGoBack:hover .textGoBack{
+  opacity: .9;
+}
 
 /* Styles of messages */
 .messageBox{
