@@ -3,14 +3,13 @@ session_start();
 include 'utilities.php';
 if (!isset($_SESSION["ID"])) {
 
-    if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"])) ) {
-        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar a enquestes',$('.messageBox'),3);");
+    if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
+        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al teacher',$('.messageBox'),3);");
     }
     else{
         $_SESSION['errors'] = [];
-        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar a enquestes',$('.messageBox'),3);");
+        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al teacher',$('.messageBox'),3);");
     }
-
     header("Location: login.php");
 }
 
@@ -174,14 +173,8 @@ $_GET['bodyClass'] = '';
     });
 </script>
 <?php
-if (isset($_SESSION['errors']) && (!empty($_SESSION["errors"]))) {
-    foreach ($_SESSION['errors'] as $key => $value) {
-        echo "
-                <script>
-                    " . $value . "
-                </script>";
-    }
-    $_SESSION['errors'] = [];
+if (isset($_SESSION["ID"])) {
+    showErrors();
 }
 ?>
 
