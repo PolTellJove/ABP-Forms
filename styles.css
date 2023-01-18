@@ -276,7 +276,7 @@ i.fa.fa-close{
 }
 
 #teacher #divButtons{
-    margin-top: 5%;
+    margin: 2%;
     width: auto;
     border-radius: 8px;
     display: flex;
@@ -299,7 +299,7 @@ i.fa.fa-close{
 }
 
 
-#teacher a:not(.active):hover{
+#teacher .button:not(.active):hover{
     background-color: #393d3f;
     transform: scale(1.1);
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
@@ -355,6 +355,20 @@ i.fa.fa-close{
 
 #teacher #saveQuestion, #clearForm{
     margin: 1%;
+    padding: 5px 15px;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#teacher #saveQuestion{
+    background-color: #46e89f;
+    border: 2px solid #139909;
+}
+
+#teacher #clearForm{
+    background-color: #f38585;
+    border-color: 2px solid #ff0000;
 }
 
 /* Landing CSS */
