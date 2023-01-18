@@ -1,25 +1,29 @@
 /* Common Styles */
 
+/* General Styles of all pages */
+
 /* Header Styling */
-.headerTitle h1 {
+header.headerTitle h1 {
     font-size:30px;
     text-align:center;
     line-height:1.5em;
     padding-bottom:45px;
     color:black;
 }
-.headerTitle h1:before {
+
+header.headerTitle h1:before {
     position: absolute;
     left: 0;
     top: 90px;
     width: 60%;
-    left:50%; margin-left:-30%;
+    left:50%;
+    margin-left:-30%;
     height: 1px;
     content: "";
     background-color: black;
     z-index: 4;
 }
-.headerTitle h1:after {
+header.headerTitle h1:after {
     position:relative;
     width:40px;
     height:40px;
@@ -35,7 +39,47 @@
     background-color: #C6C5B9;
 }
 
-/* General Styles of all pages */
+/* Footer Styling */
+footer{
+    bottom: -300px;
+    width: 100%;
+    position: absolute;
+    background-color: #b4b2a5;
+    color: #393D3F;
+    grid-row: 3;
+    line-height: 20px;
+}
+footer .containerBody{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 13px;
+    gap: 20px;
+}
+
+footer .containerBody .presentacio{
+    margin: 0;
+    width: 33%;
+    border-right: dashed #C6C5B9;
+}
+
+footer .containerBody .contacte{
+    padding: 0;
+    width: 33%;
+    border-right: dashed #C6C5B9;
+
+}
+
+
+footer .pCopyright{
+    margin-top: 0;
+    padding-top: 15px;
+    border-top: dashed #C6C5B9;
+    text-align: center;
+    color: black;
+}
+
+/* General Body */
 body { 
     background-color: #C6C5B9;    
     min-height: 100vh; 
@@ -45,20 +89,7 @@ body {
     font-family: Tahoma, sans-serif;
 }
 
-footer{
-    background-color: #7cae7a;
-    grid-row: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-header p, footer p{
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    color: white;
-}
 
 /* Styles of messages */
 .messageBox{
@@ -294,7 +325,7 @@ i.fa.fa-close{
 
 
 #dashboard .titleContainer{
-    position: fixed;
+    position: absolute;
     width: 600px;
     left: 50%;
     margin-left: -300px;
