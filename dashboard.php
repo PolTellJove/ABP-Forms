@@ -4,9 +4,15 @@ include 'utilities.php';
 if (!isset($_SESSION["ID"])) {
 
     if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
+        require __DIR__ . '/log.php';
+        $log = new Log("logs/log".date('dmY'));
+        $log->writeLine("E", "Sessió no iniciada per entrar al dashboard");
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
     }
     else{
+        require __DIR__ . '/log.php';
+        $log = new Log("logs/log".date('dmY'));
+        $log->writeLine("E", "Sessió no iniciada per entrar al dashboard");
         $_SESSION['errors'] = [];
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
     }
