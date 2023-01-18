@@ -66,7 +66,7 @@ $user = logUser();
             echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
             getTypes();
             echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
-            echo '<textarea id="taQuestion" rows="10" cols="50" disabled></textarea><br>';
+            echo '<textarea id="taQuestion" disabled></textarea><br>';
             getOptions();
             echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
             echo '<input id="clearForm" type="reset" value="Cancelar"/>';

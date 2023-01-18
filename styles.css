@@ -287,7 +287,6 @@ i.fa.fa-close{
 #teacher .button{
     display: inline-block;
     padding: 15px 30px;
-    justify-content: space-around;
     width: 20%;
     text-align: center;
     text-decoration: none;
@@ -302,9 +301,6 @@ i.fa.fa-close{
 
 #teacher a:not(.active):hover{
     background-color: #7cae7a;
-    padding: 20px 35px;
-    padding-bottom: 15px;
-    font-size: 18px;
 }
 
 #teacher a.button.active { background-color:#393d3f; }
@@ -312,8 +308,9 @@ i.fa.fa-close{
 #teacher #divDinamic{
     width: 50%;
     margin-left: 25%;
-    margin-top: 5%;
     text-align: center;
+    position: fixed;
+    top: 30%;
 }
 
 #teacher #divDinamic p{
@@ -328,11 +325,22 @@ i.fa.fa-close{
      margin-bottom: 2%;
 }
 
+#teacher #typeSelect{
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2%;
+    
+}
+#teacher textarea, #questionTitle {
+    width: 60%; 
+    min-width: 160px;
+}
 #teacher #radioGroup{
     display: grid;
     grid-template-columns: auto;
     justify-items: self-start;
-    padding-left: 36%;
+    padding-left: 40%;
+    width: 40%;
 }
 
 #teacher #radioButton{
