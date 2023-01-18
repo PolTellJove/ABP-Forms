@@ -29,18 +29,13 @@
                 header("Location: dashboard.php");
             }
             else{
-                require __DIR__ . '/log.php';
-                $log = new Log("logs/log".date('dmY'));
-                $log->writeLine("E", "Credencials incorrectes");
+                writeInLog("E", "Credencials incorrectes");
                 array_push($_SESSION['errors'],"displayMessage('Credencials incorrectes',$('.messageBox'),3);");
                 header("Location: login.php");
-
             }
         }
         catch (PDOException $e) {
-            require __DIR__ . '/log.php';
-            $log = new Log("logs/log".date('dmY'));
-            $log->writeLine("E", "Error:".$e->getMessage());
+            writeInLog("E", "Error:".$e->getMessage());
             array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");
             header("Location: login.php");
 
@@ -63,22 +58,16 @@
             $lastId = $dbh->lastInsertId();
 
             if ($done) {
-                require __DIR__ . '/log.php';
-                $log = new Log("logs/log".date('dmY'));
-                $log->writeLine("S", "La pregunta ha sigut guardada correctament");
+                writeInLog("S", "La pregunta ha sigut guardada correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('La pregunta ha sigut guardada correctament',$('.messageBox'),0);");
             }
             else {
-                require __DIR__ . '/log.php';
-                $log = new Log("logs/log".date('dmY'));
-                $log->writeLine("W", "La pregunta no ha sigut guardada correctament");
+                writeInLog("W", "La pregunta no ha sigut guardada correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('La pregunta no ha sigut guardada correctament',$('.messageBox'),2);");
             }
             return $lastId;
         } catch (\Throwable $th) {
-            require __DIR__ . '/log.php';
-            $log = new Log("logs/log".date('dmY'));
-            $log->writeLine("E", "Error en la conexió amb la base de dades:".$th);
+            writeInLog("E", "Error en la conexió amb la base de dades:".$th,$_SESSION["ID"]);
             array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades:".$th."',$('.messageBox'),3);");
         }
 
@@ -93,21 +82,15 @@
                 $done = $startSession->execute();
             }
             if ($done) {
-                require __DIR__ . '/log.php';
-                $log = new Log("logs/log".date('dmY'));
-                $log->writeLine("S", "Les opcions han sigut guardades correctament");
+                writeInLog("S", "Les opcions han sigut guardades correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('Les opcions han sigut guardades correctament',$('.messageBox'),0);");
             }
             else {
-                require __DIR__ . '/log.php';
-                $log = new Log("logs/log".date('dmY'));
-                $log->writeLine("W", "Les opcions no han sigut guardades correctament");
+                writeInLog("W", "Les opcions no han sigut guardades correctament",$_SESSION["ID"]);
                 array_push($_SESSION['errors'],"displayMessage('Les opcions no han sigut guardades correctament',$('.messageBox'),2);");
             }
         } catch (\Throwable $th) {
-            require __DIR__ . '/log.php';
-            $log = new Log("logs/log".date('dmY'));
-            $log->writeLine("E", "Error en la conexió amb la base de dades:".$th);
+            writeInLog("E", "Error en la conexió amb la base de dades:".$th,$_SESSION["ID"]);
             array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades: ".$th.",$('.messageBox'),3);");
         }
     }

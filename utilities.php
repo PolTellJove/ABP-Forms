@@ -1,4 +1,5 @@
-<?php   
+<?php
+require __DIR__ . '/log.php';
     function connToDB(){
         try {
             $hostname = "localhost";
@@ -46,5 +47,10 @@
             }
             $_SESSION['errors'] = [];
         }
+    }
+
+    function writeInLog($type,$message,$id = "No Logged"){
+        $log = new Log("logs/log".date('dmY'));
+        $log->writeLine($type, $message,$id);
     }
 ?>
