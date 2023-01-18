@@ -14,10 +14,10 @@ $user = logUser();
         <br>
         <div class="messageBox"></div>
         <div id="divButtons">
-            <a class="button" id='createQuestion'>CREAR PREGUNTA <i class="fa-regular fa-circle-question"></i></a>
-            <a class="button">CREAR ENQUESTA <i class="fa-solid fa-square-poll-vertical"></i></a>
-            <a class="button" id='questionList'>LLISTAT PREGUNTES <i class="fa-solid fa-list"></i></a>
-            <a class="button active" id='pollList'>LLISTAT ENQUESTA <i class="fa-solid fa-list"></i></a>
+            <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
+            <a class="button"><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
+            <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES </a>
+            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTA </a>
         </div>
     <?php } ?>
     <div id="divDinamic">
@@ -69,7 +69,7 @@ $user = logUser();
             echo '<textarea id="taQuestion" disabled></textarea><br>';
             getOptions();
             echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
-            echo '<input id="clearForm" type="reset" value="Cancelar"/>';
+            echo '<input id="clearForm" type="reset" value="Cancel·lar"/>';
             echo "\n" . '</form>';
         }
         getPolls();
@@ -123,7 +123,7 @@ $user = logUser();
             } else if ($("#typeSelect option:selected").attr("id") == 1) {
                 $("#taQuestion").hide();
                 $('#radioGroup').show();
-            } else if ($("#typeSelect option:selected").attr("id") == 0) {
+            } else if ($("#typeSelect option:selected").attr("id") == 0){
                 $('#radioGroup').hide();
                 $("#taQuestion").hide();
             }
@@ -144,6 +144,11 @@ $user = logUser();
             } else {
                 $("#saveQuestion").hide();
             }
+        }); 
+
+        $('#clearForm').on('click', function(e) {
+            $('#radioGroup').hide();
+            $("#taQuestion").hide();
         }); 
     });
 </script>
