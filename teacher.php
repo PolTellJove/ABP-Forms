@@ -14,10 +14,10 @@ $user = logUser();
         <br>
         <div class="messageBox"></div>
         <div id="divButtons">
-            <a class="button" id='createQuestion'>CREAR PREGUNTA</a>
-            <a class="button">CREAR ENQUESTA</a>
-            <a class="button" id='questionList'>LLISTAT PREGUNTES</a>
-            <a class="button" id='pollList'>LLISTAT ENQUESTA</a>
+            <a class="button" id='createQuestion'>CREAR PREGUNTA <i class="fa-regular fa-circle-question"></i></a>
+            <a class="button">CREAR ENQUESTA <i class="fa-solid fa-square-poll-vertical"></i></a>
+            <a class="button" id='questionList'>LLISTAT PREGUNTES <i class="fa-solid fa-list"></i></a>
+            <a class="button active" id='pollList'>LLISTAT ENQUESTA <i class="fa-solid fa-list"></i></a>
         </div>
     <?php } ?>
     <div id="divDinamic">
@@ -42,7 +42,7 @@ $user = logUser();
         
         function getTypes(){
             echo '<select name="typeQuestion" id="typeSelect">';
-            echo "\n" . '<option id="0" selected></option><br>';
+            echo "\n" . '<option id="0" selected disabled>TIPUS DE PREGUNTA</option><br>';
             $typesQuestion = getTable('type_of_question');
             foreach ($typesQuestion as $type_option) {
                 echo "\n" . '<option id=' . $type_option['ID'] . ' value=' . $type_option['ID'] . '>' . $type_option['name'] . '</option>';
@@ -65,14 +65,13 @@ $user = logUser();
         function newQuestion(){
             echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
             getTypes();
-            echo "<input name='questionTitle' type='text' id='questionTitle'><br>";
-            echo '<textarea id="taQuestion" rows="5" cols="33" disabled></textarea><br>';
+            echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
+            echo '<textarea id="taQuestion" disabled></textarea><br>';
             getOptions();
             echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
             echo '<input id="clearForm" type="reset" value="Cancelar"/>';
             echo "\n" . '</form>';
         }
-
         getPolls();
         getQuestions();
         newQuestion();
@@ -91,27 +90,30 @@ $user = logUser();
         $(button_id).css("background-color", "blue");
     }
 
-    changeColor("#pollList");
+    //changeColor("#pollList");
     $(document).ready(function() {
         $("#questionList").click(function() {
             $("#polls").hide();
             $("#newQuestion").hide();
             $("#questions").show();
-            changeColor('#questionList');
+            $('.button').removeClass('active');
+            $(this).addClass('active');
         });
 
         $("#pollList").click(function() {
             $("#questions").hide();
             $("#newQuestion").hide();
             $("#polls").show();
-            changeColor('#pollList');
+            $('.button').removeClass('active');
+            $(this).addClass('active');
         });
 
         $("#createQuestion").click(function() {
             $("#polls").hide();
             $("#questions").hide();
             $("#newQuestion").show();
-            changeColor('#createQuestion');
+            $('.button').removeClass('active');
+            $(this).addClass('active');
         });;
 
         $('#typeSelect').on('change', function() {
@@ -142,7 +144,7 @@ $user = logUser();
             } else {
                 $("#saveQuestion").hide();
             }
-        });
+        }); 
     });
 </script>
 <?php
