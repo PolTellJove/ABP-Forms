@@ -2,13 +2,23 @@
 session_start();
 include 'utilities.php';
 if (!isset($_SESSION["ID"])) {
+
+    if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
+        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
+    }
+    else{
+        $_SESSION['errors'] = [];
+        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
+    }
     header("Location: login.php");
 }
+
 $user = logUser();
 $_GET['titlePage'] = 'Dashboard';
 $_GET['bodyID'] = 'dashboard';
 $_GET['bodyClass'] = '';
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
 <div id='divDashboard'>
