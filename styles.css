@@ -442,7 +442,7 @@ i.fa.fa-close{
 
 
 #teacher .button:not(.active):hover{
-    background-color: #393d3f;
+    background-color: #546A7B;
     transform: scale(1.1);
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }

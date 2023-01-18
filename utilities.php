@@ -35,4 +35,16 @@
         }
         return $rows;
     }
+
+    function showErrors(){
+        if (isset($_SESSION['errors']) && (!empty($_SESSION["errors"]))) {
+            foreach ($_SESSION['errors'] as $key => $value) {
+                echo "
+                        <script>
+                            " . $value . "
+                        </script>";
+            }
+            $_SESSION['errors'] = [];
+        }
+    }
 ?>
