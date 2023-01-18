@@ -1,10 +1,23 @@
 <?php
 session_start();
+include 'utilities.php';
+if (!isset($_SESSION["ID"])) {
+
+    if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"])) ) {
+        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar a enquestes',$('.messageBox'),3);");
+    }
+    else{
+        $_SESSION['errors'] = [];
+        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar a enquestes',$('.messageBox'),3);");
+    }
+
+    header("Location: login.php");
+}
+
+$user = logUser();
 $_GET['titlePage'] = 'Teacher';
 $_GET['bodyID'] = 'teacher';
 $_GET['bodyClass'] = '';
-include 'utilities.php';
-$user = logUser();
 ?>
 <!DOCTYPE html>
 <html lang="en">
