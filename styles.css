@@ -3,6 +3,10 @@
 /* General Styles of all pages */
 
 /* Header Styling */
+
+header .headerTitle{
+    display: flex;
+}
 header.headerTitle h1 {
     font-size:30px;
     text-align:center;
@@ -39,6 +43,40 @@ header.headerTitle h1:after {
     background-color: #C6C5B9;
 }
 
+header .logout {
+    font-size: 0.8em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s;
+    -webkit-transition: opacity .35s;
+}
+
+header .buttonLogout i{
+    width: 35%;
+    float: left;
+}
+header .buttonLogout {
+    border-radius: 5px;
+	text-decoration: none;
+    float: right;
+    padding: 12px;
+    margin: 15px;
+    margin-top: -140px;
+    color: white;
+    width: 25px;
+    background-color: black;
+    transition: width .35s;
+    -webkit-transition: width .35s;
+    overflow: hidden
+}
+header .buttonLogout:hover {
+  width: 100px;
+}
+header .buttonLogout:hover .logout{
+  opacity: .9;
+}
+
 /* Footer Styling */
 footer{
     bottom: -150px;
@@ -70,7 +108,6 @@ footer .containerBody .contacte{
 
 }
 
-
 footer .pCopyright{
     margin-top: 0;
     padding-top: 15px;
@@ -94,28 +131,24 @@ body {
 
 /* Anchor of going back */
 
-.containerGoBackAnchor{
-    display: flex;
-    align-self: flex-start;
-    width: 100%;
-}
 .anchorGoBack i{
     width: 30%;
     float: right;
 }
 .anchorGoBack {
     border-radius: 5px;
-	text-decoration: none;
+    text-decoration: none;
     text-align: center;
-    float: right;
+    float: left;
+    margin-top: -140px;
     padding: 12px 25px 12px 5px;
     width: 10px;
-    margin: 15px;
+    margin-left: 15px;
     color: white;
     background-color: black;
     transition: width .35s;
     -webkit-transition: width .35s;
-    overflow: hidden
+    overflow: hidden;
 }
 .anchorGoBack:hover {
     background-color: black !important;
@@ -146,6 +179,7 @@ body {
     bottom: 10%;
     width: 100%;
     margin-bottom: 10px;
+    margin-top: 60px;
 }
 
 .displayMessage {
@@ -161,6 +195,7 @@ body {
     font-size: 17px;
     width: fit-content;
     margin: auto;
+    z-index: 10;
 }
 
 .displayMessage i{
@@ -324,6 +359,7 @@ i.fa.fa-close{
 /* Dashbaord CSS */
 
 #dashboard .button{
+    margin-top: -60px;
     display: flex;
     padding: 15px 30px;
     justify-content: space-around;
@@ -374,43 +410,6 @@ i.fa.fa-close{
     left: 50%;
     margin-left: -300px;
 }
-.logout {
-    font-size: 0.8em;
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity .45s;
-    -webkit-transition: opacity .35s;
-}
-#dashboard .containerLogoutBtn{
-    width: 100%;
-}
-#dashboard .buttonLogout i{
-    width: 35%;
-    float: left;
-}
-.buttonLogout {
-    border-radius: 5px;
-	text-decoration: none;
-    float: right;
-    padding: 12px;
-    margin: 15px;
-    color: white;
-    width: 25px;
-    background-color: black;
-    transition: width .35s;
-    -webkit-transition: width .35s;
-    overflow: hidden
-}
-.buttonLogout:hover {
-  width: 100px;
-}
-.buttonLogout:hover .logout{
-  opacity: .9;
-}
-
-
-
 
 /* Teacher CSS */
 

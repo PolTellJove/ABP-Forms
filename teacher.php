@@ -6,8 +6,7 @@ if (!isset($_SESSION["ID"])) {
     if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
         writeInLog("E", "Sessió no iniciada per entrar al teacher");
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al teacher',$('.messageBox'),3);");
-    }
-    else{
+    } else {
         writeInLog("E", "Sessió no iniciada per entrar al teacher");
         $_SESSION['errors'] = [];
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al teacher',$('.messageBox'),3);");
@@ -19,19 +18,13 @@ $user = logUser();
 $_GET['titlePage'] = 'Teacher';
 $_GET['bodyID'] = 'teacher';
 $_GET['bodyClass'] = '';
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
 <div id='divTeacher'>
 
-    <div class="containerGoBackAnchor">
-        <a class="anchorGoBack" href='./dashboard.php'>
-        <i class="fa-solid fa-arrow-left-long"></i>
-        <div class="textGoBack">Dashboard</div>
-        </a>
-    </div>
-
-    <?php if ($user['role'] == 1) {   ?>
+    <?php if ($user['role'] == 1) { ?>
         <br>
         <div class="messageBox"></div>
         <div id="divButtons">
@@ -43,7 +36,8 @@ $_GET['bodyClass'] = '';
     <?php } ?>
     <div id="divDinamic">
         <?php
-        function getPolls(){
+        function getPolls()
+        {
             $polls = getTable('poll');
             echo '<div id="polls">';
             foreach ($polls as $poll) {
@@ -52,7 +46,8 @@ $_GET['bodyClass'] = '';
             echo "\n" . '</div>';
         }
 
-        function getQuestions(){
+        function getQuestions()
+        {
             $questions = getTable('question');
             echo '<div id="questions" hidden>';
             foreach ($questions as $question) {
@@ -60,8 +55,9 @@ $_GET['bodyClass'] = '';
             }
             echo "\n" . '</div>';
         }
-        
-        function getTypes(){
+
+        function getTypes()
+        {
             echo '<select name="typeQuestion" id="typeSelect">';
             echo "\n" . '<option id="0" selected disabled>Tipus de pregunta</option><br>';
             $typesQuestion = getTable('type_of_question');
@@ -71,7 +67,8 @@ $_GET['bodyClass'] = '';
             echo "\n" . '</select><br>';
         }
 
-        function getOptions(){
+        function getOptions()
+        {
             echo '<div id="radioGroup">';
             $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
             $startSession->execute();
@@ -83,7 +80,8 @@ $_GET['bodyClass'] = '';
             echo "\n" . '</div>';
         }
 
-        function newQuestion(){
+        function newQuestion()
+        {
             echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
             getTypes();
             echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
@@ -111,9 +109,29 @@ $_GET['bodyClass'] = '';
         $(button_id).css("background-color", "blue");
     }
 
+    function removeById(textId) {
+        let elementToRemove = $("#" + textId);
+        elementToRemove.remove();
+    }
+
+    function addFormNewQuestion() {
+        removeById("divToRemove");
+        let initialDiv = $("<div>", {
+            id: "divDinamic",
+        }).append(
+            $("<form>", {
+                action: "checkoutForms.php",
+                method: 'POST',
+                id: "newQuestion"
+            }).append(
+                $
+            )
+        )
+    }
+
     //changeColor("#pollList");
-    $(document).ready(function() {
-        $("#questionList").click(function() {
+    $(document).ready(function () {
+        $("#questionList").click(function () {
             $("#polls").hide();
             $("#newQuestion").hide();
             $("#questions").show();
@@ -121,7 +139,7 @@ $_GET['bodyClass'] = '';
             $(this).addClass('active');
         });
 
-        $("#pollList").click(function() {
+        $("#pollList").click(function () {
             $("#questions").hide();
             $("#newQuestion").hide();
             $("#polls").show();
@@ -129,22 +147,22 @@ $_GET['bodyClass'] = '';
             $(this).addClass('active');
         });
 
-        $("#createQuestion").click(function() {
+        $("#createQuestion").click(function () {
             $("#polls").hide();
             $("#questions").hide();
             $("#newQuestion").show();
             $('.button').removeClass('active');
             $(this).addClass('active');
-        });;
+        });
 
-        $('#typeSelect').on('change', function() {
+        $('#typeSelect').on('change', function () {
             if ($("#typeSelect option:selected").attr("id") == 2) {
                 $('#radioGroup').hide();
                 $("#taQuestion").show();
             } else if ($("#typeSelect option:selected").attr("id") == 1) {
                 $("#taQuestion").hide();
                 $('#radioGroup').show();
-            } else if ($("#typeSelect option:selected").attr("id") == 0){
+            } else if ($("#typeSelect option:selected").attr("id") == 0) {
                 $('#radioGroup').hide();
                 $("#taQuestion").hide();
             }
@@ -156,7 +174,7 @@ $_GET['bodyClass'] = '';
             }
         });
 
-        $('#questionTitle').on('input', function(e) {
+        $('#questionTitle').on('input', function (e) {
             if (/^\s/.test($('#questionTitle').val())) {
                 $('#questionTitle').val('');
             }
@@ -165,12 +183,12 @@ $_GET['bodyClass'] = '';
             } else {
                 $("#saveQuestion").hide();
             }
-        }); 
+        });
 
-        $('#clearForm').on('click', function(e) {
+        $('#clearForm').on('click', function (e) {
             $('#radioGroup').hide();
             $("#taQuestion").hide();
-        }); 
+        });
     });
 </script>
 <?php

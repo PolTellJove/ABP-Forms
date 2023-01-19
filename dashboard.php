@@ -15,12 +15,6 @@ $_GET['bodyClass'] = '';
 <?php include 'header.php'; ?>
 <div id='divDashboard'>
 
-    <div class="containerLogoutBtn">
-        <a class="buttonLogout" href='./logout.php'>
-            <i class="fa fa-solid fa-right-from-bracket"></i>
-            <div class="logout">SORTIR</div>
-        </a>
-    </div>
     <br>
     <div class="titleContainer">
         <?php
