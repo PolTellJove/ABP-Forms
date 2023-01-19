@@ -26,7 +26,7 @@ include 'utilities.php';
                 <label for="" class="label">Contrasenya</label>
             </div>
 
-            <a href="#">Heu olvidat la contrasenya?</a>
+            <a href="#">Heu oblidat la contrasenya?</a>
 
             <button type="button" onclick="loginClient()" class="submitBtn">Entra</button>
         </form>
