@@ -9,9 +9,6 @@ class Log {
         $this->fileLog = fopen($path, "a");
     }
     
-    // function close(){
-    //     fclose($this->fileLog);
-    // }
 
     function writeLine($type,$message,$id){
         $date = new DateTime();
