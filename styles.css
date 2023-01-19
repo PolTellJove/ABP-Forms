@@ -462,10 +462,14 @@ i.fa.fa-close{
 #teacher #divDinamic p{
     border: 1px solid black;
     background-color: white;
-    text-transform: uppercase;
+    text-transform: lowercase;
     border-radius: 2px;
     padding: 5px 0px;
     border: 3px solid #62929E;
+}
+
+#teacher #divDinamic p::first-letter{
+    text-transform: uppercase;
 }
 
 
@@ -541,6 +545,13 @@ i.fa.fa-close{
     padding-top: 15px;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
+
+#teacher #newQuestion select#typeSelect{
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    text-align: center;
+
 }
 
 #teacher #divDinamic #questions{
