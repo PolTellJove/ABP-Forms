@@ -1,0 +1,610 @@
+/* Common Styles */
+
+/* General Styles of all pages */
+
+/* Header Styling */
+header.headerTitle h1 {
+    font-size:30px;
+    text-align:center;
+    line-height:1.5em;
+    padding-bottom:45px;
+    color:black;
+}
+
+header.headerTitle h1:before {
+    position: absolute;
+    left: 0;
+    top: 90px;
+    width: 60%;
+    left:50%;
+    margin-left:-30%;
+    height: 1px;
+    content: "";
+    background-color: black;
+    z-index: 4;
+}
+header.headerTitle h1:after {
+    position:relative;
+    width:40px;
+    height:40px;
+    left:50%;
+    margin-left:-20px;
+    content: '\00a7';
+    font-size:30px;
+    line-height:40px;
+    color:#c50000;
+    font-weight:400;
+    display:block;
+    z-index: 5;
+    background-color: #C6C5B9;
+}
+
+/* Footer Styling */
+footer{
+    bottom: -150px;
+    width: 100%;
+    position: absolute;
+    background-color: #b4b2a5;
+    color: #393D3F;
+    grid-row: 3;
+    line-height: 20px;
+}
+footer .containerBody{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 13px;
+    gap: 20px;
+}
+
+footer .containerBody .presentacio{
+    margin: 0;
+    width: 33%;
+    border-right: dashed #C6C5B9;
+}
+
+footer .containerBody .contacte{
+    padding: 0;
+    width: 33%;
+    border-right: dashed #C6C5B9;
+
+}
+
+
+footer .pCopyright{
+    margin-top: 0;
+    padding-top: 15px;
+    border-top: dashed #C6C5B9;
+    text-align: center;
+    color: black;
+}
+
+/* General Body */
+body {
+    position: relative;
+    min-width: 100vh;
+    padding-bottom: 50px;
+    background-color: #C6C5B9;    
+    min-height: 100vh; 
+    margin: 0px;
+    display: grid;
+    grid-template-rows: 10% 85% 5%;
+    font-family: Tahoma, sans-serif;
+}
+
+/* Anchor of going back */
+
+.containerGoBackAnchor{
+    display: flex;
+    align-self: flex-start;
+    width: 100%;
+}
+.anchorGoBack i{
+    width: 30%;
+    float: right;
+}
+.anchorGoBack {
+    border-radius: 5px;
+	text-decoration: none;
+    text-align: center;
+    float: right;
+    padding: 12px 25px 12px 5px;
+    width: 10px;
+    margin: 15px;
+    color: white;
+    background-color: black;
+    transition: width .35s;
+    -webkit-transition: width .35s;
+    overflow: hidden
+}
+.anchorGoBack:hover {
+    background-color: black !important;
+    width: 120px;
+    box-shadow: none !important;
+    padding-left: 15px;
+}
+.textGoBack {
+    font-size: 0.8em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s;
+    -webkit-transition: opacity .35s;
+}
+.anchorGoBack:hover .textGoBack{
+  opacity: .9;
+}
+
+/* Styles of messages */
+.messageBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    gap: 5px;
+    /* position: fixed; */
+    bottom: 10%;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.displayMessage {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    min-width: 300px;
+    animation: fadein 1s;
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 17px;
+    width: fit-content;
+    margin: auto;
+}
+
+.displayMessage i{
+    margin-right: 15px;
+}
+
+.displayMessage button{
+    margin-left: 5px;
+
+}
+
+.displayMessage.remove {
+    animation:  fadeout 1s;
+} 
+
+.displayMessage.success{
+    background-color: rgba(148, 184, 148,0.5);
+}
+
+.displayMessage.success i{
+    color: green;
+}
+
+.displayMessage.info{
+    background-color: rgba(129, 170, 245,0.5);
+}
+
+.displayMessage.info i{
+    color: blue;
+}
+
+.displayMessage.warning{
+    background-color: rgba(248, 207, 131,0.5);
+}
+
+.displayMessage.warning i{
+    color: orange;
+}
+
+.displayMessage.error{
+    background-color: rgba(241, 138, 138,0.5);
+}
+
+.displayMessage.error i{
+    color: red;
+}
+  
+.closeMessageBtn{
+    background-color: transparent !important;
+    border: none !important;
+    padding: 5px !important;
+    cursor: pointer;
+    min-width: 0px !important; 
+}
+i.fa.fa-close{
+    color: black !important;
+}
+.closeMessageBtn:hover i{
+    color: rgb(65, 65, 65);
+}
+
+/* End of Messages */
+
+
+
+/* Login CSS */
+.login .title{
+    text-align: center;
+    font-size: 50px;
+}
+.login #containerLogin{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+.login .loginForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login .form {
+    background-color: white;
+    width: 400px;
+    border-radius: 8px;
+    padding: 20px 40px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    margin-bottom: 20px;
+}
+
+.login .loginForm .inputContainer {
+    position: relative;
+    height: 45px;
+    width: 90%;
+    margin-bottom: 17px;
+}
+.login .loginForm .inputContainer .input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #DADCE0;
+    border-radius: 7px;
+    font-size: 16px;
+    padding: 0 20px;
+    outline: none;
+    background: none;
+}
+.login .loginForm .inputContainer .input ::placeholder {
+    color: transparent;
+}
+
+.login .loginForm .inputContainer .label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 0 4px;
+    background-color: white;
+    color: #4d4e4e;
+    font-size: 16px;
+    transition: 0.5s;
+}
+
+.login .loginForm .submitBtn {
+    display: block;
+    width: 40%;
+    margin: auto;
+    padding: 15px 30px;
+    border: none;
+    background-color: #62929E;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 30px;
+}
+
+.login .input:focus + .label {
+    top: -7px;
+    left: 3px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #62929E;
+}
+
+.login .loginForm .input:focus {
+    border: 2px solid #62929E;
+}
+.login .input:not(:placeholder-shown)+ .label {
+    top: -7px;
+    left: 3px;
+    font-size: 14px;
+    font-weight: 600;
+}
+  
+.login .submitBtn:hover {
+    background-color: #2a463a;
+    transform: translateY(-2px);
+}
+
+/* Dashbaord CSS */
+
+#dashboard .button{
+    display: flex;
+    padding: 15px 30px;
+    justify-content: space-around;
+    align-items: center;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 30px;
+    cursor: pointer;
+    height: 100%;
+    transition: all .2s ease-in-out;
+}
+#dashboard .button:hover{
+    color: black;
+    background-color: #546A7B;
+    transform: scale(1.2);
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
+#dashboard #divDashboard{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+
+#dashboard #divButtons{
+    margin-top: 10%;
+    width: auto;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50%;
+}
+
+#dashboard h1{
+    display: block;
+    text-align: center;
+}
+
+
+#dashboard .titleContainer{
+    position: absolute;
+    width: 600px;
+    left: 50%;
+    margin-left: -300px;
+}
+.logout {
+    font-size: 0.8em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s;
+    -webkit-transition: opacity .35s;
+}
+#dashboard .containerLogoutBtn{
+    width: 100%;
+}
+#dashboard .buttonLogout i{
+    width: 35%;
+    float: left;
+}
+.buttonLogout {
+    border-radius: 5px;
+	text-decoration: none;
+    float: right;
+    padding: 12px;
+    margin: 15px;
+    color: white;
+    width: 25px;
+    background-color: black;
+    transition: width .35s;
+    -webkit-transition: width .35s;
+    overflow: hidden
+}
+.buttonLogout:hover {
+  width: 100px;
+}
+.buttonLogout:hover .logout{
+  opacity: .9;
+}
+
+
+
+
+/* Teacher CSS */
+
+#teacher #divTeacher{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+
+#teacher #divButtons{
+    margin: 2%;
+    width: auto;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;  
+}
+
+#teacher .button{
+    display: inline-block;
+    padding: 15px 30px;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #62929e;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
+}
+
+
+#teacher .button:not(.active):hover{
+    background-color: #546A7B;
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
+
+#teacher a.button.active { background-color:#7cae7a; }
+
+#teacher #divDinamic{
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 5%;
+    text-align: center;
+}
+
+#teacher #divDinamic p{
+    border: 1px solid black;
+    background-color: white;
+    text-transform: lowercase;
+    border-radius: 2px;
+    padding: 5px 0px;
+    border: 3px solid #62929E;
+}
+
+#teacher #divDinamic p::first-letter{
+    text-transform: uppercase;
+}
+
+
+#teacher textarea{
+    resize: none;
+    height: 70px;
+    width: 60%; 
+    min-width: 160px;
+    border-radius: 5px;
+}
+#teacher #questionTitle {
+    padding: 5px 0px;
+    text-align: center;
+    width: 60%; 
+    min-width: 160px;
+    border-radius: 2px;
+    border: 3px solid #8b8a8b;
+    transition: 180ms box-shadow ease-in-out;
+}
+
+#teacher #questionTitle:focus{
+    border-color: #62929E;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
+    outline: 3px solid transparent;
+
+}
+#teacher #radioGroup{
+    display: grid;
+    grid-template-columns: auto;
+    justify-items: self-start;
+    padding-left: 40%;
+    width: 40%;
+}
+
+#teacher #radioButton{
+    padding : 1%;
+}
+
+#teacher #taQuestion, #radioGroup{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#teacher #saveQuestion, #clearForm{
+    margin: 3%;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border-style: none;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
+
+}
+
+#teacher #saveQuestion{
+    background-color: #46e89f ;
+    padding: 10px 35px;
+}
+
+#teacher #saveQuestion:hover{
+    background-color: #38b67d ;
+}
+
+#teacher #clearForm{
+    background-color: #f38585;
+    padding: 10px 30px;
+}
+
+#teacher #clearForm:hover{
+    background-color: #ad5f5f ;
+}
+
+#teacher #newQuestion{
+    padding-top: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
+
+#teacher #newQuestion select#typeSelect{
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    text-align: center;
+
+}
+
+#teacher #divDinamic #questions{
+    padding: 15px 30px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    border-radius: 5px;
+}
+
+#teacher #divDinamic #polls{
+    padding: 15px 30px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    border-radius: 5px;
+}
+
+/* Landing CSS */
+
+#landing #divLanding{
+    grid-row: 2;
+    display: inline; 
+    align-items: center;
+}
+
+#landing #buttons{
+    margin-top: 20%;
+    margin-left: 25%;
+    width: 50%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between; 
+}
+
+#landing .button{
+    display: inline;
+    padding: 15px 30px;
+    justify-content: space-around;
+    width: 25%;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #62929E;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
+}
+
+/* Animations to make messages (displayMessages) */
+@keyframes fadein {
+from {bottom: 0; opacity: 0;}
+to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+from {bottom: 30px; opacity: 1;}
+to {bottom: 0; opacity: 0;}
+}
