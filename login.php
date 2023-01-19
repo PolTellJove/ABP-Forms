@@ -3,16 +3,15 @@ session_start();
 $_GET['titlePage'] = 'Login';
 $_GET['bodyID'] = 'login';
 $_GET['bodyClass'] = 'login';
-?>
-<!DOCTYPE html>
+include 'utilities.php'; 
+?><!DOCTYPE html>
 <html>
 <?php include 'header.php'; ?>
 <div id='containerLogin'>
 
     <h1 class="title">Inicia sessió</h1>
 
-    <div class="messageBox">
-    </div>
+    <div class="messageBox"></div>
 
     <div class="loginForm">
         <form method="POST" class="form" action="./checkoutForms.php">
@@ -23,7 +22,7 @@ $_GET['bodyClass'] = 'login';
             </div>
 
             <div class="inputContainer">
-                <input type="password" name="passlog" class="input" placeholder=" ">
+                <input type="password" name="passlog" class="input password" placeholder=" ">
                 <label for="" class="label">Contrasenya</label>
             </div>
 
@@ -45,18 +44,16 @@ $_GET['bodyClass'] = 'login';
             $(".form").submit();
         }
     }
+    
+    $(".password").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $(".submitBtn").click();
+    }
+    });
 </script>
 <?php include 'footer.php'; ?>
 <?php
-if (isset($_SESSION['errors']) && (!empty($_SESSION["errors"]))) {
-    foreach ($_SESSION['errors'] as $key => $value) {
-        echo "
-                    <script>
-                        " . $value . "
-                    </script>";
-    }
-    $_SESSION['errors'] = [];
-}
+showErrors();
 ?>
 </body>
 

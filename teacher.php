@@ -19,8 +19,7 @@ $user = logUser();
 $_GET['titlePage'] = 'Teacher';
 $_GET['bodyID'] = 'teacher';
 $_GET['bodyClass'] = '';
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
 <div id='divTeacher'>

@@ -2,25 +2,15 @@
 session_start();
 include 'utilities.php';
 if (!isset($_SESSION["ID"])) {
-
-    if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
-        writeInLog("E", "Sessió no iniciada per entrar al dashboard");
-        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
-    }
-    else{
-        writeInLog("E", "Sessió no iniciada per entrar al dashboard");
-        $_SESSION['errors'] = [];
-        array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
-    }
+    writeInLog("E", "Sessió no iniciada per entrar al dashboard");
+    array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al dashboard',$('.messageBox'),3);");
     header("Location: login.php");
 }
-
 $user = logUser();
 $_GET['titlePage'] = 'Dashboard';
 $_GET['bodyID'] = 'dashboard';
 $_GET['bodyClass'] = '';
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
 <div id='divDashboard'>
@@ -32,7 +22,7 @@ $_GET['bodyClass'] = '';
         </a>
     </div>
     <br>
-        <div class="titleContainer">
+    <div class="titleContainer">
         <?php
         if ($user['role'] == 1) {
         ?>
@@ -45,6 +35,9 @@ $_GET['bodyClass'] = '';
         }
         ?>
     </div>
+
+    <div class="messageBox"></div>
+    
     <div id="divButtons">
         <a class="button" href="">ESTADISTÍQUES</a>
         <?php
@@ -63,5 +56,9 @@ $_GET['bodyClass'] = '';
 </div>
 <?php include 'footer.php'; ?>
 </body>
-
+<?php
+if (isset($_SESSION["ID"])) {
+    showErrors();
+}
+?>
 </html>
