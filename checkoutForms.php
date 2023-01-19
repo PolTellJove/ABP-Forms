@@ -26,6 +26,8 @@
                 $_SESSION["ID"] = $idUser;
                 $_SESSION["username"] = $username;
                 $_SESSION["role"] = $idRole;
+                writeInLog("I", "Sessió iniciada", $_SESSION["ID"]);
+                array_push($_SESSION['errors'],"displayMessage('Sessió iniciada',$('.messageBox'),1);");
                 header("Location: dashboard.php");
             }
             else{
