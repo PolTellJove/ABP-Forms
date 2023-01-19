@@ -39,7 +39,7 @@ $_GET['bodyClass'] = '';
     <div class="messageBox"></div>
     
     <div id="divButtons">
-        <a class="button" href="">ESTADISTÍQUES</a>
+        <a class="button" href="">ESTADÍSTIQUES</a>
         <?php
         if ($user['role'] == 1) {
         ?>

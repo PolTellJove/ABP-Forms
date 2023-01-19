@@ -37,8 +37,8 @@ $_GET['bodyClass'] = '';
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
             <a class="button"><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
-            <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES </a>
-            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTA </a>
+            <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES</a>
+            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
     <div id="divDinamic">
