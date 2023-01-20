@@ -69,15 +69,12 @@ $_GET['bodyClass'] = '';
 
         function getOptions()
         {
-            echo '<div id="radioGroup">';
             $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
             $startSession->execute();
             $_SESSION['arrayOptions'] = [];
             foreach ($startSession as $opinion) {
-                echo "\n" . '<a id="radioButton"><input type="radio" id="' . $opinion['ID'] . '" name="score" value="' . $opinion['ID'] . '" disabled><label for="' . $opinion['ID'] . '">' . $opinion['answer'] . '</label></a>';
-                array_push($_SESSION['arrayOptions'], $opinion['ID']);
+                array_push($_SESSION['arrayOptions'], $opinion);
             }
-            echo "\n" . '</div>';
         }
 
         function newQuestion()
@@ -92,8 +89,9 @@ $_GET['bodyClass'] = '';
             echo "\n" . '</form>';
         }
         getPolls();
+        getOptions();
         getQuestions();
-        newQuestion();
+
         ?>
     </div>
 </div>
@@ -109,24 +107,30 @@ $_GET['bodyClass'] = '';
         $(button_id).css("background-color", "blue");
     }
 
-    function removeById(textId) {
-        let elementToRemove = $("#" + textId);
-        elementToRemove.remove();
+    function deleteDiv(id) {
+        $("#" + id + "").remove();
     }
 
-    function addFormNewQuestion() {
-        removeById("divToRemove");
-        let initialDiv = $("<div>", {
-            id: "divDinamic",
-        }).append(
-            $("<form>", {
-                action: "checkoutForms.php",
-                method: 'POST',
-                id: "newQuestion"
-            }).append(
-                $
-            )
-        )
+    function createDiv(id, parentID) {
+        var div = $('<div/>');
+        div.attr('id', id);
+        $("#" + parentID + "").append(div);
+    }
+
+    function createForm(id, parentID, action, method) {
+        var form = $('<form/>');
+        form.attr('id', id);
+        form.attr('action', action);
+        form.attr('method', method)
+        $("#" + parentID + "").append(form);
+    }
+
+    function newQuestion(divID) {
+        createDiv("newQuestion", "divDinamic");
+        createForm("formNewQuestion", "newQuestion", "checkoutForms.php", "POST");
+        var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
+        console.log(options);
+        // voy por aqui
     }
 
     //changeColor("#pollList");
@@ -150,10 +154,15 @@ $_GET['bodyClass'] = '';
         $("#createQuestion").click(function () {
             $("#polls").hide();
             $("#questions").hide();
+            if (!$("newQuestions").length) {
+                newQuestion('newQuestions');
+            }
             $("#newQuestion").show();
             $('.button').removeClass('active');
             $(this).addClass('active');
         });
+
+
 
         $('#typeSelect').on('change', function () {
             if ($("#typeSelect option:selected").attr("id") == 2) {
