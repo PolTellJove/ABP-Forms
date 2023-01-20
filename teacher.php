@@ -145,6 +145,13 @@ $_GET['bodyClass'] = '';
             $("#"+parentID+"").append(p);
         }
 
+        function createButtons(text, id, className, parentID){
+            var a = $("<a></a>").title(text);
+            p.attr('id', id);
+            p.addClass(className); 
+            $("#"+parentID+"").append(p); 
+        }
+
         function deleteDiv(id){
             $("#"+id+"").remove();
         }
@@ -160,6 +167,12 @@ $_GET['bodyClass'] = '';
             createDiv('selectedTeachers', 'divTeachers')
             var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
             teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher', 'availableTeachers'));
+            $('.userTeacher').on("click", function(){
+                $('.userTeacher').css('background-color', 'white');
+                $(this).css('background-color', 'red');
+            });
+            createButtons('AFEGEIX', 'add', 'teacherButton', 'divTeachers');
+            createButtons('ELIMINA', 'delete', 'teacherButton', 'divTeachers');            
         }
 
     function newQuestion(){

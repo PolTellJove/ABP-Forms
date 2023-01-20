@@ -606,7 +606,7 @@ i.fa.fa-close{
 
 #teacher #availableTeachers{
     grid-column: 1;
-    background-color: blue;
+    background-color: orange;
 }
 
 /* #teacher #selectedTeachers p{
@@ -615,9 +615,26 @@ i.fa.fa-close{
 
 #teacher #availableTeachers{
     grid-column: 3;
-    background-color: black;
+    background-color: #38b67d;
 }
 
+#teacher .teacherButtons{
+    grid-column: 2;
+}
+
+#teacher .teacherButtons{
+    display: inline-block;
+    padding: 15px 30px;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #62929e;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer
+}
 #teacher #availableTeachers p{
 
 }
