@@ -572,6 +572,59 @@ i.fa.fa-close{
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }
 
+#teacher #pollInfo{
+    grid-template-rows:  1fr 1fr 1fr;
+    display: grid;
+}
+
+#teacher #pollInfo .pollTitle{
+    grid-row: 1;
+    text-align: center;
+}
+
+#teacher #pollInfo .startDate .finishTitle{
+    grid-row: 2;
+}
+#teacher #pollInfo .finishTitle{
+    grid-row: 3;
+}
+
+#teacher #pollInfo .startDate .finishTitle{
+    width: 50%;
+}
+
+#teacher #pollInfo .startDate{
+    width: 50%;
+    align-self: flex-end;
+}
+
+
+#teacher #divTeachers{
+    grid-template-columns: 45% 10% 45%;
+    display: grid;
+}
+
+#teacher #availableTeachers{
+    grid-column: 1;
+    background-color: blue;
+}
+
+/* #teacher #selectedTeachers p{
+
+} */
+
+#teacher #availableTeachers{
+    grid-column: 3;
+    background-color: black;
+}
+
+#teacher #availableTeachers p{
+
+}
+
+#teacher #newPoll > div{
+    padding: 5%;
+}
 /* Landing CSS */
 
 #landing #divLanding{

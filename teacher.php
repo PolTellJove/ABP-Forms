@@ -23,12 +23,7 @@ $_GET['bodyClass'] = '';
 <html lang="en">
 <?php include 'header.php'; ?>
 <script type="text/javascript">
-    function createP(id, text, className){
-        const p = document.createElement("p");
-        p.setAttribute('id', id);
-        p.innerHTML = text;  
-        p.classList.add(className);
-    }
+
 </script>
 <div id='divTeacher'>
 
@@ -94,10 +89,11 @@ $_GET['bodyClass'] = '';
         }
 
         function getTeachers(){  
-            $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.roleID = 2;");
+            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email` FROM `user` WHERE user.roleID = 2;");
             $startSession->execute();
+            $_SESSION['allTeachers'] = [];
             foreach ($startSession as $teacher) {
-                echo '<script type="text/javascript">createP("'.$teacher['ID'].'", "'.$teacher['username'].'", "userTeacher");</script>';
+                array_push($_SESSION['allTeachers'], $teacher);
             }
         }
 
@@ -121,11 +117,18 @@ $_GET['bodyClass'] = '';
 <?php include 'footer.php'; ?>
 </body>
 <script>
-        function createInput(id, parentID){
+        function createInputText(id, parentID){
             var newInput = $('<input>');
             newInput.attr("type", "text");
             newInput.attr("id", id);
             newInput.attr("placeholder", "Titol de l'enquesta");
+            $("#"+parentID+"").append(newInput);
+        }
+
+        function createInputDate(id, parentID){
+            var newInput = $('<input>');
+            newInput.attr("type", "date");
+            newInput.attr("id", id);
             $("#"+parentID+"").append(newInput);
         }
 
@@ -135,10 +138,11 @@ $_GET['bodyClass'] = '';
             $("#"+parentID+"").append(div);
         }
 
-        function insertElement(selector, parentSelector){
-            const elements = document.getElementsByClassName("userTeacher");
-            console.log(elements)
-            $(parentSelector).append($(selector));
+        function createP(id, text, className, parentID){
+            var p = $("<p></p>").text(text);
+            p.attr('id', id);
+            p.addClass(className);
+            $("#"+parentID+"").append(p);
         }
 
         function deleteDiv(id){
@@ -146,8 +150,16 @@ $_GET['bodyClass'] = '';
         }
 
         function newPoll(divID){
-            createDiv(divID, 'divDinamic')
-            createInput('pollTitle', divID)
+            createDiv('newPoll', 'divDinamic')
+            createDiv('pollInfo', 'newPoll')
+            createInputText('pollTitle', 'pollInfo')
+            createInputDate('startDate', 'pollInfo')
+            createInputDate('finishDate', 'pollInfo')
+            createDiv('divTeachers', 'newPoll')
+            createDiv('availableTeachers', 'divTeachers')
+            createDiv('selectedTeachers', 'divTeachers')
+            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
+            teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher', 'availableTeachers'));
         }
 
     function newQuestion(){
@@ -195,9 +207,9 @@ $_GET['bodyClass'] = '';
             $("#polls").hide();
             $("#newQuestion").hide();
             $("#questions").hide();
-            newPoll('newPoll');
-            insertElement('.userTeacher', '#newPoll');
-            console.log($('.userTeacher').length)
+            if(!$('#newPoll').length){
+                newPoll('newPoll');
+            }
             $('.button').removeClass('active');
             $(this).addClass('active');
         });
@@ -261,5 +273,4 @@ if (isset($_SESSION["ID"])) {
     showErrors();
 }
 ?>
-
 </html>
