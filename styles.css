@@ -566,6 +566,12 @@ i.fa.fa-close{
     border-radius: 5px;
 }
 
+#teacher #newPoll{
+    padding-top: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
+
 /* Landing CSS */
 
 #landing #divLanding{

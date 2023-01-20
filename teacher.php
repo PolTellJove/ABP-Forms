@@ -22,6 +22,14 @@ $_GET['bodyClass'] = '';
 ?><!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
+<script type="text/javascript">
+    function createP(id, text, className){
+        const p = document.createElement("p");
+        p.setAttribute('id', id);
+        p.innerHTML = text;  
+        p.classList.add(className);
+    }
+</script>
 <div id='divTeacher'>
 
     <div class="containerGoBackAnchor">
@@ -36,13 +44,15 @@ $_GET['bodyClass'] = '';
         <div class="messageBox"></div>
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
-            <a class="button"><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
+            <a class="button active" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
             <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES</a>
-            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
+            <a class="button" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
     <div id="divDinamic">
         <?php
+
+        
         function getPolls(){
             $polls = getTable('poll');
             echo '<div id="polls">';
@@ -83,6 +93,14 @@ $_GET['bodyClass'] = '';
             echo "\n" . '</div>';
         }
 
+        function getTeachers(){  
+            $startSession = connToDB()->prepare("SELECT * FROM `user` WHERE user.roleID = 2;");
+            $startSession->execute();
+            foreach ($startSession as $teacher) {
+                echo '<script type="text/javascript">createP("'.$teacher['ID'].'", "'.$teacher['username'].'", "userTeacher");</script>';
+            }
+        }
+
         function newQuestion(){
             echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
             getTypes();
@@ -95,6 +113,7 @@ $_GET['bodyClass'] = '';
         }
         getPolls();
         getQuestions();
+        getTeachers();
         newQuestion();
         ?>
     </div>
@@ -102,6 +121,57 @@ $_GET['bodyClass'] = '';
 <?php include 'footer.php'; ?>
 </body>
 <script>
+        function createInput(id, parentID){
+            var newInput = $('<input>');
+            newInput.attr("type", "text");
+            newInput.attr("id", id);
+            newInput.attr("placeholder", "Titol de l'enquesta");
+            $("#"+parentID+"").append(newInput);
+        }
+
+        function createDiv(id, parentID){
+            var div = $('<div/>');
+            div.attr('id', id);
+            $("#"+parentID+"").append(div);
+        }
+
+        function insertElement(selector, parentSelector){
+            const elements = document.getElementsByClassName("userTeacher");
+            console.log(elements)
+            $(parentSelector).append($(selector));
+        }
+
+        function deleteDiv(id){
+            $("#"+id+"").remove();
+        }
+
+        function newPoll(divID){
+            createDiv(divID, 'divDinamic')
+            createInput('pollTitle', divID)
+        }
+
+    function newQuestion(){
+        div = document.createElement("div");
+        div.setAttribute("id", "newQuestion");
+
+        input = document.createElement("input");
+        input.setAttribute("type", "text");
+
+        selectType = document.createElement("select");
+
+        <?php $startSession = connToDB()->prepare("SELECT * FROM `type_of_question`;");
+            $startSession->execute();
+            foreach($startSession as $type){ ?>
+                type_option = document.createElement("option");
+                type_option.setAttribute("value", <?php echo $type["ID"];?>);
+                type_option.setAttribute("text", 'Example text');
+                selectType.appendChild(type_option);
+        <?php }?>
+
+        div.append(input);
+        div.append(selectType);
+        $("#divDinamic").append(div);
+    }
     $('#radioGroup').hide();
     $("#taQuestion").hide();
     $("#saveQuestion").hide();
@@ -111,12 +181,23 @@ $_GET['bodyClass'] = '';
         $(button_id).css("background-color", "blue");
     }
 
-    //changeColor("#pollList");
     $(document).ready(function() {
         $("#questionList").click(function() {
             $("#polls").hide();
             $("#newQuestion").hide();
+            deleteDiv('newPoll');
             $("#questions").show();
+            $('.button').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $("#createPoll").click(function() {
+            $("#polls").hide();
+            $("#newQuestion").hide();
+            $("#questions").hide();
+            newPoll('newPoll');
+            insertElement('.userTeacher', '#newPoll');
+            console.log($('.userTeacher').length)
             $('.button').removeClass('active');
             $(this).addClass('active');
         });
@@ -124,6 +205,7 @@ $_GET['bodyClass'] = '';
         $("#pollList").click(function() {
             $("#questions").hide();
             $("#newQuestion").hide();
+            deleteDiv('newPoll');
             $("#polls").show();
             $('.button').removeClass('active');
             $(this).addClass('active');
@@ -132,6 +214,7 @@ $_GET['bodyClass'] = '';
         $("#createQuestion").click(function() {
             $("#polls").hide();
             $("#questions").hide();
+            deleteDiv('newPoll');
             $("#newQuestion").show();
             $('.button').removeClass('active');
             $(this).addClass('active');
