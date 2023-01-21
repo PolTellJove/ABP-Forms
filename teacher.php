@@ -97,6 +97,15 @@ $_GET['bodyClass'] = '';
             }
         }
 
+        function getAdmins(){  
+            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email` FROM `user` WHERE user.roleID = 1;");
+            $startSession->execute();
+            $_SESSION['allAdmins'] = [];
+            foreach ($startSession as $admin) {
+                array_push($_SESSION['allAdmins'], $admin);
+            }
+        }
+
         function newQuestion(){
             echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
             getTypes();
@@ -109,8 +118,11 @@ $_GET['bodyClass'] = '';
         }
         getPolls();
         getQuestions();
-        getTeachers();
         newQuestion();
+
+        //Dynamic functions
+        getTeachers();
+        getAdmins();
         ?>
     </div>
 </div>
@@ -146,14 +158,75 @@ $_GET['bodyClass'] = '';
         }
 
         function createButtons(text, id, className, parentID){
-            var a = $("<a></a>").title(text);
-            p.attr('id', id);
-            p.addClass(className); 
-            $("#"+parentID+"").append(p); 
+            var a = $("<a></a>").text(text);
+            a.attr('id', id);
+            a.addClass(className); 
+            $("#"+parentID+"").append(a); 
         }
 
         function deleteDiv(id){
             $("#"+id+"").remove();
+        }
+
+        //Select teacher for add or delete of a poll
+        function clickTeachers(){
+            $('.userTeacher').on("click", function(){
+                $('.teacherButton').removeData("IDteacher").css('background-color', '#62929e');
+                $('.userTeacher').css('background-color', 'white');
+                $(this).css('background-color', 'red');
+                
+                if($(this).hasClass('avalible')){
+                    $("#addTeacher").css('background-color', '#46e89f').data( "IDteacher", $(this).attr('id'));
+                }
+
+                if($(this).hasClass('selected')){
+                    $("#deleteTeacher").css('background-color', '#f38585').data( "IDteacher", $(this).attr('id'));
+                }
+            });
+        }
+
+        //Add or delete teachers of poll
+        function clickManagementButtons(){
+            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
+
+            $('#addTeacher').on("click", function(){
+                teachers.forEach(function(teacher){
+                    if(teacher['ID'] == $('#addTeacher').data("IDteacher")){
+                        createP(teacher['ID'], teacher['username'], 'userTeacher selected', 'selectedTeachers');
+                        clickTeachers();
+                        $("#"+teacher['ID']+".avalible").remove();
+                        $('.teacherButton').removeData("IDteacher").css('background-color', '#62929e');
+                    }
+                });            
+            });
+
+            $('#deleteTeacher').on("click", function(){
+                teachers.forEach(function(teacher){
+                    if(teacher['ID'] == $('#deleteTeacher').data("IDteacher")){
+                        createP(teacher['ID'], teacher['username'], 'userTeacher avalible', 'availableTeachers');
+                        clickTeachers();
+                        $("#"+teacher['ID']+".selected").remove();
+                        $('.teacherButton').removeData("IDteacher").css('background-color', '#62929e');
+
+                    }
+                });            
+            });
+        }
+
+        function teachers(){
+            createDiv('divTeachers', 'newPoll')
+            createDiv('availableTeachers', 'divTeachers')
+            createDiv('managementButtons', 'divTeachers')
+            createDiv('selectedTeachers', 'divTeachers')
+            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
+            teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher avalible', 'availableTeachers'));
+            // var admins = <?php echo json_encode($_SESSION['allAdmins']); ?>;
+            // admins.forEach(admin => createP(admin['ID'], admin['username'], 'userTeacher', 'selectedTeachers'));
+            createButtons('AFEGEIX', 'addTeacher', 'teacherButton', 'managementButtons');
+            createButtons('ELIMINA', 'deleteTeacher', 'teacherButton', 'managementButtons');
+            clickManagementButtons()
+            //$(".teacherButton").attr("disabled", true);
+            clickTeachers();
         }
 
         function newPoll(divID){
@@ -162,17 +235,7 @@ $_GET['bodyClass'] = '';
             createInputText('pollTitle', 'pollInfo')
             createInputDate('startDate', 'pollInfo')
             createInputDate('finishDate', 'pollInfo')
-            createDiv('divTeachers', 'newPoll')
-            createDiv('availableTeachers', 'divTeachers')
-            createDiv('selectedTeachers', 'divTeachers')
-            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
-            teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher', 'availableTeachers'));
-            $('.userTeacher').on("click", function(){
-                $('.userTeacher').css('background-color', 'white');
-                $(this).css('background-color', 'red');
-            });
-            createButtons('AFEGEIX', 'add', 'teacherButton', 'divTeachers');
-            createButtons('ELIMINA', 'delete', 'teacherButton', 'divTeachers');            
+            teachers();      
         }
 
     function newQuestion(){
@@ -279,6 +342,11 @@ $_GET['bodyClass'] = '';
             $('#radioGroup').hide();
             $("#taQuestion").hide();
         }); 
+
+        if($('.active').attr('id') == 'createPoll'){
+            $("#polls").hide();
+            newPoll('newPoll');
+        }
     });
 </script>
 <?php
