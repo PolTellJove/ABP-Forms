@@ -148,7 +148,6 @@ $_GET['bodyClass'] = '';
             input.attr("placeholder", placeholder);
         }
         $("#" + parentID).append(input);
-
     }
 
     function createRadioButtons(arrayOptions, insertBeforeThat) {
@@ -167,7 +166,7 @@ $_GET['bodyClass'] = '';
         space = $("<br>");
         textArea.insertBefore("#" + insertBeforeThat);
         space.insertBefore("#" + insertBeforeThat);
-        parentID.append($("<br>"));
+        $("#"+parentID).append($("<br>"));
     }
 
     function newQuestion(divID) {
@@ -175,31 +174,41 @@ $_GET['bodyClass'] = '';
         createForm("formNewQuestion", "newQuestion", "checkoutForms.php", "POST");
         var types = <?php echo json_encode($_SESSION['arrayTypes']); ?>;
         createSelectForAddQuestion(types, "formNewQuestion");
-
         $("#formNewQuestion").append("<br>");
         createInput("text", "questionTitle", "formNewQuestion", "questionTitle", null, "Títol de la pregunta");
         checkSelect();
         $("#formNewQuestion").append("<br>");
         $("#formNewQuestion").append("<br>");
         createInput("reset", null, "formNewQuestion", "clearForm", "Cancel·lar", null);
-
     }
 
     function checkSelect() {
         $('#typeSelect').on('change', function () {
             if ($("#typeSelect option:selected").attr("id") == 2) {
                 deleteDiv("radioGroup");
+                deleteDiv("simpleOption");
                 createTextArea("taQuestion", "clearForm", "formNewQuestion");
             } else if ($("#typeSelect option:selected").attr("id") == 1) {
                 deleteDiv("taQuestion");
+                deleteDiv("simpleOption");
                 var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
                 createRadioButtons(options, "clearForm");
             } else if ($("#typeSelect option:selected").attr("id") == 0) {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
+                deleteDiv("simpleOption");
             }
             else if ($("#typeSelect option:selected").attr("id") == 3) {
-                borrar divs q no son, funcion que cree dos inputs, boton para añadir mas y para borrar.
+                deleteDiv("taQuestion");
+                deleteDiv("radioGroup");
+                $("<div>").attr("id", "simpleOption").insertBefore("#clearForm");
+                createInput("text", "option1", "simpleOption", "questionTitle", null,"Opció 1");
+                createInput("text", "option2", "simpleOption", "questionTitle", null,"Opció 2");
+
+                
+
+
+                // borrar divs q no son, funcion que cree dos inputs, boton para añadir mas y para borrar.
             }
 
             if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
