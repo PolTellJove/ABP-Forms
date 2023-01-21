@@ -49,12 +49,12 @@ $_GET['bodyClass'] = '';
 
         
         function getPolls(){
-            $startSession = connToDB()->prepare("SELECT * FROM `poll`;");
-            $startSession->execute();
-            $_SESSION['allPolls'] = [];
-            foreach ($startSession as $poll) {
-                array_push($_SESSION['allPolls'], $poll);
-            }
+                $startSession = connToDB()->prepare("SELECT * FROM `poll`;");
+                $startSession->execute();
+                $_SESSION['allPolls'] = [];
+                foreach ($startSession as $poll) {
+                    array_push($_SESSION['allPolls'], $poll);
+                }
         }
 
         function getQuestions(){
@@ -92,9 +92,23 @@ $_GET['bodyClass'] = '';
             }
         }
 
+        function getStudents(){  
+            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email` FROM `user` WHERE user.roleID = 3;");
+            $startSession->execute();
+            $_SESSION['allStudents'] = [];
+            foreach ($startSession as $students) {
+                array_push($_SESSION['allStudents'], $students);
+            }
+        }
+
         function newQuestion(){
             
         }
+        getQuestions();
+        getPolls();
+        getTeachers();
+        getStudents();
+
         ?>
     </div>
 </div>
@@ -276,7 +290,7 @@ $_GET['bodyClass'] = '';
 
         //Add or delete students of poll
         function clickManagementButtonsStudent(){
-            var students = <?php echo json_encode($_SESSION['allAdmins']); ?>;
+            var students = <?php echo json_encode($_SESSION['allStudents']); ?>;
 
             $('#addStudent').on("click", function(){
                 students.forEach(function(student){
@@ -322,7 +336,7 @@ $_GET['bodyClass'] = '';
             createDiv('availableStudents', 'divStudents')
             createDiv('managementButtonsStudent', 'divStudents')
             createDiv('selectedStudents', 'divStudents')
-            var students = <?php echo json_encode($_SESSION['allAdmins']); ?>;
+            var students = <?php echo json_encode($_SESSION['allStudents']); ?>;
             students.forEach(students => createP(students['ID'], students['username'], 'userStudent avalible', 'availableStudents'));
             createManagementButtons('addStudent', 'deleteStudent', 'studentButton', 'managementButtonsStudent');
             clickManagementButtonsStudent();
