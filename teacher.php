@@ -58,13 +58,8 @@ $_GET['bodyClass'] = '';
 
         function getTypes()
         {
-            echo '<select name="typeQuestion" id="typeSelect">';
-            echo "\n" . '<option id="0" selected disabled>Tipus de pregunta</option><br>';
             $typesQuestion = getTable('type_of_question');
-            foreach ($typesQuestion as $type_option) {
-                echo "\n" . '<option id=' . $type_option['ID'] . ' value=' . $type_option['ID'] . '>' . $type_option['name'] . '</option>';
-            }
-            echo "\n" . '</select><br>';
+            $_SESSION['arrayTypes'] = $typesQuestion;
         }
 
         function getOptions()
@@ -77,18 +72,19 @@ $_GET['bodyClass'] = '';
             }
         }
 
-        function newQuestion()
-        {
-            echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
-            getTypes();
-            echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
-            echo '<textarea id="taQuestion" readonly></textarea><br>';
-            getOptions();
-            echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
-            echo '<input id="clearForm" type="reset" value="Cancel·lar"/>';
-            echo "\n" . '</form>';
-        }
+        // function newQuestion()
+        // {
+        //     echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
+        //     getTypes();
+        //     echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
+        //     echo '<textarea id="taQuestion" readonly></textarea><br>';
+        //     getOptions();
+        //     echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
+        //     echo '<input id="clearForm" type="reset" value="Cancel·lar"/>';
+        //     echo "\n" . '</form>';
+        // }
         getPolls();
+        getTypes();
         getOptions();
         getQuestions();
 
@@ -125,12 +121,93 @@ $_GET['bodyClass'] = '';
         $("#" + parentID + "").append(form);
     }
 
+    function createSelectForAddQuestion(arrayOptions, parentID) {
+        var select = $("<select>").attr('name', 'typeQuestion').attr('id', 'typeSelect');
+
+        var options = arrayOptions;
+
+        select.append($("<option id='0' selected disabled>Tipus de pregunta</option><br>"));
+
+        $.each(options, function (index, value) {
+            select.append($("<option>").attr('id', options[index]['ID']).attr('value', options[index]['ID']).text(options[index]['name']))
+        })
+
+        $("#" + parentID).append(select);
+
+    }
+
+    function createInput(type, name, parentID, id, value, placeholder) {
+        var input = $("<input>");
+        input.attr("type", type);
+        input.attr("name", name);
+        input.attr("id", id);
+        if (value) {
+            input.val(value);
+        }
+        if (placeholder) {
+            input.attr("placeholder", placeholder);
+        }
+        $("#" + parentID).append(input);
+
+    }
+
+    function createRadioButtons(arrayOptions, insertBeforeThat) {
+        var radioGroup = $("<div>").attr("id", "radioGroup");
+
+        $.each(arrayOptions, function (index, value) {
+            radioGroup.append($('<a id="radioButton"><input type="radio" id="' + arrayOptions[index]['ID'] + '" name="score" value="' + arrayOptions[index]['ID'] + '" disabled><label for="' + arrayOptions[index]['ID'] + '">' + arrayOptions[index]['answer'] + '</label></a><br>'));
+        })
+
+        radioGroup.insertBefore("#" + insertBeforeThat);
+    }
+
+    function createTextArea(id, insertBeforeThat, parentID) {
+        var textArea = $("<textarea>");
+        textArea.attr("id", id);
+        space = $("<br>");
+        textArea.insertBefore("#" + insertBeforeThat);
+        space.insertBefore("#" + insertBeforeThat);
+        parentID.append($("<br>"));
+    }
+
     function newQuestion(divID) {
         createDiv("newQuestion", "divDinamic");
         createForm("formNewQuestion", "newQuestion", "checkoutForms.php", "POST");
-        var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
-        console.log(options);
-        // voy por aqui
+        var types = <?php echo json_encode($_SESSION['arrayTypes']); ?>;
+        createSelectForAddQuestion(types, "formNewQuestion");
+
+        $("#formNewQuestion").append("<br>");
+        createInput("text", "questionTitle", "formNewQuestion", "questionTitle", null, "Títol de la pregunta");
+        checkSelect();
+        $("#formNewQuestion").append("<br>");
+        $("#formNewQuestion").append("<br>");
+        createInput("reset", null, "formNewQuestion", "clearForm", "Cancel·lar", null);
+
+    }
+
+    function checkSelect() {
+        $('#typeSelect').on('change', function () {
+            if ($("#typeSelect option:selected").attr("id") == 2) {
+                deleteDiv("radioGroup");
+                createTextArea("taQuestion", "clearForm", "formNewQuestion");
+            } else if ($("#typeSelect option:selected").attr("id") == 1) {
+                deleteDiv("taQuestion");
+                var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
+                createRadioButtons(options, "clearForm");
+            } else if ($("#typeSelect option:selected").attr("id") == 0) {
+                deleteDiv("taQuestion");
+                deleteDiv("radioGroup");
+            }
+            else if ($("#typeSelect option:selected").attr("id") == 3) {
+                borrar divs q no son, funcion que cree dos inputs, boton para añadir mas y para borrar.
+            }
+
+            if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
+                $("#saveQuestion").show();
+            } else {
+                $("#saveQuestion").hide();
+            }
+        });
     }
 
     //changeColor("#pollList");
@@ -154,8 +231,8 @@ $_GET['bodyClass'] = '';
         $("#createQuestion").click(function () {
             $("#polls").hide();
             $("#questions").hide();
-            if (!$("newQuestions").length) {
-                newQuestion('newQuestions');
+            if (!$("#newQuestion").length) {
+                newQuestion('newQuestion');
             }
             $("#newQuestion").show();
             $('.button').removeClass('active');
@@ -163,25 +240,6 @@ $_GET['bodyClass'] = '';
         });
 
 
-
-        $('#typeSelect').on('change', function () {
-            if ($("#typeSelect option:selected").attr("id") == 2) {
-                $('#radioGroup').hide();
-                $("#taQuestion").show();
-            } else if ($("#typeSelect option:selected").attr("id") == 1) {
-                $("#taQuestion").hide();
-                $('#radioGroup').show();
-            } else if ($("#typeSelect option:selected").attr("id") == 0) {
-                $('#radioGroup').hide();
-                $("#taQuestion").hide();
-            }
-
-            if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
-                $("#saveQuestion").show();
-            } else {
-                $("#saveQuestion").hide();
-            }
-        });
 
         $('#questionTitle').on('input', function (e) {
             if (/^\s/.test($('#questionTitle').val())) {
