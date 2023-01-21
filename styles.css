@@ -453,8 +453,8 @@ i.fa.fa-close{
 #teacher a.button.active { background-color:#7cae7a; }
 
 #teacher #divDinamic{
-    width: 50%;
-    margin-left: 25%;
+    width: 70%;
+    margin-left: 15%;
     margin-top: 5%;
     text-align: center;
 }
@@ -579,57 +579,58 @@ i.fa.fa-close{
 }
 
 #teacher #pollInfo{
-    grid-template-rows:  1fr 1fr 1fr;
-    display: grid;
+    align-items: center;
 }
 
-#teacher #pollInfo .pollTitle{
-    grid-row: 1;
+#teacher #pollInfo #pollTitle{
+    display: flex;
+    width: 100%;
     text-align: center;
 }
 
-#teacher #pollInfo .startDate .finishTitle{
-    grid-row: 2;
-}
-#teacher #pollInfo .finishTitle{
-    grid-row: 3;
-}
-
-#teacher #pollInfo .startDate .finishTitle{
-    width: 50%;
+#teacher #pollInfo #startDate, #finishDate{
+    width: 40%;
+    margin: 1% 4%;
 }
 
 
-#teacher #divTeachers{
+
+#teacher #divTeachers, #divStudents, #divQuestions{
     height: 100%;
     display: flex;
     justify-content: space-around;
+    border: 1px solid black;
+    margin: 1%;
 }
 
-#teacher #selectedTeachers{
+#teacher #selectedTeachers, #selectedStudents, #selectedQuestions{
     background-color: orange;
 }
 
-#teacher #availableTeachers{
+#teacher #availableTeachers, #availableStudents, #availableQuestions{
     background-color: #38b67d;
 }
 
-#teacher #availableTeachers, #selectedTeachers, #managementButtons{
+#teacher #availableTeachers, #selectedTeachers, #managementButtonsTeacher, 
+            #availableStudents, #selectedStudents, #managementButtonsStudent,
+            #availableQuestions, #selectedQuestions, #managementButtonsQuestion{
     float: left;
     width: 30%;
 }
-#teacher #availableTeachers, #selectedTeachers{
+#teacher #availableTeachers, #selectedTeachers, 
+        #availableStudents, #selectedStudents, 
+        #availableQuestions, #selectedQuestions{
     padding: 2%;
 }
 
-#teacher #managementButtons{
+#teacher #managementButtonsTeacher, #managementButtonsStudent, #managementButtonsQuestion{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
 }
 
-#teacher #divTeachers .teacherButton{
+#teacher #divTeachers .teacherButton, .studentButton, .questionButton{
     display: block;
     padding: 15px 30px;
     width: 50%;
@@ -640,6 +641,10 @@ i.fa.fa-close{
     border-radius: 6px;
     outline: none;
     font-size: 16px;
+    cursor: pointer;
+}
+
+#teacher #divTeachers, #divStudents, #divQuestions p{
     cursor: pointer;
 }
 
