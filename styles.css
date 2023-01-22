@@ -129,6 +129,9 @@ body {
     font-family: Tahoma, sans-serif;
 }
 
+i{
+    cursor: pointer;
+}
 /* Anchor of going back */
 
 .anchorGoBack i{
