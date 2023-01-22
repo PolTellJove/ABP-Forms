@@ -166,7 +166,7 @@ $_GET['bodyClass'] = '';
         space = $("<br>");
         textArea.insertBefore("#" + insertBeforeThat);
         space.insertBefore("#" + insertBeforeThat);
-        $("#"+parentID).append($("<br>"));
+        $("#" + parentID).append($("<br>"));
     }
 
     function newQuestion(divID) {
@@ -202,13 +202,10 @@ $_GET['bodyClass'] = '';
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
                 $("<div>").attr("id", "simpleOption").insertBefore("#clearForm");
-                createInput("text", "option1", "simpleOption", "questionTitle", null,"Opció 1");
-                createInput("text", "option2", "simpleOption", "questionTitle", null,"Opció 2");
-
-                
-
-
-                // borrar divs q no son, funcion que cree dos inputs, boton para añadir mas y para borrar.
+                createInput("text", "option1", "simpleOption", "questionTitle", null, "Escrigui la opció");
+                createInput("text", "option2", "simpleOption", "questionTitle", null, "Escrigui la opció");
+                var numOption = 3;
+                // crear function de crear inputs, en cada input tener un boton de borrar input
             }
 
             if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
