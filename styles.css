@@ -516,7 +516,7 @@ i.fa.fa-close {
     transition: 180ms box-shadow ease-in-out;
 }
 
-#teacher #optionTitle {
+#teacher #simpleOption .inputsForAddOption {
     padding: 5px 0px;
     text-align: center;
     width: 60%;
@@ -526,7 +526,7 @@ i.fa.fa-close {
     transition: 180ms box-shadow ease-in-out;
 }
 
-#teacher #optionTitle:focus {
+#teacher #simpleOption .inputsForAddOption:focus {
     border-color: #62929E;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
     outline: 3px solid transparent;
