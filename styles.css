@@ -537,6 +537,15 @@ i.fa.fa-close {
     outline: 3px solid transparent;
 }
 
+#teacher #simpleOption .add{
+    margin-left: 19px;
+}
+
+#teacher #simpleOption .fa-minus{
+    margin-left: 5px;
+    color: white;
+}
+
 #teacher #questionTitle:focus {
     border-color: #62929E;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
@@ -641,8 +650,6 @@ i.fa.fa-close {
     width: 40%;
     margin: 1% 4%;
 }
-
-
 
 #teacher #divTeachers, #divStudents, #divQuestions, #divSave{
     height: 100%;

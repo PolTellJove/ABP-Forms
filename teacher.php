@@ -480,7 +480,7 @@ $_GET['bodyClass'] = '';
                 createInput("text", "options[]", "simpleOption", "optionTitle1", null, "Escrigui la opció", null, "inputsForAddOption");
                 createInput("text", "options[]", "simpleOption", "optionTitle2", null, "Escrigui la opció", null, "inputsForAddOption");
                 $("#simpleOption").append("<br>");
-                $("#simpleOption").append("<i id='addOption' class='fa fa-plus' aria-hidden='true'></i>");
+                $("#simpleOption").find("input:last").after("<i id='addOption' class='fa fa-plus' aria-hidden='true'></i>");
                 addEventForAddInputs();
                 deleteInputs();
             }
@@ -497,11 +497,13 @@ $_GET['bodyClass'] = '';
     }
 
     function addEventForAddInputs() {
-
         $("#addOption").click(function () {
             var numOption = $(".inputsForAddOption").length + 1;
             createInput("text", "options[]", "simpleOption", "optionTitle" + numOption, null, "Escrigui la opció", true, "inputsForAddOption");
-            $("#simpleOption").append("<i id='" + numOption + "' class='fa fa-minus deleteOption' aria-hidden='true'></i>");
+            $("#optionTitle"+numOption).addClass("add");
+            $("#simpleOption").find("input:last").after("<i id='" + numOption + "' class='fa fa-minus deleteOption' aria-hidden='true'></i>");
+            $("#simpleOption").append("<br>");
+            $("#simpleOption").append("<br>");
             deleteInputs();
         })
     }
