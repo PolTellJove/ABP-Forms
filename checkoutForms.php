@@ -100,6 +100,7 @@
     function savePoll(){
         try {
             //Teachers of Poll
+            $teachers = [];
             foreach($_POST['teachers'] as $teacher){
                 $startSession = connToDB()->prepare("SELECT ID FROM `user` where user.username = :username;");
                 $startSession -> bindParam(':username', $teacher);
@@ -108,14 +109,10 @@
             }
 
             //Questions of Poll
-            foreach($_POST['questions'] as $question){
-                $startSession = connToDB()->prepare("SELECT ID FROM `user` where question.username = :username;");
-                $startSession -> bindParam(':username', $teacher);
-                $startSession->execute();
-                $teachers = $startSession->fetch();
-            }
+            $questions = $_POST['questions'];
 
             //Questions of Poll
+            $students = [];
             if(isset($_POST['students'])){
                 foreach($_POST['students'] as $student){
                     $startSession = connToDB()->prepare("SELECT ID FROM `user` where user.username = :username;");
@@ -124,10 +121,10 @@
                     $students = $startSession->fetch();
                 }
             }
-            $questions = $_POST['questions'];
-            echo $students;
-            echo $teachers;
-            echo $questions;
+
+            echo var_dump($teachers);
+            echo var_dump($questions);
+            echo var_dump($students);
         }catch (PDOException $e) {
             writeInLog("E", "Error:".$e->getMessage());
             array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");

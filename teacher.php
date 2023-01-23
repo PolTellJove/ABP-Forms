@@ -153,8 +153,15 @@ $_GET['bodyClass'] = '';
 
         function clickSavePoll(){
             $( "#saveButton" ).click(function() {
-                $('#newPollForm').submit();
+                elememts = $("form#newPollForm :input")
+                console.log(elememts);
+                elememts.each(function(){
+                    $(this).val($(this).attr('id'))
+                });
+                $("#newPollForm").submit();
             });
+
+
         }
 
         function savePoll(){
@@ -224,7 +231,7 @@ $_GET['bodyClass'] = '';
             clickManagementButtons('addTeacher', 'available', 'selected', 'selectedTeachers', 'teacherButton', 'teachers[]');
             clickManagementButtons('deleteTeacher', 'selected', 'available', 'availableTeachers', 'teacherButton', '');
             $('.teacherButton').on("click", function(){
-                if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll();savePoll();};
+                if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll();};
                 if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();$('#divStudents').remove()};  
                 clickTeachers();
             });
@@ -252,8 +259,8 @@ $_GET['bodyClass'] = '';
             clickManagementButtons('addQuestion', 'available', 'selected', 'selectedQuestions', 'questionButton', 'questions[]');
             clickManagementButtons('deleteQuestion', 'selected', 'available', 'availableQuestions', 'questionButton', '');
             $('.questionButton').on("click", function(){
-                if($('.question.selected').length == 1 && $('#divStudents').length == 0){studentsForPoll()} 
-                if(!$('.question.selected').length){$('#divStudents').remove()}
+                if($('.question.selected').length == 1 && $('#divStudents').length == 0){savePoll();studentsForPoll();} 
+                if(!$('.question.selected').length){$('#divSave').remove();$('#divStudents').remove()}
                 clickQuestions();
             });
         }
