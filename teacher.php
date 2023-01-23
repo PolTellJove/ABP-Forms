@@ -72,17 +72,6 @@ $_GET['bodyClass'] = '';
             }
         }
 
-        // function newQuestion()
-        // {
-        //     echo '<form action="checkoutForms.php" method="POST" id="newQuestion" hidden>';
-        //     getTypes();
-        //     echo "<input type='text' name='questionTitle' id='questionTitle'><br>";
-        //     echo '<textarea id="taQuestion" readonly></textarea><br>';
-        //     getOptions();
-        //     echo '<input id="saveQuestion" type="submit" value="Guardar"/>';
-        //     echo '<input id="clearForm" type="reset" value="Cancel·lar"/>';
-        //     echo "\n" . '</form>';
-        // }
         getPolls();
         getTypes();
         getOptions();
@@ -94,11 +83,7 @@ $_GET['bodyClass'] = '';
 <?php include 'footer.php'; ?>
 </body>
 <script>
-    $('#radioGroup').hide();
-    $("#taQuestion").hide();
-    $("#saveQuestion").hide();
-
-    var numOption = 3;
+    
 
     function changeColor(button_id) {
         $('.button').css("background-color", "#62929E");
@@ -138,11 +123,12 @@ $_GET['bodyClass'] = '';
 
     }
 
-    function createInput(type, name, parentID, id, value, placeholder, elementInsertBefore) {
+    function createInput(type, name, parentID, id, value, placeholder, elementInsertBefore, className="") {
         var input = $("<input>");
         input.attr("type", type);
         input.attr("name", name);
         input.attr("id", id);
+        input.addClass(className);
         if (value) {
             input.val(value);
         }
@@ -174,7 +160,6 @@ $_GET['bodyClass'] = '';
         space = $("<br>");
         textArea.insertBefore("#" + insertBeforeThat);
         space.insertBefore("#" + insertBeforeThat);
-        $("#" + parentID).append($("<br>"));
     }
 
     function newQuestion(divID) {
@@ -183,11 +168,25 @@ $_GET['bodyClass'] = '';
         var types = <?php echo json_encode($_SESSION['arrayTypes']); ?>;
         createSelectForAddQuestion(types, "formNewQuestion");
         $("#formNewQuestion").append("<br>");
-        createInput("text", "questionTitle", "formNewQuestion", "questionTitle", null, "Títol de la pregunta", null);
+        createInput("text", "questionTitle", "formNewQuestion", "questionTitle", null, "Títol de la pregunta", null,null);
         checkSelect();
         $("#formNewQuestion").append("<br>");
         $("#formNewQuestion").append("<br>");
-        createInput("reset", null, "formNewQuestion", "clearForm", "Cancel·lar", null, null);
+        createInput("reset", null, "formNewQuestion", "clearForm", "Cancel·lar", null, null,null);
+        $('#questionTitle').on('input', function (e) {
+            if (/^\s/.test($('#questionTitle').val())) {
+                $('#questionTitle').val('');
+            }
+            if ($("#questionTitle").val().length && $("#typeSelect option:selected").attr("id") != 0) {
+                if (!$("#saveQuestion").length) {
+                    createInput("submit", "buttonSaveQuestion", "formNewQuestion", "saveQuestion", null ,null, null);
+                    $("#saveQuestion").insertBefore("#clearForm");
+            }
+            } else {
+                $("#saveQuestion").remove();
+            }
+
+        });
     }
 
     function checkSelect() {
@@ -210,42 +209,41 @@ $_GET['bodyClass'] = '';
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
                 $("<div>").attr("id", "simpleOption").insertBefore("#clearForm");
-                createInput("text", "option1", "simpleOption", "questionTitle", null, "Escrigui la opció");
-                createInput("text", "option2", "simpleOption", "questionTitle", null, "Escrigui la opció");
+                createInput("text", "option1", "simpleOption", "optionTitle", null, "Escrigui la opció",null,"inputsForAddOption");
+                createInput("text", "option2", "simpleOption", "optionTitle", null, "Escrigui la opció",null,"inputsForAddOption");
                 $("#simpleOption").append("<br>");
                 $("#simpleOption").append("<i id='addOption' class='fa fa-plus' aria-hidden='true'></i>");
                 addEventForAddInputs();
                 deleteInputs();
-                
             }
 
-            if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
-                $("#saveQuestion").show();
-            } else {
-                $("#saveQuestion").hide();
-            }
         });
     }
 
+    
+
+    function deleteInputs(){
+        $(".deleteOption").click( function() {
+        var numOption = $(this).attr('id');
+            toDelete = "option"+numOption;
+        $('input[name="'+toDelete+'"]').remove();
+        $(this).remove();
+        });
+    }
+
+    
+
     function addEventForAddInputs(){
+        
         $("#addOption").click(function () {
-            createInput("text", "option"+numOption, "simpleOption", "questionTitle", null, "Escrigui la opció", true);
-            $("#simpleOption").append("<i id='iconDelete"+numOption+"' class='fa fa-minus' aria-hidden='true'></i>");
-            numOption++;
+            var numOption = $(".inputsForAddOption").length + 1;
+            createInput("text", "option"+numOption, "simpleOption", "optionTitle", null, "Escrigui la opció", true, "inputsForAddOption");
+            $("#simpleOption").append("<i id='"+numOption+"' class='fa fa-minus deleteOption' aria-hidden='true'></i>");
             deleteInputs();
         })
     }
 
-    function deleteInputs(){
-        var element = "iconDelete"+numOption;
-        console.log(element);
-        $(element).click( function() {
-            let toDelete = "option"+numOption;
-            console.log("hey");
-        $("input[name='"+toDelete+"']").remove();
-        $(this).remove();
-        });
-    }
+    
 
     $(document).ready(function () {
         $("#questionList").click(function () {
@@ -279,16 +277,7 @@ $_GET['bodyClass'] = '';
 
 
 
-        $('#questionTitle').on('input', function (e) {
-            if (/^\s/.test($('#questionTitle').val())) {
-                $('#questionTitle').val('');
-            }
-            if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
-                $("#saveQuestion").show();
-            } else {
-                $("#saveQuestion").hide();
-            }
-        });
+        
 
         $('#clearForm').on('click', function (e) {
             $('#radioGroup').hide();

@@ -40,7 +40,6 @@
             writeInLog("E", "Error:".$e->getMessage());
             array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");
             header("Location: login.php");
-
         }
     }
 
@@ -72,7 +71,6 @@
             writeInLog("E", "Error en la conexió amb la base de dades:".$th,$_SESSION["ID"]);
             array_push($_SESSION['errors'],"displayMessage('Error en la conexió amb la base de dades:".$th."',$('.messageBox'),3);");
         }
-
     }
 
     function saveOptionsofQuestions($lastId,$arrayOptions){
@@ -109,6 +107,9 @@
                 break;
             case 2:
                 saveQuestions();
+            break;
+        case 3:
+            // ndjsnja
             break;
         }
         header("Location: teacher.php");
