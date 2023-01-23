@@ -575,7 +575,7 @@ i.fa.fa-close{
 }
 
 #landing #buttons{
-    margin-top: 20%;
+    margin-top: 15%;
     margin-left: 25%;
     width: 50%;
     border-radius: 8px;
@@ -607,4 +607,41 @@ to {bottom: 30px; opacity: 1;}
 @keyframes fadeout {
 from {bottom: 30px; opacity: 1;}
 to {bottom: 0; opacity: 0;}
+}
+
+/* Plane CSS */
+
+.plane-container img {
+    width: 120px;
+    height: 120px;
+    margin-top: 15%;
+    margin-left: 5%;
+}
+  
+.plane-container img {
+    -webkit-animation: moveplane 4s linear infinite;
+}
+
+@-webkit-keyframes moveplane {
+	0% {margin-left: 0%; margin-top:18%; transform: rotate(20deg);}
+    9.5% {margin-left: 9%; margin-top:17.25%; transform: rotate(40deg);}
+    19% {margin-left: 18%; margin-top:16.5%; transform: rotate(20deg);}
+    28.5% {margin-left: 27%; margin-top:15.75%; transform: rotate(0deg);}
+    38% {margin-left: 37%; margin-top:15%; transform: rotate(20deg);}
+    40% {margin-left: 43%; margin-top:13.25%; transform: rotate(-25deg);}
+    42% {margin-left: 48%; margin-top:11.675%; transform: rotate(-45deg);}
+    44% {margin-left: 52%; margin-top:10%; transform: rotate(-65deg);}
+	46% {margin-left: 54%; margin-top:7%; transform: rotate(-90deg);}
+    48% {margin-left: 52%; margin-top:4%; transform: rotate(-135deg);}
+    50% {margin-left: 47%; margin-top:3%; transform: rotate(-180deg);}
+    52% {margin-left: 42%; margin-top:4%; transform: rotate(-225deg);}
+    54% {margin-left: 40%; margin-top:7%; transform: rotate(-270deg);}
+    56% {margin-left: 42%; margin-top:10%; transform: rotate(-295deg);}
+    58% {margin-left: 46%; margin-top:11.675%; transform: rotate(-315deg);}
+    60% {margin-left: 51%; margin-top:13.25%; transform: rotate(-335deg);}
+    63% {margin-left: 56%; margin-top:15%; transform: rotate(-350deg);}
+    71.5% {margin-left: 66%; margin-top:15.75%; transform: rotate(-330deg);}
+    81% {margin-left: 75%; margin-top:16.5%; transform: rotate(-310deg);}
+    90.5% {margin-left: 84%; margin-top:17.25%; transform: rotate(-330deg);}
+    100% {margin-left: 92%; margin-top:18%; transform: rotate(-310deg);}
 }
