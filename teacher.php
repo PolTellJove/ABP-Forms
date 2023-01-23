@@ -39,9 +39,9 @@ $_GET['bodyClass'] = '';
         <div class="messageBox"></div>
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
-            <a class="button" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
+            <a class="button active" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
             <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES</a>
-            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
+            <a class="button" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
     <div id="divDinamic">
@@ -74,30 +74,17 @@ $_GET['bodyClass'] = '';
 
         }
 
-        function getTeachers(){  
-            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email` FROM `user` WHERE user.roleID = 2;");
-            $startSession->execute();
-            $_SESSION['allTeachers'] = [];
-            foreach ($startSession as $teacher) {
-                array_push($_SESSION['allTeachers'], $teacher);
-            }
-        }
 
-        function getAdmins(){  
-            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email` FROM `user` WHERE user.roleID = 1;");
+        function getUsers(){  
+            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email`, `roleID` FROM `user`;");
             $startSession->execute();
             $_SESSION['allAdmins'] = [];
-            foreach ($startSession as $admin) {
-                array_push($_SESSION['allAdmins'], $admin);
-            }
-        }
-
-        function getStudents(){  
-            $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email` FROM `user` WHERE user.roleID = 3;");
-            $startSession->execute();
+            $_SESSION['allTeachers'] = [];
             $_SESSION['allStudents'] = [];
-            foreach ($startSession as $students) {
-                array_push($_SESSION['allStudents'], $students);
+            foreach ($startSession as $user){
+                if($user['roleID'] == 1){array_push($_SESSION['allAdmins'], $user);}
+                elseif($user['roleID'] == 2){array_push($_SESSION['allTeachers'], $user);}
+                elseif($user['roleID'] == 3){array_push($_SESSION['allStudents'], $user);}
             }
         }
 
@@ -106,9 +93,7 @@ $_GET['bodyClass'] = '';
         }
         getQuestions();
         getPolls();
-        getTeachers();
-        getStudents();
-
+        getUsers();
         ?>
     </div>
 </div>
@@ -121,6 +106,16 @@ $_GET['bodyClass'] = '';
             newInput.attr("id", id);
             newInput.attr("placeholder", "Titol de l'enquesta");
             $("#"+parentID+"").append(newInput);
+        }
+
+        function createTextarea(val, id, parentID, className, group){
+            var ta = $('<textarea>');
+            ta.attr('id', id);
+            ta.addClass(className);
+            ta.attr('name', group);
+            ta.prop('readonly', true);
+            ta.val();
+            $("#"+parentID+"").append(ta);
         }
 
         function createInputDate(id, parentID){
@@ -136,15 +131,16 @@ $_GET['bodyClass'] = '';
             $("#"+parentID+"").append(div);
         }
 
-        function createP(id, text, className, parentID){
-            var p = $("<p></p>").text(text);
+        function createP(id, text, className, parentID, group = ''){
+            var p = $("<p/>").text(text);
             p.attr('id', id);
             p.addClass(className);
+            p.attr('name', group);
             $("#"+parentID+"").append(p);
         }
 
         function createButtons(text, id, className, parentID){
-            var a = $("<a></a>").text(text);
+            var a = $("<a/>").text(text);
             a.attr('id', id);
             a.addClass(className); 
             $("#"+parentID+"").append(a); 
@@ -153,13 +149,26 @@ $_GET['bodyClass'] = '';
         function deleteDiv(id){
             $("#"+id+"").remove();
         }
+
+        function clickSavePoll(){
+            $( "#saveButton" ).click(function() {
+                $('#newPollForm').submit();
+            });
+        }
+
+        function savePoll(){
+            createDiv('divSave', 'newPoll');
+
+            createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+            createButtons('Cancelar', 'cancelButton', 'createPoll', 'divSave');
+            clickSavePoll();
+        }
          
         //VIEW QUESTIONS
         function showQuestions(){
             createDiv('questions', 'divDinamic')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
             questions.forEach(question => createP(question['ID'], question['question'], '', 'questions'));
-
         }
 
         //VIEW POLLS
@@ -179,137 +188,99 @@ $_GET['bodyClass'] = '';
             $('#'+deleteID+'').append('<i class="fa-sharp fa-solid fa-square-caret-left"></i>')
         }
 
+        function clickManagementButtons(idButton, currentStatus, nextStatus, divID, generalClassButton){
+            $("#"+idButton).on("click", function(){
+                element = $("#"+$("#"+idButton).data("elementID")+"."+currentStatus).clone();
+                element.removeClass(currentStatus).addClass(nextStatus).css('background-color', '');
+                element.appendTo("#"+divID);
+                
+                $("#"+$("#"+idButton).data("elementID")+"."+currentStatus).remove();
+                $("."+generalClassButton).removeData("elementID").css('background-color', '');
+            });
+        }
+
         //Select teacher for add or delete of a poll
         function clickTeachers(){
             $('.userTeacher').on("click", function(){
-                $('.teacherButton').removeData("IDteacher").css('background-color', '#62929e');
+                $('.teacherButton').removeData("elementID").css('background-color', '#62929e');
                 $('.userTeacher').css('background-color', 'white');
                 $(this).css('background-color', 'red');
                 
-                if($(this).hasClass('avalible')){
-                    $("#addTeacher").css('background-color', '#46e89f').data( "IDteacher", $(this).attr('id'));
+                if($(this).hasClass('available')){
+                    $("#addTeacher").css('background-color', '#46e89f').data( "elementID", $(this).attr('id'));
                 }
 
                 if($(this).hasClass('selected')){
-                    $("#deleteTeacher").css('background-color', '#f38585').data( "IDteacher", $(this).attr('id'));
+                    $("#deleteTeacher").css('background-color', '#f38585').data( "elementID", $(this).attr('id'));
                 }
             });
         }
 
+
         //Add or delete teachers of poll
         function clickManagementButtonsTeacher(){
-            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
-
-            $('#addTeacher').on("click", function(){
-                teacher = $("#"+$('#addTeacher').data("IDteacher")+".avalible").clone();
-                teacher.removeClass("avalible").addClass("selected").css('background-color', '');
-                teacher.appendTo('#selectedTeachers');
+            clickManagementButtons('addTeacher', 'available', 'selected', 'selectedTeachers', 'teacherButton');
+            clickManagementButtons('deleteTeacher', 'selected', 'available', 'availableTeachers', 'teacherButton');
+            $('.teacherButton').on("click", function(){
+                if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll();savePoll();};
+                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();};  
                 clickTeachers();
-                $("#"+$('#addTeacher').data("IDteacher")+".avalible").remove();
-                $('.teacherButton').removeData("IDteacher").css('background-color', '');   
-                if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll()}       
-            });
-
-            $('#deleteTeacher').on("click", function(){
-                teacher = $("#"+$('#deleteTeacher').data("IDteacher")+".selected").clone();
-                teacher.removeClass("selected").addClass("avalible").css('background-color', '');
-                teacher.appendTo('#availableTeachers');
-                clickTeachers();
-                $("#"+$('#deleteTeacher').data("IDteacher")+".selected").remove();
-                $('.teacherButton').removeData("IDteacher").css('background-color', '');
-                if(!$('.userTeacher.selected').length){$('#divQuestions').remove()}          
             });
         }
 
         //Select question for add or delete of a poll
         function clickQuestions(){
             $('.question').on("click", function(){
-                $('.questionButton').removeData("IDquestion").css('background-color', '#62929e');
+                $('.questionButton').removeData("elementID").css('background-color', '#62929e');
                 $('.question').css('background-color', 'white');
                 $(this).css('background-color', 'red');
                 
-                if($(this).hasClass('avalible')){
-                    $("#addQuestion").css('background-color', '#46e89f').data( "IDquestion", $(this).attr('id'));
+                if($(this).hasClass('available')){
+                    $("#addQuestion").css('background-color', '#46e89f').data( "elementID", $(this).attr('id'));
                 }
 
                 if($(this).hasClass('selected')){
-                    $("#deleteQuestion").css('background-color', '#f38585').data( "IDquestion", $(this).attr('id'));
+                    $("#deleteQuestion").css('background-color', '#f38585').data( "elementID", $(this).attr('id'));
                 }
             });
         }
 
         //Add or delete question of poll
         function clickManagementButtonsQuestions(){
-            var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-
-            $('#addQuestion').on("click", function(){
-                questions.forEach(function(question){
-                    if(question['ID'] == $('#addQuestion').data("IDquestion")){
-                        createP(question['ID'], question['question'], 'question selected', 'selectedQuestions');
-                        clickQuestions();
-                        $("#"+question['ID']+".avalible").remove();
-                        $('.questionButton').removeData("IDquestion").css('background-color', '#62929e');
-                    }
-                });     
-                if($('.question.selected').length == 1){studentsForPoll()}       
-            });
-
-            $('#deleteQuestion').on("click", function(){
-                questions.forEach(function(question){
-                    if(question['ID'] == $('#deleteQuestion').data("IDquestion")){
-                        createP(question['ID'], question['question'], 'question avalible', 'availableQuestions');
-                        clickQuestions();
-                        $("#"+question['ID']+".selected").remove();
-                        $('.questionButton').removeData("IDquestion").css('background-color', '#62929e');
-                    }
-                    if(!$('.question.selected').length){$('#divStudents').remove()}
-                });            
+            clickManagementButtons('addQuestion', 'available', 'selected', 'selectedQuestions', 'questionButton');
+            clickManagementButtons('deleteQuestion', 'selected', 'available', 'availableQuestions', 'questionButton');
+            $('.questionButton').on("click", function(){
+                if($('.question.selected').length == 1 && $('#divStudents').length == 0){studentsForPoll()} 
+                if(!$('.question.selected').length){$('#divStudents').remove()}
+                clickQuestions();
             });
         }
 
         //Select student for add or delete of a poll
         function clickStudents(){
             $('.userStudent').on("click", function(){
-                $('.studentButton').removeData("IDstudent").css('background-color', '#62929e');
+                $('.studentButton').removeData("elementID").css('background-color', '#62929e');
                 $('.userStudent').css('background-color', 'white');
                 $(this).css('background-color', 'red');
                 
-                if($(this).hasClass('avalible')){
-                    $("#addStudent").css('background-color', '#46e89f').data( "IDstudent", $(this).attr('id'));
+                if($(this).hasClass('available')){
+                    $("#addStudent").css('background-color', '#46e89f').data( "elementID", $(this).attr('id'));
                 }
 
                 if($(this).hasClass('selected')){
-                    $("#deleteStudent").css('background-color', '#f38585').data( "IDstudent", $(this).attr('id'));
+                    $("#deleteStudent").css('background-color', '#f38585').data( "elementID", $(this).attr('id'));
                 }
             });
         }
 
         //Add or delete students of poll
         function clickManagementButtonsStudent(){
-            var students = <?php echo json_encode($_SESSION['allStudents']); ?>;
-
-            $('#addStudent').on("click", function(){
-                students.forEach(function(student){
-                    if(student['ID'] == $('#addStudent').data("IDstudent")){
-                        createP(student['ID'], student['username'], 'userStudent selected', 'selectedStudents');
-                        clickStudents();
-                        $("#"+student['ID']+".avalible").remove();
-                        $('.studentButton').removeData("IDstudent").css('background-color', '#62929e');
-                    }
-                });     
-                //if($('.selected').length == 1){students();}       
-            });
-
-            $('#deleteStudent').on("click", function(){
-                students.forEach(function(student){
-                    if(student['ID'] == $('#deleteStudent').data("IDstudent")){
-                        createP(student['ID'], student['username'], 'userStudent avalible', 'availableStudents');
-                        clickStudents();
-                        $("#"+student['ID']+".selected").remove();
-                        $('.studentButton').removeData("IDstudent").css('background-color', '#62929e');
-                    }
-                    //if(!$('.selected').length){$('#divStudents').remove()}
-                });            
+            clickManagementButtons('addStudent', 'available', 'selected', 'selectedStudents', 'studentButton');
+            clickManagementButtons('deleteStudent', 'selected', 'available', 'availableStudents', 'studentButton');
+            $('.studentButton').on("click", function(){
+                if($('.userStudent.selected').length == 1 && $('#divSave').length == 0){} 
+                if(!$('.userStudent.selected').length){}
+                clickStudents();
             });
         }
 
@@ -320,7 +291,9 @@ $_GET['bodyClass'] = '';
             createDiv('managementButtonsTeacher', 'divTeachers')
             createDiv('selectedTeachers', 'divTeachers')
             var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
-            teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher avalible', 'availableTeachers'));
+            teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher available', 'availableTeachers', 'teachers[]'));
+
+            teachers.forEach(teacher => createTextarea(teacher['username'], teacher['ID'],'userTeacher available', 'availableTeachers', 'teachers[]'));
             createManagementButtons('addTeacher', 'deleteTeacher', 'teacherButton', 'managementButtonsTeacher');
             clickManagementButtonsTeacher();
             clickTeachers();
@@ -328,12 +301,12 @@ $_GET['bodyClass'] = '';
 
         //View STUDENTS for new poll
         function studentsForPoll(){
-            createDiv('divStudents', 'newPoll')
+            $('<div/>').attr('id','divStudents').insertBefore($("#divSave"));
             createDiv('availableStudents', 'divStudents')
             createDiv('managementButtonsStudent', 'divStudents')
             createDiv('selectedStudents', 'divStudents')
             var students = <?php echo json_encode($_SESSION['allStudents']); ?>;
-            students.forEach(students => createP(students['ID'], students['username'], 'userStudent avalible', 'availableStudents'));
+            students.forEach(students => createP(students['ID'], students['username'], 'userStudent available', 'availableStudents', 'students[]'));
             createManagementButtons('addStudent', 'deleteStudent', 'studentButton', 'managementButtonsStudent');
             clickManagementButtonsStudent();
             clickStudents();
@@ -346,7 +319,7 @@ $_GET['bodyClass'] = '';
             createDiv('managementButtonsQuestion', 'divQuestions')
             createDiv('selectedQuestions', 'divQuestions')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-            questions.forEach(question => createP(question['ID'], question['question'], 'question avalible', 'availableQuestions'));
+            questions.forEach(question => createP(question['ID'], question['question'], 'question available', 'availableQuestions', 'questions[]'));
             createManagementButtons('addQuestion', 'deleteQuestion', 'questionButton', 'managementButtonsQuestion');
             clickManagementButtonsQuestions();
             clickQuestions();
@@ -360,38 +333,21 @@ $_GET['bodyClass'] = '';
             createInputDate('finishDate', 'pollInfo')
         }
 
+
         //Create new poll
         function newPoll(){
-            createDiv('newPoll', 'divDinamic')
-            infoOfPoll();
-            teachersForPoll();     
+            $form = $("<form/>");
+            $form.attr('id', 'newPollForm')
+            $form.attr('action', 'checkoutForms.php');
+            $form.attr("method", "post");
+            $form.appendTo('#divDinamic')
+            createDiv('newPoll', 'newPollForm')
+            teachersForPoll();
         }
 
-    function newQuestion(){
-        div = document.createElement("div");
-        div.setAttribute("id", "newQuestion");
+        function newQuestion(){
 
-        input = document.createElement("input");
-        input.setAttribute("type", "text");
-
-        selectType = document.createElement("select");
-
-        <?php $startSession = connToDB()->prepare("SELECT * FROM `type_of_question`;");
-            $startSession->execute();
-            foreach($startSession as $type){ ?>
-                type_option = document.createElement("option");
-                type_option.setAttribute("value", <?php echo $type["ID"];?>);
-                type_option.setAttribute("text", 'Example text');
-                selectType.appendChild(type_option);
-        <?php }?>
-
-        div.append(input);
-        div.append(selectType);
-        $("#divDinamic").append(div);
-    }
-    $('#radioGroup').hide();
-    $("#taQuestion").hide();
-    $("#saveQuestion").hide();
+        }
 
     $(document).ready(function() {
         $("#questionList").click(function() {
@@ -421,49 +377,10 @@ $_GET['bodyClass'] = '';
             $(this).addClass('active');
         });
 
-        $("#createQuestion").click(function() {
-            $("#divDinamic").empty();
-            $('.button').removeClass('active');
-            $(this).addClass('active');
-        });;
-
-        $('#typeSelect').on('change', function() {
-            if ($("#typeSelect option:selected").attr("id") == 2) {
-                $('#radioGroup').hide();
-                $("#taQuestion").show();
-            } else if ($("#typeSelect option:selected").attr("id") == 1) {
-                $("#taQuestion").hide();
-                $('#radioGroup').show();
-            } else if ($("#typeSelect option:selected").attr("id") == 0){
-                $('#radioGroup').hide();
-                $("#taQuestion").hide();
-            }
-
-            if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
-                $("#saveQuestion").show();
-            } else {
-                $("#saveQuestion").hide();
-            }
-        });
-
-        $('#questionTitle').on('input', function(e) {
-            if (/^\s/.test($('#questionTitle').val())) {
-                $('#questionTitle').val('');
-            }
-            if (document.getElementById("questionTitle").value.length && $("#typeSelect option:selected").attr("id") != 0) {
-                $("#saveQuestion").show();
-            } else {
-                $("#saveQuestion").hide();
-            }
-        }); 
-
-        $('#clearForm').on('click', function(e) {
-            $('#radioGroup').hide();
-            $("#taQuestion").hide();
-        }); 
 
         //START PAGE
-        showPolls();
+        // showPolls();
+        newPoll();
     });
 </script>
 <?php

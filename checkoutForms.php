@@ -97,6 +97,9 @@
         }
     }
 
+    function savePoll(){
+        
+    }
 
     if ( (isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))  ){
         login();
