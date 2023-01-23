@@ -201,27 +201,23 @@ $_GET['bodyClass'] = '';
             var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
 
             $('#addTeacher').on("click", function(){
-                teachers.forEach(function(teacher){
-                    if(teacher['ID'] == $('#addTeacher').data("IDteacher")){
-                        createP(teacher['ID'], teacher['username'], 'userTeacher selected', 'selectedTeachers');
-                        clickTeachers();
-                        $("#"+teacher['ID']+".avalible").remove();
-                        $('.teacherButton').removeData("IDteacher").css('background-color', '#62929e');
-                    }
-                });     
-                if($('.userTeacher.selected').length == 1){questionsForPoll()}       
+                teacher = $("#"+$('#addTeacher').data("IDteacher")+".avalible").clone();
+                teacher.removeClass("avalible").addClass("selected").css('background-color', '');
+                teacher.appendTo('#selectedTeachers');
+                clickTeachers();
+                $("#"+$('#addTeacher').data("IDteacher")+".avalible").remove();
+                $('.teacherButton').removeData("IDteacher").css('background-color', '');   
+                if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll()}       
             });
 
             $('#deleteTeacher').on("click", function(){
-                teachers.forEach(function(teacher){
-                    if(teacher['ID'] == $('#deleteTeacher').data("IDteacher")){
-                        createP(teacher['ID'], teacher['username'], 'userTeacher avalible', 'availableTeachers');
-                        clickTeachers();
-                        $("#"+teacher['ID']+".selected").remove();
-                        $('.teacherButton').removeData("IDteacher").css('background-color', '#62929e');
-                    }
-                    if(!$('.userTeacher.selected').length){$('#divQuestions').remove()}
-                });            
+                teacher = $("#"+$('#deleteTeacher').data("IDteacher")+".selected").clone();
+                teacher.removeClass("selected").addClass("avalible").css('background-color', '');
+                teacher.appendTo('#availableTeachers');
+                clickTeachers();
+                $("#"+$('#deleteTeacher').data("IDteacher")+".selected").remove();
+                $('.teacherButton').removeData("IDteacher").css('background-color', '');
+                if(!$('.userTeacher.selected').length){$('#divQuestions').remove()}          
             });
         }
 
