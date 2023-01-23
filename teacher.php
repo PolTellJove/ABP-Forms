@@ -108,14 +108,15 @@ $_GET['bodyClass'] = '';
             $("#"+parentID+"").append(newInput);
         }
 
-        function createTextarea(val, id, parentID, className, group){
-            var ta = $('<textarea>');
-            ta.attr('id', id);
-            ta.addClass(className);
-            ta.attr('name', group);
-            ta.prop('readonly', true);
-            ta.val();
-            $("#"+parentID+"").append(ta);
+        function createInputOnlyRead(id, text, className, parentID, group = ''){
+            var newInput = $('<input>');
+            newInput.attr("type", "text");
+            newInput.attr("id", id);
+            newInput.val(text);
+            newInput.addClass(className);
+            newInput.attr('name', group);
+            newInput.attr('readonly', true);
+            $("#"+parentID+"").append(newInput);
         }
 
         function createInputDate(id, parentID){
@@ -188,10 +189,11 @@ $_GET['bodyClass'] = '';
             $('#'+deleteID+'').append('<i class="fa-sharp fa-solid fa-square-caret-left"></i>')
         }
 
-        function clickManagementButtons(idButton, currentStatus, nextStatus, divID, generalClassButton){
+        function clickManagementButtons(idButton, currentStatus, nextStatus, divID, generalClassButton, statusName){
             $("#"+idButton).on("click", function(){
                 element = $("#"+$("#"+idButton).data("elementID")+"."+currentStatus).clone();
                 element.removeClass(currentStatus).addClass(nextStatus).css('background-color', '');
+                element.attr('name', statusName)
                 element.appendTo("#"+divID);
                 
                 $("#"+$("#"+idButton).data("elementID")+"."+currentStatus).remove();
@@ -219,11 +221,11 @@ $_GET['bodyClass'] = '';
 
         //Add or delete teachers of poll
         function clickManagementButtonsTeacher(){
-            clickManagementButtons('addTeacher', 'available', 'selected', 'selectedTeachers', 'teacherButton');
-            clickManagementButtons('deleteTeacher', 'selected', 'available', 'availableTeachers', 'teacherButton');
+            clickManagementButtons('addTeacher', 'available', 'selected', 'selectedTeachers', 'teacherButton', 'teachers[]');
+            clickManagementButtons('deleteTeacher', 'selected', 'available', 'availableTeachers', 'teacherButton', '');
             $('.teacherButton').on("click", function(){
                 if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll();savePoll();};
-                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();};  
+                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();$('#divStudents').remove()};  
                 clickTeachers();
             });
         }
@@ -247,8 +249,8 @@ $_GET['bodyClass'] = '';
 
         //Add or delete question of poll
         function clickManagementButtonsQuestions(){
-            clickManagementButtons('addQuestion', 'available', 'selected', 'selectedQuestions', 'questionButton');
-            clickManagementButtons('deleteQuestion', 'selected', 'available', 'availableQuestions', 'questionButton');
+            clickManagementButtons('addQuestion', 'available', 'selected', 'selectedQuestions', 'questionButton', 'questions[]');
+            clickManagementButtons('deleteQuestion', 'selected', 'available', 'availableQuestions', 'questionButton', '');
             $('.questionButton').on("click", function(){
                 if($('.question.selected').length == 1 && $('#divStudents').length == 0){studentsForPoll()} 
                 if(!$('.question.selected').length){$('#divStudents').remove()}
@@ -275,8 +277,8 @@ $_GET['bodyClass'] = '';
 
         //Add or delete students of poll
         function clickManagementButtonsStudent(){
-            clickManagementButtons('addStudent', 'available', 'selected', 'selectedStudents', 'studentButton');
-            clickManagementButtons('deleteStudent', 'selected', 'available', 'availableStudents', 'studentButton');
+            clickManagementButtons('addStudent', 'available', 'selected', 'selectedStudents', 'studentButton', 'students[]');
+            clickManagementButtons('deleteStudent', 'selected', 'available', 'availableStudents', 'studentButton', '');
             $('.studentButton').on("click", function(){
                 if($('.userStudent.selected').length == 1 && $('#divSave').length == 0){} 
                 if(!$('.userStudent.selected').length){}
@@ -290,10 +292,8 @@ $_GET['bodyClass'] = '';
             createDiv('availableTeachers', 'divTeachers')
             createDiv('managementButtonsTeacher', 'divTeachers')
             createDiv('selectedTeachers', 'divTeachers')
-            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;
-            teachers.forEach(teacher => createP(teacher['ID'], teacher['username'], 'userTeacher available', 'availableTeachers', 'teachers[]'));
-
-            teachers.forEach(teacher => createTextarea(teacher['username'], teacher['ID'],'userTeacher available', 'availableTeachers', 'teachers[]'));
+            var teachers = <?php echo json_encode($_SESSION['allTeachers']); ?>;         
+            teachers.forEach(teacher => createInputOnlyRead(teacher['ID'], teacher['username'], 'userTeacher available', 'availableTeachers', ''));
             createManagementButtons('addTeacher', 'deleteTeacher', 'teacherButton', 'managementButtonsTeacher');
             clickManagementButtonsTeacher();
             clickTeachers();
@@ -306,7 +306,7 @@ $_GET['bodyClass'] = '';
             createDiv('managementButtonsStudent', 'divStudents')
             createDiv('selectedStudents', 'divStudents')
             var students = <?php echo json_encode($_SESSION['allStudents']); ?>;
-            students.forEach(students => createP(students['ID'], students['username'], 'userStudent available', 'availableStudents', 'students[]'));
+            students.forEach(students => createInputOnlyRead(students['ID'], students['username'], 'userStudent available', 'availableStudents', ''));
             createManagementButtons('addStudent', 'deleteStudent', 'studentButton', 'managementButtonsStudent');
             clickManagementButtonsStudent();
             clickStudents();
@@ -319,7 +319,7 @@ $_GET['bodyClass'] = '';
             createDiv('managementButtonsQuestion', 'divQuestions')
             createDiv('selectedQuestions', 'divQuestions')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-            questions.forEach(question => createP(question['ID'], question['question'], 'question available', 'availableQuestions', 'questions[]'));
+            questions.forEach(question => createInputOnlyRead(question['ID'], question['question'], 'question available', 'availableQuestions', ''));
             createManagementButtons('addQuestion', 'deleteQuestion', 'questionButton', 'managementButtonsQuestion');
             clickManagementButtonsQuestions();
             clickQuestions();
@@ -339,7 +339,7 @@ $_GET['bodyClass'] = '';
             $form = $("<form/>");
             $form.attr('id', 'newPollForm')
             $form.attr('action', 'checkoutForms.php');
-            $form.attr("method", "post");
+            $form.attr("method", "POST");
             $form.appendTo('#divDinamic')
             createDiv('newPoll', 'newPollForm')
             teachersForPoll();

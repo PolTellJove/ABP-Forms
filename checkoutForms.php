@@ -98,7 +98,41 @@
     }
 
     function savePoll(){
-        
+        try {
+            //Teachers of Poll
+            foreach($_POST['teachers'] as $teacher){
+                $startSession = connToDB()->prepare("SELECT ID FROM `user` where user.username = :username;");
+                $startSession -> bindParam(':username', $teacher);
+                $startSession->execute();
+                $teachers = $startSession->fetch();
+            }
+
+            //Questions of Poll
+            foreach($_POST['questions'] as $question){
+                $startSession = connToDB()->prepare("SELECT ID FROM `user` where question.username = :username;");
+                $startSession -> bindParam(':username', $teacher);
+                $startSession->execute();
+                $teachers = $startSession->fetch();
+            }
+
+            //Questions of Poll
+            if(isset($_POST['students'])){
+                foreach($_POST['students'] as $student){
+                    $startSession = connToDB()->prepare("SELECT ID FROM `user` where user.username = :username;");
+                    $startSession -> bindParam(':username', $student);
+                    $startSession->execute();
+                    $students = $startSession->fetch();
+                }
+            }
+            $questions = $_POST['questions'];
+            echo $students;
+            echo $teachers;
+            echo $questions;
+        }catch (PDOException $e) {
+            writeInLog("E", "Error:".$e->getMessage());
+            array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");
+            //header("Location: login.php");
+        }
     }
 
     if ( (isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))  ){
@@ -115,6 +149,9 @@
             break;
         }
         header("Location: teacher.php");
+    }
 
+    if(isset($_POST['teachers'])){
+        savePoll();
     }
 ?>

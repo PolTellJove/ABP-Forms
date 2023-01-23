@@ -616,11 +616,15 @@ i.fa.fa-close{
     float: left;
     width: 30%;
 }
+
 #teacher #availableTeachers, #selectedTeachers, 
         #availableStudents, #selectedStudents, 
         #availableQuestions, #selectedQuestions{
     padding: 2%;
+    display: grid;
+    justify-content: center;
 }
+
 
 #teacher #managementButtonsTeacher, #managementButtonsStudent, #managementButtonsQuestion{
     display: flex;
@@ -641,7 +645,9 @@ i.fa.fa-close{
     outline: none;
     font-size: 16px;
     cursor: pointer;
+    margin: 1%;
 }
+
 
 #teacher #newPoll #divSave #newPollForm{
     width: 100%;
@@ -661,8 +667,11 @@ i.fa.fa-close{
     background-color: red;
 }
 
-#teacher #divTeachers, #divStudents, #divQuestions p{
+#teacher #divTeachers > div > input, #divStudents > div > input, #divQuestions > div > input{
     cursor: pointer;
+    text-align: center;
+    margin: 1%;
+    height: min-content;
 }
 
 /* Landing CSS */
