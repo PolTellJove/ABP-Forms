@@ -6,8 +6,7 @@ if (!isset($_SESSION["ID"])) {
     if (isset($_SESSION['errors']) || (!empty($_SESSION["errors"]))) {
         writeInLog("E", "Sessió no iniciada per entrar al teacher");
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al teacher',$('.messageBox'),3);");
-    }
-    else{
+    } else {
         writeInLog("E", "Sessió no iniciada per entrar al teacher");
         $_SESSION['errors'] = [];
         array_push($_SESSION['errors'], "displayMessage('Has d\'iniciar sessió per entrar al teacher',$('.messageBox'),3);");
@@ -19,7 +18,8 @@ $user = logUser();
 $_GET['titlePage'] = 'Teacher';
 $_GET['bodyID'] = 'teacher';
 $_GET['bodyClass'] = '';
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
 <script type="text/javascript">
@@ -27,14 +27,7 @@ $_GET['bodyClass'] = '';
 </script>
 <div id='divTeacher'>
 
-    <div class="containerGoBackAnchor">
-        <a class="anchorGoBack" href='./dashboard.php'>
-        <i class="fa-solid fa-arrow-left-long"></i>
-        <div class="textGoBack">Dashboard</div>
-        </a>
-    </div>
-
-    <?php if ($user['role'] == 1) {   ?>
+    <?php if ($user['role'] == 1) { ?>
         <br>
         <div class="messageBox"></div>
         <div id="divButtons">
@@ -66,15 +59,6 @@ $_GET['bodyClass'] = '';
             }
         }
 
-        function getTypes(){
-
-        }
-
-        function getOptions(){
-
-        }
-
-
         function getUsers(){  
             $startSession = connToDB()->prepare("SELECT `ID`, `username`, `email`, `roleID` FROM `user`;");
             $startSession->execute();
@@ -94,6 +78,27 @@ $_GET['bodyClass'] = '';
         getQuestions();
         getPolls();
         getUsers();
+        function getTypes()
+        {
+            $typesQuestion = getTable('type_of_question');
+            $_SESSION['arrayTypes'] = $typesQuestion;
+        }
+
+        function getOptions()
+        {
+            $startSession = connToDB()->prepare("SELECT * FROM `option` WHERE ID <= 5;");
+            $startSession->execute();
+            $_SESSION['arrayOptions'] = [];
+            foreach ($startSession as $opinion) {
+                array_push($_SESSION['arrayOptions'], $opinion);
+            }
+        }
+
+        getPolls();
+        getTypes();
+        getOptions();
+        getQuestions();
+
         ?>
     </div>
 </div>
@@ -352,9 +357,154 @@ $_GET['bodyClass'] = '';
             teachersForPoll();
         }
 
-        function newQuestion(){
+        function deleteDiv(id) {
+        $("#" + id + "").remove();
+    }
 
+    function createDiv(id, parentID) {
+        var div = $('<div/>');
+        div.attr('id', id);
+        $("#" + parentID + "").append(div);
+    }
+
+    function createForm(id, parentID, action, method) {
+        var form = $('<form/>');
+        form.attr('id', id);
+        form.attr('action', action);
+        form.attr('method', method)
+        $("#" + parentID + "").append(form);
+    }
+
+    function createSelectForAddQuestion(arrayOptions, parentID) {
+        var select = $("<select>").attr('name', 'typeQuestion').attr('id', 'typeSelect');
+
+        var options = arrayOptions;
+
+        select.append($("<option id='0' selected disabled>Tipus de pregunta</option><br>"));
+
+        $.each(options, function (index, value) {
+            select.append($("<option>").attr('id', options[index]['ID']).attr('value', options[index]['ID']).text(options[index]['name']))
+        })
+
+        $("#" + parentID).append(select);
+
+    }
+
+    function createInput(type, name, parentID, id, value, placeholder, elementInsertBefore, className = "") {
+        var input = $("<input>");
+        input.attr("type", type);
+        input.attr("name", name);
+        input.attr("id", id);
+        input.addClass(className);
+        if (value) {
+            input.val(value);
         }
+        if (placeholder) {
+            input.attr("placeholder", placeholder);
+        }
+        if (elementInsertBefore) {
+            input.insertBefore("#addOption")
+        }
+        else {
+            $("#" + parentID).append(input);
+        }
+
+    }
+
+    function createRadioButtons(arrayOptions, insertBeforeThat) {
+        var radioGroup = $("<div>").attr("id", "radioGroup");
+
+        $.each(arrayOptions, function (index, value) {
+            radioGroup.append($('<a id="radioButton"><input type="radio" id="' + arrayOptions[index]['ID'] + '" name="score" value="' + arrayOptions[index]['ID'] + '" disabled><label for="' + arrayOptions[index]['ID'] + '">' + arrayOptions[index]['answer'] + '</label></a><br>'));
+        })
+
+        radioGroup.insertBefore("#" + insertBeforeThat);
+    }
+
+    function createTextArea(id, insertBeforeThat, parentID) {
+        var textArea = $("<textarea>");
+        textArea.attr("id", id);
+        textArea.attr("disabled", "disabled");
+        space = $("<br>");
+        textArea.insertBefore("#" + insertBeforeThat);
+        space.insertBefore("#" + insertBeforeThat);
+    }
+
+    function newQuestion(divID) {
+        createDiv("newQuestion", "divDinamic");
+        createForm("formNewQuestion", "newQuestion", "checkoutForms.php", "POST");
+        var types = <?php echo json_encode($_SESSION['arrayTypes']); ?>;
+        createSelectForAddQuestion(types, "formNewQuestion");
+        $("#formNewQuestion").append("<br>");
+        createInput("text", "questionTitle", "formNewQuestion", "questionTitle", null, "Títol de la pregunta", null, null);
+        checkSelect();
+        $("#formNewQuestion").append("<br>");
+        $("#formNewQuestion").append("<br>");
+        createInput("reset", null, "formNewQuestion", "clearForm", "Cancel·lar", null, null, null);
+        $('#questionTitle').on('input', function (e) {
+            if (/^\s/.test($('#questionTitle').val())) {
+                $('#questionTitle').val('');
+            }
+            if ($("#questionTitle").val().length && $("#typeSelect option:selected").attr("id") != 0) {
+                if (!$("#saveQuestion").length) {
+                    createInput("submit", "buttonSaveQuestion", "formNewQuestion", "saveQuestion", null, null, null);
+                    $("#saveQuestion").insertBefore("#clearForm");
+                }
+            } else {
+                $("#saveQuestion").remove();
+            }
+
+        });
+    }
+
+    function checkSelect() {
+        $('#typeSelect').on('change', function () {
+            if ($("#typeSelect option:selected").attr("id") == 2) {
+                deleteDiv("radioGroup");
+                deleteDiv("simpleOption");
+                createTextArea("taQuestion", "clearForm", "formNewQuestion");
+            } else if ($("#typeSelect option:selected").attr("id") == 1) {
+                deleteDiv("taQuestion");
+                deleteDiv("simpleOption");
+                var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
+                createRadioButtons(options, "clearForm");
+            } else if ($("#typeSelect option:selected").attr("id") == 0) {
+                deleteDiv("taQuestion");
+                deleteDiv("radioGroup");
+                deleteDiv("simpleOption");
+            }
+            else if ($("#typeSelect option:selected").attr("id") == 3) {
+                deleteDiv("taQuestion");
+                deleteDiv("radioGroup");
+                $("<div>").attr("id", "simpleOption").insertBefore("#clearForm");
+                createInput("text", "options[]", "simpleOption", "optionTitle1", null, "Escrigui la opció", null, "inputsForAddOption");
+                createInput("text", "options[]", "simpleOption", "optionTitle2", null, "Escrigui la opció", null, "inputsForAddOption");
+                $("#simpleOption").append("<br>");
+                $("#simpleOption").append("<i id='addOption' class='fa fa-plus' aria-hidden='true'></i>");
+                addEventForAddInputs();
+                deleteInputs();
+            }
+        });
+    }
+
+    function deleteInputs() {
+        $(".deleteOption").click(function () {
+            var numOption = $(this).attr('id');
+            toDelete = "optionTitle" + numOption;
+            $("#" + toDelete).remove();
+            $(this).remove();
+        });
+    }
+
+    function addEventForAddInputs() {
+
+        $("#addOption").click(function () {
+            var numOption = $(".inputsForAddOption").length + 1;
+            createInput("text", "options[]", "simpleOption", "optionTitle" + numOption, null, "Escrigui la opció", true, "inputsForAddOption");
+            $("#simpleOption").append("<i id='" + numOption + "' class='fa fa-minus deleteOption' aria-hidden='true'></i>");
+            deleteInputs();
+        })
+    }
 
     $(document).ready(function() {
         $("#questionList").click(function() {
@@ -388,6 +538,19 @@ $_GET['bodyClass'] = '';
         //START PAGE
         // showPolls();
         newPoll();
+        $("#createQuestion").click(function () {
+            if (!$("#newQuestion").length) {
+                $("#divDinamic").empty();
+                newQuestion('newQuestion');
+            }
+            $('.button').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('#clearForm').on('click', function (e) {
+            $('#radioGroup').hide();
+            $("#taQuestion").hide();
+        });
     });
 </script>
 <?php
