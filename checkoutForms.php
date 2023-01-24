@@ -147,41 +147,123 @@ function addSimpleOptions($arrayOptions)
         array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
     }
 }
+function addTeachersToPoll($teachers, $pollID){
+    $checkTeachersPoll = true;
+    for($t = 0; $t < sizeof($teachers); $t++){
+        $startSession = connToDB()->prepare("INSERT INTO `teacher_poll`(`teacherID`, `pollID`) VALUES (:teacherID, :pollID);");
+        $startSession->bindParam(':teacherID', $teachers[$t]);
+        $startSession->bindParam(':pollID', $pollID);
+        writeInLog("SQL", "INSERT INTO `teacher_poll`(`teacherID`, `pollID`) VALUES ('".$teachers[$t]."', '".$pollID."');", $_SESSION["ID"]);
+        $checkTeachersPoll = $startSession->execute();
+        if($checkTeachersPoll){
+            writeInLog("S", "'ID: ". $pollID." - Professor ".$teachers[$t]." ha esta afegit al formulari", $_SESSION["ID"]);
+        }else{
+            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
+            break;
+        }
+    };
+    return $checkTeachersPoll;
+}
 
+function addQuestionsToPoll($questions, $pollID){
+    $checkQuestionsPoll = true;
+    for($q = 0; $q < sizeof($questions); $q++){
+        $startSession = connToDB()->prepare("INSERT INTO `poll_question`(`questionID`, `pollID`) VALUES (:questionID, :pollID);");
+        $startSession->bindParam(':questionID', $questions[$q]);
+        $startSession->bindParam(':pollID', $pollID);
+        writeInLog("SQL", "INSERT INTO `poll_question`(`questionID`, `pollID`) VALUES ('".$questions[$q]."', '".$pollID."');", $_SESSION["ID"]);
+        $checkQuestionsPoll = $startSession->execute();
+        if($checkQuestionsPoll){
+            writeInLog("S", "'ID: ". $pollID." - Pregunta: ".$questions[$q]." ha esta afegida al formulari", $_SESSION["ID"]);
+        }else{
+            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
+            break;
+        }
+        return $checkQuestionsPoll;
+    };
+}
+
+function addStudentsToPoll($students, $pollID){
+    $checkStudentssPoll = true;
+    for($s = 0; $s < sizeof($students); $s++){
+        $startSession = connToDB()->prepare("INSERT INTO `student_poll`(`studentID`, `pollID`) VALUES (:studentID, :pollID);");
+        $startSession->bindParam(':studentID', $students[$s]);
+        $startSession->bindParam(':pollID', $pollID);
+        writeInLog("SQL", "INSERT INTO `poll_question`(`questionID`, `pollID`) VALUES ('".$students[$s]."', '".$pollID."');", $_SESSION["ID"]);
+        $checkStudentsPoll = $startSession->execute();
+        if($checkStudentsPoll){
+            writeInLog("S", "'ID: ". $pollID." - Professor ".$students[$s]." ha esta afegit al formulari", $_SESSION["ID"]);
+        }else{
+            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
+            break;
+        }
+        return $checkStudentsPoll;
+    };
+}
     function savePoll(){
         try {
             //Teachers of Poll
-            $teachers = [];
-            foreach($_POST['teachers'] as $teacher){
-                $startSession = connToDB()->prepare("SELECT ID FROM `user` where user.username = :username;");
-                $startSession -> bindParam(':username', $teacher);
-                $startSession->execute();
-                $teachers = $startSession->fetch();
-            }
+            $teachers = $_POST['teachers'];
 
             //Questions of Poll
-            $questions = $_POST['questions'];
+            $questions = [];
+            if(isset($_POST['questions'])){$questions = $_POST['questions'];}
 
-            //Questions of Poll
+            //Students of Poll
             $students = [];
-            if(isset($_POST['students'])){
-                foreach($_POST['students'] as $student){
-                    $startSession = connToDB()->prepare("SELECT ID FROM `user` where user.username = :username;");
-                    $startSession -> bindParam(':username', $student);
-                    $startSession->execute();
-                    $students = $startSession->fetch();
+            if(isset($_POST['students'])){$students = $_POST['students'];}
+
+            //CREATE POLL
+            $startSession = connToDB()->prepare("INSERT INTO `poll`(`title`, `startDate`) VALUES (:title, :startDate);");
+            $startDate = date("Y-m-d H:i:s");
+            if(!empty($_POST['startDate'])){
+                $startDate = str_replace("T"," ",$_POST['startDate']);
+                $startDate = $startDate.':00';
+            }
+            if(!empty($_POST['finishDate'])){
+                $finishDate = str_replace("T"," ",$_POST['finishDate']);
+                $finishDate .= ':00';
+                $startSession = connToDB()->prepare("INSERT INTO `poll`(`title`, `startDate`, `finishDate`) VALUES (:title, :startDate, :finishDate);");
+                $startSession->bindParam(':finishDate', $finishDate);
+            }
+            $startSession->bindParam(':title', $_POST['pollTitle']);
+            $startSession->bindParam(':startDate', $startDate);
+            $checkPoll = $startSession->execute();
+            writeInLog("SQL", "INSERT INTO `poll`(`title`, `startDate`, `finishDate`) VALUES (".$_POST['pollTitle'].", $startDate);", $_SESSION["ID"]);
+            if($checkPoll){
+                $startSession = connToDB()->prepare("select max(id) as id from poll;");
+                $startSession->execute();
+                $poll = $startSession->fetch();
+                //ID of last poll -> $poll["id"]; //
+                writeInLog("S", "ID: ". $poll["id"]." - La enquesta  ha estat enregistrada correctament", $_SESSION["ID"]);
+                array_push($_SESSION['errors'], "displayMessage('La enquesta  ha estat enregistrada correctament',$('.messageBox'),0);");
+                
+                //Add teachers
+                $teachersPoll = addTeachersToPoll($teachers, $poll["id"]);
+                if($teachersPoll){
+                    array_push($_SESSION['errors'], "displayMessage('Professor/s afegit/s a la enquesta correctament',$('.messageBox'),0);");
+                    
+                    //Add questions
+                    $questionsPoll = addQuestionsToPoll($questions, $poll["id"]);
+                    if($questionsPoll){
+                        array_push($_SESSION['errors'], "displayMessage('Pregunta/es afegida/es al formulari correctament',$('.messageBox'),0);");
+
+                        //Add students
+                        $studentsPoll = addStudentsToPoll($students, $poll["id"]);
+                        if($studentsPoll){
+                            array_push($_SESSION['errors'], "displayMessage('Estudiant/s afegit/s a la enquesta correctament',$('.messageBox'),0);");
+                        }
+                    }
                 }
             }
-
-            echo var_dump($teachers);
-            echo var_dump($questions);
-            echo var_dump($students);
+            header("Location: teacher.php");
         }catch (PDOException $e) {
-            writeInLog("E", "Error:".$e->getMessage());
+            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
             array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");
-            //header("Location: login.php");
+            header("Location: login.php");
         }
     }
+
 function saveOptionsofSimpleQuestions($questionId, $lastId)
 {
     try {
@@ -229,5 +311,12 @@ if ((isset($_POST["questionTitle"]) && (!empty($_POST["questionTitle"]))) && (is
             break;
     }
     header("Location: teacher.php");
+}
+
+
+//Create new poll
+if(isset($_POST['pollTitle'])){
+    savePoll();
+    
 }
 ?>

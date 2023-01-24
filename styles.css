@@ -477,15 +477,9 @@ i.fa.fa-close {
     background-color: #7cae7a;
 }
 
-/* #teacher #divDinamic{
-    width: 70%;
-    margin: 5% 15%;
-} */
-
-#teacher #divDinamic {
-    width: 50%;
-    margin-left: 25%;
-    margin-top: 5%;
+#teacher #divDinamic{
+    width: 80%;
+    margin: 5% 10%;
     text-align: center;
 }
 

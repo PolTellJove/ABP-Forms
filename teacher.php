@@ -126,7 +126,7 @@ $_GET['bodyClass'] = '';
 
         function createInputDate(id, parentID){
             var newInput = $('<input>');
-            newInput.attr("type", "date");
+            newInput.attr("type", "datetime-local");
             newInput.attr("id", id);
             $("#"+parentID+"").append(newInput);
         }
@@ -158,12 +158,13 @@ $_GET['bodyClass'] = '';
 
         function clickSavePoll(){
             $( "#saveButton" ).click(function() {
-                elememts = $("form#newPollForm :input")
-                console.log(elememts);
-                elememts.each(function(){
-                    $(this).val($(this).attr('id'))
-                });
-                $("#newPollForm").submit();
+                if($("#pollTitle").val()){
+                    selectedElements = $("form#newPollForm :input.selected")
+                    selectedElements.each(function(){
+                        $(this).val($(this).attr('id'))
+                    });
+                    $("#newPollForm").submit();
+                }
             });
 
 
@@ -171,7 +172,6 @@ $_GET['bodyClass'] = '';
 
         function savePoll(){
             createDiv('divSave', 'newPoll');
-
             createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
             createButtons('Cancelar', 'cancelButton', 'createPoll', 'divSave');
             clickSavePoll();
@@ -341,8 +341,16 @@ $_GET['bodyClass'] = '';
         function infoOfPoll(){
             createDiv('pollInfo', 'newPoll')
             createInputText('pollTitle', 'pollInfo')
-            createInputDate('startDate', 'pollInfo')
-            createInputDate('finishDate', 'pollInfo')
+            $('#pollTitle').attr('name', 'pollTitle')
+            $('#pollTitle').on('input', function (e) {
+                if (/^\s/.test($('#pollTitle').val())) {
+                    $('#pollTitle').val('');
+                }
+            });
+            createInputDate('startDate', 'pollInfo');
+            $('#startDate').attr('name', 'startDate');
+            createInputDate('finishDate', 'pollInfo');
+            $('#finishDate').attr('name', 'finishDate');
         }
 
 
@@ -354,6 +362,7 @@ $_GET['bodyClass'] = '';
             $form.attr("method", "POST");
             $form.appendTo('#divDinamic')
             createDiv('newPoll', 'newPollForm')
+            infoOfPoll();
             teachersForPoll();
         }
 
