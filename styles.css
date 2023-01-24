@@ -587,6 +587,11 @@ dialog::backdrop  {
     width: 40%;
 }
 
+#teacher #divDinamic #polls p {
+    display: inline-block;
+    width: 90%;
+}
+
 #teacher #radioButton {
     padding: 1%;
 }
@@ -651,6 +656,10 @@ dialog::backdrop  {
 }
 
 #teacher #divDinamic #questions .fa-pen, .fa-trash {
+    margin-left: 10px;
+}
+
+#teacher #divDinamic #polls .fa-pen, .fa-trash {
     margin-left: 10px;
 }
 

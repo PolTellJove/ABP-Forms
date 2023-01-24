@@ -303,13 +303,36 @@ function removeQuestion($id){
         writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
         array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
     }
-
 }
-
-
 
 if(isset($_POST['idQuestionToDelete'])){
     removeQuestion($_POST['idQuestionToDelete']);
+    header("Location: teacher.php");
+}
+
+function removePoll($id) {
+    try{
+        $startSession = connToDB()->prepare("UPDATE `poll` SET active = 1 where ID = :idPoll");
+        $startSession->bindParam(":idPoll", $id);
+        $done = $startSession->execute();
+
+        if($done){
+            writeInLog("S", "Enquesta esborrada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('Enquesta esborrada correctament',$('.messageBox'),0);");
+        }
+        else{
+            writeInLog("W", "Enquesta no ha sigut esborrada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('Enquesta no ha sigut esborrada correctament',$('.messageBox'),2);");
+        }
+    }
+    catch (\Throwable $th) {
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+}
+
+if(isset($_POST['idPollToDelete'])){
+    removePoll($_POST['idPollToDelete']);
     header("Location: teacher.php");
 }
 

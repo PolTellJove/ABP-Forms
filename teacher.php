@@ -42,7 +42,7 @@ $_GET['bodyClass'] = '';
 
         
         function getPolls(){
-                $startSession = connToDB()->prepare("SELECT * FROM `poll`;");
+                $startSession = connToDB()->prepare("SELECT * FROM `poll` where active = 0;");
                 $startSession->execute();
                 $_SESSION['allPolls'] = [];
                 foreach ($startSession as $poll) {
@@ -190,7 +190,7 @@ $_GET['bodyClass'] = '';
             }
         
         function confirmDelete(){
-            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar la pregunta?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
+            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
             $('#teacher').append(popup);
         }
 
@@ -211,7 +211,6 @@ $_GET['bodyClass'] = '';
         }
 
         function deleteQuestion(id){
-            console.log(id);
             $("#btnPublish-yes").on("click", function() {
                $("#teacher").append("<form id='formToSend' action='checkoutForms.php' method='POST'><input hidden type='number' name='idQuestionToDelete' id='idQuestionToDelete'><input hidden type='submit' name='sendData' id='sendData'></form>");
                $("#idQuestionToDelete").val(id);
@@ -219,18 +218,38 @@ $_GET['bodyClass'] = '';
             });
         }
 
+        function clickTrashPoll(){
+            $(".fa-trash").on("click", function() {
+                idPoll = $(this).attr("id");
+                confirmDelete();
+                $("#modalPublish").show();
+                deleteModal();
+                deletePoll(idPoll);
+            });
+        }
 
-
-       
-
-        
+        function deletePoll(id){
+            $("#btnPublish-yes").on("click", function() {
+               $("#teacher").append("<form id='formToSendPoll' action='checkoutForms.php' method='POST'><input hidden type='number' name='idPollToDelete' id='idPollToDelete'><input hidden type='submit' name='sendDataPoll' id='sendDataPoll'></form>");
+               $("#idPollToDelete").val(id);
+               $("#formToSendPoll").submit();
+            });
+        }
 
         //VIEW POLLS
         function showPolls(){
-            createDiv('polls', 'divDinamic')
+            createDiv('polls', 'divDinamic');
             var polls = <?php echo json_encode($_SESSION['allPolls']); ?>;
-            polls.forEach(poll => createP(poll['ID'], poll['title'], '', 'polls'));
+            polls.forEach(poll => {
+                createP(poll['ID'], poll['title'], '', 'polls');
+                $("#polls").find("p:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-pen'></i>");
+                $("#polls").find("i:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-trash'></i>");
+            });
+            clickTrashPoll();
+            
+                
         }
+        
         
         //NEW POLL
         function createManagementButtons(addID, deleteID, className, parentID, addText, deleteText){
