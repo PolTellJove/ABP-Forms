@@ -612,6 +612,15 @@ i.fa.fa-close {
     border-radius: 5px;
 }
 
+#teacher #divDinamic #questions p {
+    display: inline-block;
+    width: 90%;
+}
+
+#teacher #divDinamic #questions .fa-pen, .fa-trash {
+    margin-left: 10px;
+}
+
 #teacher #divDinamic #polls {
     padding: 15px 30px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);

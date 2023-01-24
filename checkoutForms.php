@@ -157,9 +157,6 @@ function addTeachersToPoll($teachers, $pollID){
         $checkTeachersPoll = $startSession->execute();
         if($checkTeachersPoll){
             writeInLog("S", "'ID: ". $pollID." - Professor ".$teachers[$t]." ha esta afegit al formulari", $_SESSION["ID"]);
-        }else{
-            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
-            break;
         }
     };
     return $checkTeachersPoll;
@@ -175,9 +172,6 @@ function addQuestionsToPoll($questions, $pollID){
         $checkQuestionsPoll = $startSession->execute();
         if($checkQuestionsPoll){
             writeInLog("S", "'ID: ". $pollID." - Pregunta: ".$questions[$q]." ha esta afegida al formulari", $_SESSION["ID"]);
-        }else{
-            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
-            break;
         }
         return $checkQuestionsPoll;
     };
@@ -193,9 +187,6 @@ function addStudentsToPoll($students, $pollID){
         $checkStudentsPoll = $startSession->execute();
         if($checkStudentsPoll){
             writeInLog("S", "'ID: ". $pollID." - Professor ".$students[$s]." ha esta afegit al formulari", $_SESSION["ID"]);
-        }else{
-            writeInLog("E", "Error:".$e->getMessage(), $_SESSION["ID"]);
-            break;
         }
         return $checkStudentsPoll;
     };

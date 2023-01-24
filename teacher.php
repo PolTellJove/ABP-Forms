@@ -181,8 +181,30 @@ $_GET['bodyClass'] = '';
         function showQuestions(){
             createDiv('questions', 'divDinamic')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-            questions.forEach(question => createP(question['ID'], question['question'], '', 'questions'));
+            questions.forEach(question => {
+                createP(question['ID'], question['question'], '', 'questions'); 
+                $("#questions").find("p:last").after("<i id='"+question['ID']+"' class='fa-solid fa-pen'></i>");
+                $("#questions").find("i:last").after("<i id='"+question['ID']+"' class='fa-solid fa-trash'></i>");
+            });
+            clickTrash();
+            }
+        
+        function confirmDelete(){
+            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar la pregunta?></h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></div></div></dialog>";
+            $('#teacher').append(popup);
         }
+
+        function clickTrash(){
+            $(".fa-trash").on("click", function() {
+                confirmDelete();
+                $("#modalPublish").show();
+            });
+            
+        }
+
+       
+
+        
 
         //VIEW POLLS
         function showPolls(){
