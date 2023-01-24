@@ -627,7 +627,7 @@ i.fa.fa-close {
 }
 
 #teacher #newPoll > div{
-    padding: 5%;
+    padding: 1%;
 }
 
 #teacher #pollInfo{
@@ -654,11 +654,11 @@ i.fa.fa-close {
 }
 
 #teacher #selectedTeachers, #selectedStudents, #selectedQuestions{
-    background-color: orange;
+    /* background-color: orange; */
 }
 
 #teacher #availableTeachers, #availableStudents, #availableQuestions{
-    background-color: #38b67d;
+    /* background-color: #38b67d; */
 }
 
 #teacher #availableTeachers, #selectedTeachers, #managementButtonsTeacher, 
@@ -671,9 +671,9 @@ i.fa.fa-close {
 #teacher #availableTeachers, #selectedTeachers, 
         #availableStudents, #selectedStudents, 
         #availableQuestions, #selectedQuestions{
-    padding: 2%;
     display: grid;
     justify-content: center;
+    align-content: space-around;
 }
 
 
