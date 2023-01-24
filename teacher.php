@@ -51,7 +51,7 @@ $_GET['bodyClass'] = '';
         }
 
         function getQuestions(){
-            $startSession = connToDB()->prepare("SELECT * FROM `question`;");
+            $startSession = connToDB()->prepare("SELECT * FROM `question` where active = 0;");
             $startSession->execute();
             $_SESSION['allQuestions'] = [];
             foreach ($startSession as $question) {
@@ -190,17 +190,36 @@ $_GET['bodyClass'] = '';
             }
         
         function confirmDelete(){
-            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar la pregunta?></h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></div></div></dialog>";
+            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar la pregunta?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
             $('#teacher').append(popup);
         }
 
         function clickTrash(){
             $(".fa-trash").on("click", function() {
+                idQuestion = $(this).attr("id");
                 confirmDelete();
                 $("#modalPublish").show();
+                deleteModal();
+                deleteQuestion(idQuestion);
             });
-            
         }
+
+        function deleteModal(){
+            $("#btnPublish-no").on("click", function() {
+                $("#modalPublish").remove();
+            })
+        }
+
+        function deleteQuestion(id){
+            console.log(id);
+            $("#btnPublish-yes").on("click", function() {
+               $("#teacher").append("<form id='formToSend' action='checkoutForms.php' method='POST'><input hidden type='number' name='idQuestionToDelete' id='idQuestionToDelete'><input hidden type='submit' name='sendData' id='sendData'></form>");
+               $("#idQuestionToDelete").val(id);
+               $("#formToSend").submit();
+            });
+        }
+
+
 
        
 

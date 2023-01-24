@@ -284,6 +284,35 @@ function saveOptionsofSimpleQuestions($questionId, $lastId)
     }
 }
 
+function removeQuestion($id){
+    try{
+        $startSession = connToDB()->prepare("UPDATE `question` SET active = 1 WHERE ID = :idOption");
+        $startSession->bindParam(':idOption', $id);
+        $done = $startSession->execute();
+
+        if($done){
+            writeInLog("S", "La pregunta ha sigut esborrada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('La pregunta ha sigut esborrada correctament',$('.messageBox'),0);");
+        }
+        else{
+            writeInLog("W", "La pregunta no ha sigut esborrada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('La pregunta no ha sigut esborrada correctament',$('.messageBox'),2);");
+        }
+    }
+    catch (\Throwable $th) {
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+
+}
+
+
+
+if(isset($_POST['idQuestionToDelete'])){
+    removeQuestion($_POST['idQuestionToDelete']);
+    header("Location: teacher.php");
+}
+
 if ((isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))) {
     login();
 }
