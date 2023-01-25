@@ -49,6 +49,33 @@ $_GET['bodyClass'] = '';
                     array_push($_SESSION['allPolls'], $poll);
                 }
         }
+        function getPoll($ID){
+            $startSession = connToDB()->prepare("SELECT * FROM `poll` WHERE poll.ID = :pollID;");
+            $startSession->bindParam(':pollID', $ID);
+            $startSession->execute();
+            $_SESSION['edtiPoll'] = [];
+            foreach ($startSession as $poll) {
+                array_push($_SESSION['allPolls'], $poll);
+            }
+        }
+
+        function getTeachersOfActivePolls(){
+            $startSession = connToDB()->prepare("SELECT teacherID, pollID FROM `teacher_poll` tp RIGHT JOIN poll p on tp.pollID = p.ID  WHERE p.active = 0;");
+            $startSession->execute();
+            $_SESSION['teachersPolls'] = [];
+            foreach ($startSession as $teachersOfPoll) {
+                array_push($_SESSION['teachersPolls'], $teachersOfPoll);
+            }
+        }
+
+        function getStudentsOfActivePolls(){
+            $startSession = connToDB()->prepare("SELECT studentID, pollID FROM `student_poll` sp RIGHT JOIN poll p on sp.pollID = p.ID  WHERE p.active = 0;");
+            $startSession->execute();
+            $_SESSION['studentsPolls'] = [];
+            foreach ($startSession as $studentsOfPoll) {
+                array_push($_SESSION['studentsPolls'], $studentsOfPoll);
+            }
+        }
 
         function getQuestions(){
             $startSession = connToDB()->prepare("SELECT * FROM `question` where active = 0;");
@@ -56,6 +83,15 @@ $_GET['bodyClass'] = '';
             $_SESSION['allQuestions'] = [];
             foreach ($startSession as $question) {
                 array_push($_SESSION['allQuestions'], $question);
+            }
+        }
+
+        function getQuestionsOfActivePolls(){
+            $startSession = connToDB()->prepare("SELECT questionID, pollID FROM `poll_question` pq RIGHT JOIN poll p on pq.pollID = p.ID  WHERE p.active = 0;");
+            $startSession->execute();
+            $_SESSION['questionsPolls'] = [];
+            foreach ($startSession as $questionsOfPoll) {
+                array_push($_SESSION['questionsPolls'], $questionsOfPoll);
             }
         }
 
@@ -72,9 +108,6 @@ $_GET['bodyClass'] = '';
             }
         }
 
-        function newQuestion(){
-            
-        }
         getQuestions();
         getPolls();
         getUsers();
@@ -98,6 +131,11 @@ $_GET['bodyClass'] = '';
         getTypes();
         getOptions();
         getQuestions();
+
+        //For edit polls
+        getTeachersOfActivePolls();
+        getQuestionsOfActivePolls();
+        getStudentsOfActivePolls();
 
         ?>
     </div>
@@ -237,17 +275,116 @@ $_GET['bodyClass'] = '';
         }
 
         //VIEW POLLS
+        function getTeachersPoll($ID){
+            var teachers = <?php echo json_encode($_SESSION['teachersPolls']); ?>;
+            teachersOfPoll = [];
+            teachers.forEach(teacher => {
+                if($ID == teacher['pollID']){
+                    teachersOfPoll.push(teacher['teacherID']);
+                }
+            });
+            return teachersOfPoll;
+        }
+
+        function teachersPoll(poll){
+            teachersofPoll = getTeachersPoll(poll['ID']);
+            teachersofPoll.forEach(teacher => {
+                element = $("#"+teacher).clone();
+                $("#"+teacher).remove();
+                element.removeClass('available').addClass('selected').css('background-color', '');
+                element.attr('name', 'teachers[]')
+                element.appendTo("#selectedTeachers");
+            });
+            clickTeachers();
+        }
+
+        function getQuestionPoll($ID){
+            var questions = <?php echo json_encode($_SESSION['questionsPolls']); ?>;
+            questionsOfPoll = [];
+            questions.forEach(question => {
+                if($ID == question['pollID']){
+                    questionsOfPoll.push(question['questionID']);
+                }
+            });
+            return questionsOfPoll;
+        }
+
+
+        function questionPoll(poll){
+            questionsofPoll = getQuestionPoll(poll['ID']);
+            questionsofPoll.forEach(question => {
+                element = $("#"+question).clone();
+                $("#"+question).remove();
+                element.removeClass('available').addClass('selected').css('background-color', '');
+                element.attr('name', 'questions[]')
+                element.appendTo("#selectedQuestions");
+            });
+            clickQuestions()
+        }
+
+        function getStudentPoll($ID){
+            var students = <?php echo json_encode($_SESSION['studentsPolls']); ?>;
+            studentsOfPoll = [];
+            students.forEach(student => {
+                if($ID == student['pollID']){
+                    studentsOfPoll.push(student['studentID']);
+                }
+            });
+            return studentsOfPoll;
+        }
+
+
+        function studentPoll(poll){
+            studentsofPoll = getStudentPoll(poll['ID']);
+            studentsofPoll.forEach(student => {
+                element = $("#"+student).clone();
+                $("#"+student).remove();
+                element.removeClass('available').addClass('selected').css('background-color', '');
+                element.attr('name', 'students[]')
+                element.appendTo("#selectedStudents");
+            });
+            clickStudents();
+        }
+
+        function editingPoll(poll){
+            $('#pollTitle').val(poll['title']);
+            $('#startDate').val(poll['startDate']);
+            $('#finishDate').val(poll['finishDate']);
+            teachersPoll(poll);
+            questionsForPoll();
+            questionPoll(poll);
+            savePoll();
+            studentsForPoll();
+            studentPoll(poll);
+        }
+
+        function clickPenPoll(){
+            $(".poll.fa-pen").on('click', function(){
+                $('.button').removeClass('active');
+                $('#createPoll').addClass('active');
+                $("#divDinamic").empty();
+                newPoll();
+                 //Get info of editing poll
+                var polls = <?php echo json_encode($_SESSION['allPolls']); ?>;
+                polls.forEach(poll => {
+                    if(poll['ID'] == $(this).attr('id')){
+                        editPoll = poll;
+                    }
+                });
+                editingPoll(editPoll);
+            })
+        }
+
         function showPolls(){
             createDiv('polls', 'divDinamic');
             var polls = <?php echo json_encode($_SESSION['allPolls']); ?>;
             polls.forEach(poll => {
                 createP(poll['ID'], poll['title'], '', 'polls');
-                $("#polls").find("p:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-pen'></i>");
+                $("#polls").find("p:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-pen poll'></i>");
                 $("#polls").find("i:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-trash'></i>");
             });
-            clickTrashPoll();
-            
-                
+            clickPenPoll();
+            clickTrashPoll();         
         }
         
         
@@ -297,7 +434,7 @@ $_GET['bodyClass'] = '';
             clickManagementButtons('deleteTeacher', 'selected', 'available', 'availableTeachers', 'teacherButton', '');
             $('.teacherButton').on("click", function(){
                 if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll();};
-                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();$('#divStudents').remove()};  
+                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();$('#divStudents').remove();};  
                 clickTeachers();
             });
         }
@@ -325,7 +462,7 @@ $_GET['bodyClass'] = '';
             clickManagementButtons('deleteQuestion', 'selected', 'available', 'availableQuestions', 'questionButton', '');
             $('.questionButton').on("click", function(){
                 if($('.question.selected').length == 1 && $('#divStudents').length == 0){savePoll();studentsForPoll();} 
-                if(!$('.question.selected').length){$('#divSave').remove();$('#divStudents').remove()}
+                if(!$('.question.selected').length){$('#divSave').remove();$('#divStudents').remove();}
                 clickQuestions();
             });
         }
