@@ -439,6 +439,27 @@ $_GET['bodyClass'] = '';
         space.insertBefore("#" + insertBeforeThat);
     }
 
+    function saveButtonOfSimpleQuestion(){
+        if (!$("#saveQuestion").length) {
+            createInput("submit", null ,"buttonsOfNewQuestion", "saveQuestion", "Enviar", null, null, null);
+        }
+        $('.inputsForAddOption').each(
+            function(){
+                if($(this).val() == '' && $("#saveQuestion").length){
+                    $("#saveQuestion").remove();
+                }
+            }
+        )
+    }
+
+    function onInputNewOptions(){
+        $('.inputsForAddOption').on('input', function (e) {
+            saveButtonOfSimpleQuestion();
+            if (/^\s/.test($(this).val())) {
+                $(this).val('');
+            }
+        });
+    }
     function newQuestion(divID) {
         createDiv("newQuestion", "divDinamic");
         createForm("formNewQuestion", "newQuestion", "checkoutForms.php", "POST");
@@ -447,17 +468,16 @@ $_GET['bodyClass'] = '';
         $("#formNewQuestion").append("<br>");
         createInput("text", "questionTitle", "formNewQuestion", "questionTitle", null, "Títol de la pregunta", null, null);
         checkSelect();
-        $("#formNewQuestion").append("<br>");
-        $("#formNewQuestion").append("<br>");
-        createInput("reset", null, "formNewQuestion", "clearForm", "Cancel·lar", null, null, null);
+        createDiv('buttonsOfNewQuestion', "formNewQuestion");
+        createInput("reset", null, "buttonsOfNewQuestion", "clearForm", "Cancel·lar", null, null, null);
         $('#questionTitle').on('input', function (e) {
             if (/^\s/.test($('#questionTitle').val())) {
                 $('#questionTitle').val('');
             }
             if ($("#questionTitle").val().length && $("#typeSelect option:selected").attr("id") != 0) {
                 if (!$("#saveQuestion").length) {
-                    createInput("submit", "buttonSaveQuestion", "formNewQuestion", "saveQuestion", null, null, null);
-                    $("#saveQuestion").insertBefore("#clearForm");
+                    createInput("submit", null ,"buttonsOfNewQuestion", "saveQuestion", "Enviar", null, null, null);
+                    saveButtonOfSimpleQuestion();
                 }
             } else {
                 $("#saveQuestion").remove();
@@ -485,11 +505,14 @@ $_GET['bodyClass'] = '';
             else if ($("#typeSelect option:selected").attr("id") == 3) {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
-                $("<div>").attr("id", "simpleOption").insertBefore("#clearForm");
-                createInput("text", "options[]", "simpleOption", "optionTitle1", null, "Escrigui la opció", null, "inputsForAddOption");
-                createInput("text", "options[]", "simpleOption", "optionTitle2", null, "Escrigui la opció", null, "inputsForAddOption");
-                $("#simpleOption").append("<br>");
-                $("#simpleOption").find("input:last").after("<i id='addOption' class='fa fa-plus' aria-hidden='true'></i>");
+                createDiv('simpleOption', 'formNewQuestion');
+                createInput("text", "options[]", "simpleOption", "optionTitle1", null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");
+                createInput("text", "options[]", "simpleOption", "optionTitle2", null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");
+                createDiv('moreOptions', 'formNewQuestion');
+                $("#moreOptions").append("<i id='addOption' class='fa fa-plus' aria-hidden='true'></i>");
+                $("#questionTitle").after($("#simpleOption"));
+                $("#buttonsOfNewQuestion").before($("#moreOptions"));
+                onInputNewOptions()
                 addEventForAddInputs();
                 deleteInputs();
             }
@@ -502,17 +525,18 @@ $_GET['bodyClass'] = '';
             toDelete = "optionTitle" + numOption;
             $("#" + toDelete).remove();
             $(this).remove();
+            saveButtonOfSimpleQuestion();
         });
     }
 
     function addEventForAddInputs() {
         $("#addOption").click(function () {
             var numOption = $(".inputsForAddOption").length + 1;
-            createInput("text", "options[]", "simpleOption", "optionTitle" + numOption, null, "Escrigui la opció", true, "inputsForAddOption");
+            createInput("text", "options[]", "simpleOption", "optionTitle" + numOption, null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");
             $("#optionTitle"+numOption).addClass("add");
             $("#simpleOption").find("input:last").after("<i id='" + numOption + "' class='fa fa-minus deleteOption' aria-hidden='true'></i>");
-            $("#simpleOption").append("<br>");
-            $("#simpleOption").append("<br>");
+            saveButtonOfSimpleQuestion();
+            onInputNewOptions()
             deleteInputs();
         })
     }
@@ -545,10 +569,6 @@ $_GET['bodyClass'] = '';
             $(this).addClass('active');
         });
 
-
-        //START PAGE
-        // showPolls();
-        newPoll();
         $("#createQuestion").click(function () {
             if (!$("#newQuestion").length) {
                 $("#divDinamic").empty();
@@ -562,6 +582,10 @@ $_GET['bodyClass'] = '';
             $('#radioGroup').hide();
             $("#taQuestion").hide();
         });
+
+        //START PAGE
+        // showPolls();
+        newPoll();
     });
 </script>
 <?php
