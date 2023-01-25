@@ -42,7 +42,7 @@ $_GET['bodyClass'] = '';
 
         
         function getPolls(){
-                $startSession = connToDB()->prepare("SELECT * FROM `poll`;");
+                $startSession = connToDB()->prepare("SELECT * FROM `poll` where active = 0;");
                 $startSession->execute();
                 $_SESSION['allPolls'] = [];
                 foreach ($startSession as $poll) {
@@ -51,7 +51,7 @@ $_GET['bodyClass'] = '';
         }
 
         function getQuestions(){
-            $startSession = connToDB()->prepare("SELECT * FROM `question`;");
+            $startSession = connToDB()->prepare("SELECT * FROM `question` where active = 0;");
             $startSession->execute();
             $_SESSION['allQuestions'] = [];
             foreach ($startSession as $question) {
@@ -181,15 +181,75 @@ $_GET['bodyClass'] = '';
         function showQuestions(){
             createDiv('questions', 'divDinamic')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-            questions.forEach(question => createP(question['ID'], question['question'], '', 'questions'));
+            questions.forEach(question => {
+                createP(question['ID'], question['question'], '', 'questions'); 
+                $("#questions").find("p:last").after("<i id='"+question['ID']+"' class='fa-solid fa-pen'></i>");
+                $("#questions").find("i:last").after("<i id='"+question['ID']+"' class='fa-solid fa-trash'></i>");
+            });
+            clickTrash();
+            }
+        
+        function confirmDelete(){
+            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
+            $('#teacher').append(popup);
+        }
+
+        function clickTrash(){
+            $(".fa-trash").on("click", function() {
+                idQuestion = $(this).attr("id");
+                confirmDelete();
+                $("#modalPublish").show();
+                deleteModal();
+                deleteQuestion(idQuestion);
+            });
+        }
+
+        function deleteModal(){
+            $("#btnPublish-no").on("click", function() {
+                $("#modalPublish").remove();
+            })
+        }
+
+        function deleteQuestion(id){
+            $("#btnPublish-yes").on("click", function() {
+               $("#teacher").append("<form id='formToSend' action='checkoutForms.php' method='POST'><input hidden type='number' name='idQuestionToDelete' id='idQuestionToDelete'><input hidden type='submit' name='sendData' id='sendData'></form>");
+               $("#idQuestionToDelete").val(id);
+               $("#formToSend").submit();
+            });
+        }
+
+        function clickTrashPoll(){
+            $(".fa-trash").on("click", function() {
+                idPoll = $(this).attr("id");
+                confirmDelete();
+                $("#modalPublish").show();
+                deleteModal();
+                deletePoll(idPoll);
+            });
+        }
+
+        function deletePoll(id){
+            $("#btnPublish-yes").on("click", function() {
+               $("#teacher").append("<form id='formToSendPoll' action='checkoutForms.php' method='POST'><input hidden type='number' name='idPollToDelete' id='idPollToDelete'><input hidden type='submit' name='sendDataPoll' id='sendDataPoll'></form>");
+               $("#idPollToDelete").val(id);
+               $("#formToSendPoll").submit();
+            });
         }
 
         //VIEW POLLS
         function showPolls(){
-            createDiv('polls', 'divDinamic')
+            createDiv('polls', 'divDinamic');
             var polls = <?php echo json_encode($_SESSION['allPolls']); ?>;
-            polls.forEach(poll => createP(poll['ID'], poll['title'], '', 'polls'));
+            polls.forEach(poll => {
+                createP(poll['ID'], poll['title'], '', 'polls');
+                $("#polls").find("p:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-pen'></i>");
+                $("#polls").find("i:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-trash'></i>");
+            });
+            clickTrashPoll();
+            
+                
         }
+        
         
         //NEW POLL
         function createManagementButtons(addID, deleteID, className, parentID, addText, deleteText){

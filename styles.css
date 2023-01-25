@@ -4,6 +4,11 @@
 
 /* Header Styling */
 
+html, body
+{
+	height: 100%;
+}
+
 header .headerTitle {
     display: flex;
 }
@@ -137,6 +142,13 @@ body {
 
 i {
     cursor: pointer;
+}
+
+
+
+dialog{
+    top: 40%;
+    position: fixed;
 }
 
 /* Anchor of going back */
@@ -519,6 +531,23 @@ i.fa.fa-close {
     margin: 2%;
 }
 
+#teacher #modalPublish .titleDialog{
+    display: flex;
+    justify-content: center;
+}
+
+#teacher #modalPublish #btnsDialog {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+}
+
+#teacher #modalPublish {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #teacher #simpleOption .inputsForAddOption {
     padding: 5px 0px;
     text-align: center;
@@ -545,6 +574,10 @@ i.fa.fa-close {
     color: white;
 }
 
+dialog::backdrop  {
+    background: rgba(0,0,0,0.75) !important;
+}
+
 #teacher #questionTitle:focus {
     border-color: #62929E;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
@@ -557,6 +590,11 @@ i.fa.fa-close {
     justify-items: self-start;
     padding-left: 40%;
     width: 40%;
+}
+
+#teacher #divDinamic #polls p {
+    display: inline-block;
+    width: 90%;
 }
 
 #teacher #radioButton {
@@ -615,6 +653,19 @@ i.fa.fa-close {
     padding: 15px 30px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
     border-radius: 5px;
+}
+
+#teacher #divDinamic #questions p {
+    display: inline-block;
+    width: 90%;
+}
+
+#teacher #divDinamic #questions .fa-pen, .fa-trash {
+    margin-left: 10px;
+}
+
+#teacher #divDinamic #polls .fa-pen, .fa-trash {
+    margin-left: 10px;
 }
 
 #teacher #divDinamic #polls {
