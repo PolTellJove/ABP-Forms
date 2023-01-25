@@ -91,7 +91,7 @@ header .buttonLogout:hover .logout {
 footer {
     bottom: -150px;
     width: 100%;
-    position: absolute;
+    position: relative;
     background-color: #b4b2a5;
     color: #393D3F;
     grid-row: 3;

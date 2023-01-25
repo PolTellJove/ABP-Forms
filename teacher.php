@@ -177,31 +177,33 @@ $_GET['bodyClass'] = '';
             clickSavePoll();
         }
          
-        //VIEW QUESTIONS
+        //MENU QUESTIONS
+        function editQuestion(){
+            $('.button').removeClass('active');
+            $('#createQuestion').addClass('active');
+        }
+        function clickPen(){
+            $(".fa-pen").on("click", function() {
+                idQuestion = $(this).attr("id");
+                editQuestion();
+            });
+        }
+
         function showQuestions(){
             createDiv('questions', 'divDinamic')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
             questions.forEach(question => {
                 createP(question['ID'], question['question'], '', 'questions'); 
                 $("#questions").find("p:last").after("<i id='"+question['ID']+"' class='fa-solid fa-pen'></i>");
-                $("#questions").find("i:last").after("<i id='"+question['ID']+"' class='fa-solid fa-trash'></i>");
+                $("#questions").find("i:last").after("<i id='"+question['ID']+"' class='fa-solid fa-trash '></i>");
             });
-            clickTrash();
+            //clickTrash();
+            clickPen();
             }
         
         function confirmDelete(){
             var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
             $('#teacher').append(popup);
-        }
-
-        function clickTrash(){
-            $(".fa-trash").on("click", function() {
-                idQuestion = $(this).attr("id");
-                confirmDelete();
-                $("#modalPublish").show();
-                deleteModal();
-                deleteQuestion(idQuestion);
-            });
         }
 
         function deleteModal(){
