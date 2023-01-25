@@ -38,8 +38,91 @@ function login()
     } catch (PDOException $e) {
         writeInLog("E", "Error:" . $e->getMessage());
         array_push($_SESSION['errors'], "displayMessage('Error:" . $e->getMessage() . "',$('.messageBox'),3);");
-        header("Location: login.php");
     }
+}
+
+
+
+
+function updateOptions(){
+    try{
+        for ($i = 0; $i < count($_POST['optionsQuestion']); $i++){
+            echo $i;
+            $startSession = connToDB()->prepare("UPDATE option SET answer = :title WHERE ID = :id;");
+            $startSession->bindParam(':title', $_POST['optionsQuestion'][$i]);
+            $startSession->bindParam(':id', $_POST['idsOptions'][$i]);
+            $done = $startSession->execute();
+        }
+        $startSession->close();
+        if ($done) {
+            writeInLog("S", "La pregunta ha sigut editada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('La pregunta ha sigut editada correctament',$('.messageBox'),0);");
+        } else {
+            writeInLog("W", "La pregunta no ha sigut editada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('La pregunta no ha sigut editada correctament',$('.messageBox'),2);");
+        }
+    }
+    catch(\Throwable $th){
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+    
+}
+
+if(isset($_POST['optionsQuestion']) ){
+    updateQuestionNumericText($_POST['titleSimpleOption'], $_POST['idSimpleOption']);
+    updateOptions();
+    header("Location: teacher.php");
+}
+
+function updateQuestionNumericText($title, $id){
+    try{
+        $startSession = connToDB()->prepare("UPDATE question SET question = :title WHERE ID = :id;");
+        $startSession->bindParam(':title', $title);
+        $startSession->bindParam(':id', $id);
+        $done = $startSession->execute();
+        if ($done) {
+            writeInLog("S", "La pregunta ha sigut editada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('La pregunta ha sigut editada correctament',$('.messageBox'),0);");
+        } else {
+            writeInLog("W", "La pregunta no ha sigut editada correctament", $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('La pregunta no ha sigut editada correctament',$('.messageBox'),2);");
+        }
+    }
+    catch(\Throwable $th){
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+
+}
+
+if(isset($_POST['idQuestionEdit']) && isset($_POST['titleEditQuestion'])){
+    updateQuestionNumericText($_POST['titleEditQuestion'], $_POST['idQuestionEdit']);
+    header("Location: teacher.php");
+}
+
+function getAllOptions($id){
+    $startSession = connToDB()->prepare("SELECT * FROM `question_option` WHERE questionID = :id;");
+    $startSession->bindParam(':id', $id);
+    $startSession->execute();
+    $_SESSION['arrayAllOptions'] = [];
+    foreach ($startSession as $opinion) {
+        array_push($_SESSION['arrayAllOptions'], $opinion['optionID']);
+    }
+    $_SESSION['optionsQuestion'] = [];
+    foreach($_SESSION['arrayAllOptions'] as $option){
+        $startSession = connToDB()->prepare("SELECT * FROM option where ID = :id");
+        $startSession->bindParam(':id', $option);
+        $startSession->execute();
+        foreach($startSession as $query){
+            array_push($_SESSION['optionsQuestion'], $query);
+        }
+    }
+}
+
+if(isset($_POST['idSimpleQuestionEdit'])){
+    getAllOptions($_POST['idSimpleQuestionEdit']);
+    header("Location: teacher.php");
 }
 
 
@@ -335,6 +418,8 @@ if(isset($_POST['idPollToDelete'])){
     removePoll($_POST['idPollToDelete']);
     header("Location: teacher.php");
 }
+
+
 
 if ((isset($_POST["userlog"]) && (!empty($_POST["userlog"]))) && (isset($_POST["passlog"]) && (!empty($_POST["passlog"])))) {
     login();

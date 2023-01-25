@@ -571,11 +571,6 @@ i.fa.fa-close {
 
 #teacher #simpleOption .fa-minus{
     margin-left: 5px;
-    color: white;
-}
-
-dialog::backdrop  {
-    background: rgba(0,0,0,0.75) !important;
 }
 
 #teacher #questionTitle:focus {
@@ -607,8 +602,8 @@ dialog::backdrop  {
     margin-bottom: 2%;
 }
 
-#teacher #saveQuestion,
-#clearForm {
+#teacher #saveQuestion, #saveEditQuestion, #saveEditSimpleQuestion,#btnPublish-yes,
+#clearForm,#btnPublish-no {
     margin: 3%;
     font-weight: bold;
     cursor: pointer;
@@ -618,21 +613,21 @@ dialog::backdrop  {
 
 }
 
-#teacher #saveQuestion {
+#teacher #saveQuestion,#saveEditQuestion,#saveEditSimpleQuestion,#btnPublish-yes {
     background-color: #46e89f;
     padding: 10px 35px;
 }
 
-#teacher #saveQuestion:hover {
+#teacher #saveQuestion:hover,#saveEditQuestion:hover,#saveEditSimpleQuestion:hover,#btnPublish-yes:hover {
     background-color: #38b67d;
 }
 
-#teacher #clearForm {
+#teacher #clearForm,#btnPublish-no {
     background-color: #f38585;
     padding: 10px 30px;
 }
 
-#teacher #clearForm:hover {
+#teacher #clearForm:hover,#btnPublish-no:hover {
     background-color: #ad5f5f;
 }
 
@@ -641,6 +636,14 @@ dialog::backdrop  {
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }
+
+#teacher #editQuestion {
+    padding-top: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+}
+
+
 
 #teacher #newQuestion select#typeSelect {
     margin-bottom: 10px;
