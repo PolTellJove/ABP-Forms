@@ -3,12 +3,22 @@
 /* General Styles of all pages */
 
 /* Header Styling */
+
+html, body
+{
+	height: 100%;
+}
+
+header .headerTitle {
+    display: flex;
+}
+
 header.headerTitle h1 {
-    font-size:30px;
-    text-align:center;
-    line-height:1.5em;
-    padding-bottom:45px;
-    color:black;
+    font-size: 30px;
+    text-align: center;
+    line-height: 1.5em;
+    padding-bottom: 45px;
+    color: black;
 }
 
 header.headerTitle h1:before {
@@ -16,31 +26,69 @@ header.headerTitle h1:before {
     left: 0;
     top: 90px;
     width: 60%;
-    left:50%;
-    margin-left:-30%;
+    left: 50%;
+    margin-left: -30%;
     height: 1px;
     content: "";
     background-color: black;
     z-index: 4;
 }
+
 header.headerTitle h1:after {
-    position:relative;
-    width:40px;
-    height:40px;
-    left:50%;
-    margin-left:-20px;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    left: 50%;
+    margin-left: -20px;
     content: '\00a7';
-    font-size:30px;
-    line-height:40px;
-    color:#c50000;
-    font-weight:400;
-    display:block;
+    font-size: 30px;
+    line-height: 40px;
+    color: #c50000;
+    font-weight: 400;
+    display: block;
     z-index: 5;
     background-color: #C6C5B9;
 }
 
+header .logout {
+    font-size: 0.8em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s;
+    -webkit-transition: opacity .35s;
+}
+
+header .buttonLogout i {
+    width: 35%;
+    float: left;
+}
+
+header .buttonLogout {
+    border-radius: 5px;
+    text-decoration: none;
+    float: right;
+    padding: 12px;
+    margin: 15px;
+    margin-top: -140px;
+    color: white;
+    width: 25px;
+    background-color: black;
+    transition: width .35s;
+    -webkit-transition: width .35s;
+    overflow: hidden
+}
+
+header .buttonLogout:hover {
+    width: 100px;
+}
+
+header .buttonLogout:hover .logout {
+    opacity: .9;
+}
+
 /* Footer Styling */
-footer{
+footer {
     bottom: -150px;
     width: 100%;
     position: absolute;
@@ -49,7 +97,8 @@ footer{
     grid-row: 3;
     line-height: 20px;
 }
-footer .containerBody{
+
+footer .containerBody {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -57,21 +106,20 @@ footer .containerBody{
     gap: 20px;
 }
 
-footer .containerBody .presentacio{
+footer .containerBody .presentacio {
     margin: 0;
     width: 33%;
     border-right: dashed #C6C5B9;
 }
 
-footer .containerBody .contacte{
+footer .containerBody .contacte {
     padding: 0;
     width: 33%;
     border-right: dashed #C6C5B9;
 
 }
 
-
-footer .pCopyright{
+footer .pCopyright {
     margin-top: 0;
     padding-top: 15px;
     border-top: dashed #C6C5B9;
@@ -84,45 +132,55 @@ body {
     position: relative;
     min-width: 100vh;
     padding-bottom: 50px;
-    background-color: #C6C5B9;    
-    min-height: 100vh; 
+    background-color: #C6C5B9;
+    min-height: 100vh;
     margin: 0px;
     display: grid;
     grid-template-rows: 10% 85% 5%;
     font-family: Tahoma, sans-serif;
 }
 
+i {
+    cursor: pointer;
+}
+
+
+
+dialog{
+    top: 40%;
+    position: fixed;
+}
+
 /* Anchor of going back */
 
-.containerGoBackAnchor{
-    display: flex;
-    align-self: flex-start;
-    width: 100%;
-}
-.anchorGoBack i{
+.anchorGoBack i {
     width: 30%;
     float: right;
 }
+
 .anchorGoBack {
     border-radius: 5px;
-	text-decoration: none;
+    text-decoration: none;
     text-align: center;
-    float: right;
+    float: left;
+    margin-top: -140px;
     padding: 12px 25px 12px 5px;
     width: 10px;
-    margin: 15px;
+    margin-left: 15px;
     color: white;
     background-color: black;
     transition: width .35s;
     -webkit-transition: width .35s;
-    overflow: hidden
+    overflow: hidden;
 }
+
 .anchorGoBack:hover {
     background-color: black !important;
     width: 120px;
     box-shadow: none !important;
     padding-left: 15px;
 }
+
 .textGoBack {
     font-size: 0.8em;
     position: relative;
@@ -131,12 +189,13 @@ body {
     transition: opacity .45s;
     -webkit-transition: opacity .35s;
 }
-.anchorGoBack:hover .textGoBack{
-  opacity: .9;
+
+.anchorGoBack:hover .textGoBack {
+    opacity: .9;
 }
 
 /* Styles of messages */
-.messageBox{
+.messageBox {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -146,6 +205,7 @@ body {
     bottom: 10%;
     width: 100%;
     margin-bottom: 10px;
+    margin-top: 60px;
 }
 
 .displayMessage {
@@ -161,64 +221,67 @@ body {
     font-size: 17px;
     width: fit-content;
     margin: auto;
+    z-index: 10;
 }
 
-.displayMessage i{
+.displayMessage i {
     margin-right: 15px;
 }
 
-.displayMessage button{
+.displayMessage button {
     margin-left: 5px;
 
 }
 
 .displayMessage.remove {
-    animation:  fadeout 1s;
-} 
-
-.displayMessage.success{
-    background-color: rgba(148, 184, 148,0.5);
+    animation: fadeout 1s;
 }
 
-.displayMessage.success i{
+.displayMessage.success {
+    background-color: rgba(148, 184, 148, 0.5);
+}
+
+.displayMessage.success i {
     color: green;
 }
 
-.displayMessage.info{
-    background-color: rgba(129, 170, 245,0.5);
+.displayMessage.info {
+    background-color: rgba(129, 170, 245, 0.5);
 }
 
-.displayMessage.info i{
+.displayMessage.info i {
     color: blue;
 }
 
-.displayMessage.warning{
-    background-color: rgba(248, 207, 131,0.5);
+.displayMessage.warning {
+    background-color: rgba(248, 207, 131, 0.5);
 }
 
-.displayMessage.warning i{
+.displayMessage.warning i {
     color: orange;
 }
 
-.displayMessage.error{
-    background-color: rgba(241, 138, 138,0.5);
+.displayMessage.error {
+    background-color: rgba(241, 138, 138, 0.5);
 }
 
-.displayMessage.error i{
+.displayMessage.error i {
     color: red;
 }
-  
-.closeMessageBtn{
+
+.closeMessageBtn {
     background-color: transparent !important;
     border: none !important;
     padding: 5px !important;
     cursor: pointer;
-    min-width: 0px !important; 
+    min-width: 0px !important;
 }
-i.fa.fa-close{
+
+i.fa.fa-close {
     color: black !important;
 }
-.closeMessageBtn:hover i{
+
+.closeMessageBtn:hover i {
     color: rgb(65, 65, 65);
 }
 
@@ -227,20 +290,23 @@ i.fa.fa-close{
 
 
 /* Login CSS */
-.login .title{
+.login .title {
     text-align: center;
     font-size: 50px;
 }
-.login #containerLogin{
+
+.login #containerLogin {
     grid-row: 2;
-    display: inline; 
+    display: inline;
     align-items: center;
 }
+
 .login .loginForm {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .login .form {
     background-color: white;
     width: 400px;
@@ -256,6 +322,7 @@ i.fa.fa-close{
     width: 90%;
     margin-bottom: 17px;
 }
+
 .login .loginForm .inputContainer .input {
     position: absolute;
     top: 0px;
@@ -269,6 +336,7 @@ i.fa.fa-close{
     outline: none;
     background: none;
 }
+
 .login .loginForm .inputContainer .input ::placeholder {
     color: transparent;
 }
@@ -298,7 +366,7 @@ i.fa.fa-close{
     margin-top: 30px;
 }
 
-.login .input:focus + .label {
+.login .input:focus+.label {
     top: -7px;
     left: 3px;
     font-size: 14px;
@@ -309,13 +377,14 @@ i.fa.fa-close{
 .login .loginForm .input:focus {
     border: 2px solid #62929E;
 }
-.login .input:not(:placeholder-shown)+ .label {
+
+.login .input:not(:placeholder-shown)+.label {
     top: -7px;
     left: 3px;
     font-size: 14px;
     font-weight: 600;
 }
-  
+
 .login .submitBtn:hover {
     background-color: #2a463a;
     transform: translateY(-2px);
@@ -323,7 +392,8 @@ i.fa.fa-close{
 
 /* Dashbaord CSS */
 
-#dashboard .button{
+#dashboard .button {
+    margin-top: -60px;
     display: flex;
     padding: 15px 30px;
     justify-content: space-around;
@@ -340,19 +410,21 @@ i.fa.fa-close{
     height: 100%;
     transition: all .2s ease-in-out;
 }
-#dashboard .button:hover{
+
+#dashboard .button:hover {
     color: black;
     background-color: #546A7B;
     transform: scale(1.2);
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }
-#dashboard #divDashboard{
+
+#dashboard #divDashboard {
     grid-row: 2;
-    display: inline; 
+    display: inline;
     align-items: center;
 }
 
-#dashboard #divButtons{
+#dashboard #divButtons {
     margin-top: 10%;
     width: auto;
     border-radius: 8px;
@@ -362,74 +434,37 @@ i.fa.fa-close{
     height: 50%;
 }
 
-#dashboard h1{
+#dashboard h1 {
     display: block;
     text-align: center;
 }
 
 
-#dashboard .titleContainer{
+#dashboard .titleContainer {
     position: absolute;
     width: 600px;
     left: 50%;
     margin-left: -300px;
 }
-.logout {
-    font-size: 0.8em;
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity .45s;
-    -webkit-transition: opacity .35s;
-}
-#dashboard .containerLogoutBtn{
-    width: 100%;
-}
-#dashboard .buttonLogout i{
-    width: 35%;
-    float: left;
-}
-.buttonLogout {
-    border-radius: 5px;
-	text-decoration: none;
-    float: right;
-    padding: 12px;
-    margin: 15px;
-    color: white;
-    width: 25px;
-    background-color: black;
-    transition: width .35s;
-    -webkit-transition: width .35s;
-    overflow: hidden
-}
-.buttonLogout:hover {
-  width: 100px;
-}
-.buttonLogout:hover .logout{
-  opacity: .9;
-}
-
-
-
 
 /* Teacher CSS */
 
-#teacher #divTeacher{
+#teacher #divTeacher {
     grid-row: 2;
-    display: inline; 
+    display: inline;
     align-items: center;
 }
 
-#teacher #divButtons{
+#teacher #divButtons {
     margin: 2%;
     width: auto;
     border-radius: 8px;
     display: flex;
     justify-content: space-around;
-    align-items: center;  
+    align-items: center;
 }
 
-#teacher .button{
+#teacher .button {
     display: inline-block;
     padding: 15px 30px;
     width: 20%;
@@ -444,22 +479,23 @@ i.fa.fa-close{
 }
 
 
-#teacher .button:not(.active):hover{
+#teacher .button:not(.active):hover {
     background-color: #546A7B;
     transform: scale(1.1);
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }
 
-#teacher a.button.active { background-color:#7cae7a; }
+#teacher a.button.active {
+    background-color: #7cae7a;
+}
 
 #teacher #divDinamic{
-    width: 50%;
-    margin-left: 25%;
-    margin-top: 5%;
+    width: 80%;
+    margin: 5% 10%;
     text-align: center;
 }
 
-#teacher #divDinamic p{
+#teacher #divDinamic p {
     border: 1px solid black;
     background-color: white;
     text-transform: lowercase;
@@ -468,35 +504,87 @@ i.fa.fa-close{
     border: 3px solid #62929E;
 }
 
-#teacher #divDinamic p::first-letter{
+#teacher #divDinamic p::first-letter {
     text-transform: uppercase;
 }
 
 
-#teacher textarea{
+#teacher textarea {
     resize: none;
     height: 70px;
-    width: 60%; 
+    width: 60%;
     min-width: 160px;
     border-radius: 5px;
 }
+
 #teacher #questionTitle {
     padding: 5px 0px;
     text-align: center;
-    width: 60%; 
+    width: 60%;
     min-width: 160px;
     border-radius: 2px;
     border: 3px solid #8b8a8b;
     transition: 180ms box-shadow ease-in-out;
 }
 
-#teacher #questionTitle:focus{
+#teacher #simpleOption {
+    margin: 2%;
+}
+
+#teacher #modalPublish .titleDialog{
+    display: flex;
+    justify-content: center;
+}
+
+#teacher #modalPublish #btnsDialog {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+}
+
+#teacher #modalPublish {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#teacher #simpleOption .inputsForAddOption {
+    padding: 5px 0px;
+    text-align: center;
+    width: 60%;
+    min-width: 160px;
+    border-radius: 2px;
+    border: 3px solid #8b8a8b;
+    transition: 180ms box-shadow ease-in-out;
+    margin-top: 1%
+}
+
+#teacher #simpleOption .inputsForAddOption:focus {
     border-color: #62929E;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
     outline: 3px solid transparent;
-
 }
-#teacher #radioGroup{
+
+#teacher #simpleOption .add{
+    margin-left: 19px;
+}
+
+#teacher #simpleOption .fa-minus{
+    margin-left: 5px;
+    color: white;
+}
+
+dialog::backdrop  {
+    background: rgba(0,0,0,0.75) !important;
+}
+
+#teacher #questionTitle:focus {
+    border-color: #62929E;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 0.5);
+    outline: 3px solid transparent;
+}
+
+#teacher #radioGroup {
     display: grid;
     grid-template-columns: auto;
     justify-items: self-start;
@@ -504,16 +592,23 @@ i.fa.fa-close{
     width: 40%;
 }
 
-#teacher #radioButton{
-    padding : 1%;
+#teacher #divDinamic #polls p {
+    display: inline-block;
+    width: 90%;
 }
 
-#teacher #taQuestion, #radioGroup{
+#teacher #radioButton {
+    padding: 1%;
+}
+
+#teacher #taQuestion,
+#radioGroup {
     margin-top: 2%;
     margin-bottom: 2%;
 }
 
-#teacher #saveQuestion, #clearForm{
+#teacher #saveQuestion,
+#clearForm {
     margin: 3%;
     font-weight: bold;
     cursor: pointer;
@@ -523,67 +618,187 @@ i.fa.fa-close{
 
 }
 
-#teacher #saveQuestion{
-    background-color: #46e89f ;
+#teacher #saveQuestion {
+    background-color: #46e89f;
     padding: 10px 35px;
 }
 
-#teacher #saveQuestion:hover{
-    background-color: #38b67d ;
+#teacher #saveQuestion:hover {
+    background-color: #38b67d;
 }
 
-#teacher #clearForm{
+#teacher #clearForm {
     background-color: #f38585;
     padding: 10px 30px;
 }
 
-#teacher #clearForm:hover{
-    background-color: #ad5f5f ;
+#teacher #clearForm:hover {
+    background-color: #ad5f5f;
 }
 
-#teacher #newQuestion{
+#teacher #newQuestion {
     padding-top: 15px;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
 }
 
-#teacher #newQuestion select#typeSelect{
+#teacher #newQuestion select#typeSelect {
     margin-bottom: 10px;
     text-transform: capitalize;
     text-align: center;
 
 }
 
-#teacher #divDinamic #questions{
+#teacher #divDinamic #questions {
     padding: 15px 30px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
     border-radius: 5px;
 }
 
-#teacher #divDinamic #polls{
+#teacher #divDinamic #questions p {
+    display: inline-block;
+    width: 90%;
+}
+
+#teacher #divDinamic #questions .fa-pen, .fa-trash {
+    margin-left: 10px;
+}
+
+#teacher #divDinamic #polls .fa-pen, .fa-trash {
+    margin-left: 10px;
+}
+
+#teacher #divDinamic #polls {
     padding: 15px 30px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
     border-radius: 5px;
+}
+
+#teacher #newPoll{
+    padding-top: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+#teacher #newPoll > div{
+    padding: 1%;
+}
+
+#teacher #pollInfo{
+    align-items: center;
+}
+
+#teacher #pollInfo #pollTitle{
+    display: flex;
+    width: 100%;
+    text-align: center;
+}
+
+#teacher #pollInfo #startDate, #finishDate{
+    width: 40%;
+    margin: 1% 4%;
+}
+
+#teacher #divTeachers, #divStudents, #divQuestions, #divSave{
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid black;
+    margin: 1%;
+}
+
+#teacher #selectedTeachers, #selectedStudents, #selectedQuestions{
+    /* background-color: orange; */
+}
+
+#teacher #availableTeachers, #availableStudents, #availableQuestions{
+    /* background-color: #38b67d; */
+}
+
+#teacher #availableTeachers, #selectedTeachers, #managementButtonsTeacher, 
+            #availableStudents, #selectedStudents, #managementButtonsStudent,
+            #availableQuestions, #selectedQuestions, #managementButtonsQuestion{
+    float: left;
+    width: 30%;
+}
+
+#teacher #availableTeachers, #selectedTeachers, 
+        #availableStudents, #selectedStudents, 
+        #availableQuestions, #selectedQuestions{
+    display: grid;
+    justify-content: center;
+    align-content: space-around;
+}
+
+
+#teacher #managementButtonsTeacher, #managementButtonsStudent, #managementButtonsQuestion{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#teacher #newPoll a{
+    display: block;
+    padding: 15px 30px;
+    width: 50%;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #62929e;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 1%;
+}
+
+
+#teacher #newPoll #divSave #newPollForm{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+#teacher #newPoll #divSave a{
+    width: 30%;
+}
+
+#teacher #newPoll a#saveButton{
+    background-color: green;
+}
+
+#teacher #newPoll a#cancelButton{
+    background-color: red;
+}
+
+#teacher #divTeachers > div > input, #divStudents > div > input, #divQuestions > div > input{
+    cursor: pointer;
+    text-align: center;
+    margin: 1%;
+    height: min-content;
 }
 
 /* Landing CSS */
 
-#landing #divLanding{
+#landing #divLanding {
     grid-row: 2;
-    display: inline; 
+    display: inline;
     align-items: center;
 }
 
-#landing #buttons{
+#landing #buttons {
     margin-top: 20%;
     margin-left: 25%;
     width: 50%;
     border-radius: 8px;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
 }
 
-#landing .button{
+#landing .button {
     display: inline;
     padding: 15px 30px;
     justify-content: space-around;
@@ -600,11 +815,25 @@ i.fa.fa-close{
 
 /* Animations to make messages (displayMessages) */
 @keyframes fadein {
-from {bottom: 0; opacity: 0;}
-to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes fadeout {
-from {bottom: 30px; opacity: 1;}
-to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
