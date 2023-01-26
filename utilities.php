@@ -50,7 +50,7 @@ require __DIR__ . '/log.php';
     }
 
     function writeInLog($type,$message,$id = "No Logged"){
-        $log = new Log("logs/log".date('Hi'));
+        $log = new Log("logs/log".date('dmY'));
         $log->writeLine($type, $message,$id);
     }
 ?>
