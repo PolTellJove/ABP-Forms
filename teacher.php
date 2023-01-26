@@ -270,6 +270,7 @@ $_GET['bodyClass'] = '';
             createInput("text", "questionEditTitle", "newQuestion", "questionTitle", null, "Títol de la pregunta", null, null);
             $("#questionTitle").val(questionToEdit['question']);
             createDiv('buttonsOfNewQuestion', "newQuestion");
+            createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
             
             if (questionToEdit['typeID'] == '2') {
                 deleteDiv("radioGroup");
@@ -312,7 +313,28 @@ $_GET['bodyClass'] = '';
             else if (questionToEdit['typeID'] == '3') {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
-                
+
+
+                function clickSaveEditPoll(){
+                    $("#saveEditSimpleQuestion").on("click", function() {
+                        $("#teacher").append("<form id='formEditSimpleQuestion' action='checkoutForms.php' method='POST'>");
+                        $("#formEditSimpleQuestion").append("<input hidden type='text' name='titleSimpleOption' id='titleSimpleOption'>");
+                        $("#titleSimpleOption").val($("#questionTitle").val());
+                        for(let j = 0; j < optionsQuestion.length; j++) {
+                            $("#formEditSimpleQuestion").append("<input hidden type='text' name='idsOptions[]' id='idOptionQuestion"+j+1+"'>");
+                            $("#idOptionQuestion"+j+1).val(optionsQuestion[j][1]);
+                        }
+                        for(let i = 0; i < optionsQuestion.length; i++) {
+                            $("#formEditSimpleQuestion").append("<input hidden type='text' name='optionsQuestion[]' id='optionQuestion"+i+1+"'>");
+                            $("#optionQuestion"+i+1).val($("#optionTitle"+i+1).val());
+                        }
+                        $("#formEditSimpleQuestion").append("<input hidden type='text' name='idSimpleOption' id='idSimpleOption'>");
+                        $("#idSimpleOption").val(questionToEdit['ID']);
+                        $("#formEditSimpleQuestion").append("<input hidden type='submit' name='submitButton' id='submitButton'>");
+                        $("#formEditSimpleQuestion").submit();
+                    });
+                }
+
                 var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
                 optionsQuestion = [];
                 optionsQuestion2.forEach(element => {
@@ -328,28 +350,45 @@ $_GET['bodyClass'] = '';
                 createDiv('moreOptions', 'newQuestion');
                 $("#questionTitle").after($("#simpleOption"));
                 $("#buttonsOfNewQuestion").before($("#moreOptions"));
-                createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
-                
-                $("#saveEditSimpleQuestion").on("click", function() {
-                    $("#teacher").append("<form id='formEditSimpleQuestion' action='checkoutForms.php' method='POST'>");
-                    $("#formEditSimpleQuestion").append("<input hidden type='text' name='titleSimpleOption' id='titleSimpleOption'>");
-                    $("#titleSimpleOption").val($("#questionTitle").val());
-                    for(let j = 0; j < optionsQuestion.length; j++) {
-                        $("#formEditSimpleQuestion").append("<input hidden type='text' name='idsOptions[]' id='idOptionQuestion"+j+1+"'>");
-                        $("#idOptionQuestion"+j+1).val(optionsQuestion[j][1]);
-                    }
-                    for(let i = 0; i < optionsQuestion.length; i++) {
-                        $("#formEditSimpleQuestion").append("<input hidden type='text' name='optionsQuestion[]' id='optionQuestion"+i+1+"'>");
-                        $("#optionQuestion"+i+1).val($("#optionTitle"+i+1).val());
-                    }
-                    $("#formEditSimpleQuestion").append("<input hidden type='text' name='idSimpleOption' id='idSimpleOption'>");
-                    $("#idSimpleOption").val(questionToEdit['ID']);
-                    $("#formEditSimpleQuestion").append("<input hidden type='submit' name='submitButton' id='submitButton'>");
-                    $("#formEditSimpleQuestion").submit();
-                });
-            }
 
-        }
+                $(".inputsForAddOption").on("input", function() {
+                    if($('#saveEditSimpleQuestion').length == 0){
+                        createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+                        clickSaveEditPoll();
+                    }
+                    $(".inputsForAddOption").each(function(){
+                        if (/^\s/.test($(this).val())) {
+                            $(this).val('');
+                        }
+                        if($(this).val().length == 0){
+                            $('#saveEditSimpleQuestion').remove();
+                        }
+                    });
+                });
+
+                $("#questionTitle").on("input", function() {
+                    if($('#saveEditSimpleQuestion').length == 0){
+                        createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+                    }
+                    if (/^\s/.test($(this).val())) {
+                        $(this).val('');
+                    }
+                    if($(this).val().length == 0){
+                        $('#saveEditSimpleQuestion').remove();
+                    }
+                });
+                
+                $(".inputsForAddOption").each(function(){
+                    if($(this).val().length == 0 && $('#saveEditSimpleQuestion').length == 0){
+                        createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+                        clickSaveEditPoll();
+                    }
+                    if($(this).val().length == 0){
+                        $('#saveEditSimpleQuestion').remove();
+                    }
+                });
+                }
+            }
         function clickPen(){
             $(".fa-pen").on("click", function() {
                 idQuestion = $(this).attr("id");
@@ -695,7 +734,6 @@ $_GET['bodyClass'] = '';
                 if (/^\s/.test($('#pollTitle').val())) {
                     $('#pollTitle').val('');
                 }
-                console.log($('#pollTitle').val().length);
                 if($('#pollTitle').val().length > 0 && !$('#saveButton').length){
                     createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
                 }else if($('#pollTitle').val().length < 1){
@@ -850,25 +888,36 @@ $_GET['bodyClass'] = '';
             } else {
                 $("#saveQuestion").remove();
             }
-
         });
     }
 
     function checkSelect() {
         $('#typeSelect').on('change', function () {
+            if ($("#questionTitle").val().length && $("#typeSelect option:selected").attr("id") != 0) {
+                if (!$("#saveQuestion").length) {
+                    createInput("submit", null ,"buttonsOfNewQuestion", "saveQuestion", "Enviar", null, null, null);
+                    saveButtonOfSimpleQuestion();
+                }
+            } else {
+                $("#saveQuestion").remove();
+            }
+
             if ($("#typeSelect option:selected").attr("id") == 2) {
                 deleteDiv("radioGroup");
                 deleteDiv("simpleOption");
                 createTextArea("taQuestion", "clearForm", "formNewQuestion");
+                deleteDiv("moreOptions");
             } else if ($("#typeSelect option:selected").attr("id") == 1) {
                 deleteDiv("taQuestion");
                 deleteDiv("simpleOption");
+                deleteDiv("moreOptions");
                 var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
                 createRadioButtons(options, "clearForm");
             } else if ($("#typeSelect option:selected").attr("id") == 0) {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
                 deleteDiv("simpleOption");
+                deleteDiv("moreOptions");
             }
             else if ($("#typeSelect option:selected").attr("id") == 3) {
                 deleteDiv("taQuestion");
