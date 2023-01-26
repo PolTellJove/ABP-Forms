@@ -11,6 +11,9 @@ $_GET['bodyClass'] = 'landing';
         <a class="button">ALUMNE</a>
         <a class="button" href="login.php">PROFESSOR</a>
     </div>
+    <div class="plane-container">
+        <img src="/images/paperPlane.png" alt="Paper Plane" />
+    </div>
 </div>
 <?php include 'footer.php'; ?>
 </body>
