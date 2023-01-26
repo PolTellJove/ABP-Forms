@@ -32,9 +32,9 @@ $_GET['bodyClass'] = '';
         <div class="messageBox"></div>
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
-            <a class="button active" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
+            <a class="button" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
             <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES</a>
-            <a class="button" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
+            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
     <div id="divDinamic">
@@ -148,7 +148,7 @@ $_GET['bodyClass'] = '';
             newInput.attr("type", "text");
             newInput.attr("id", id);
             newInput.attr("placeholder", "Titol de l'enquesta");
-            $("#"+parentID+"").append(newInput);
+            $("#"+parentID).append(newInput);
         }
 
         function createInputOnlyRead(id, text, className, parentID, group = ''){
@@ -161,6 +161,20 @@ $_GET['bodyClass'] = '';
             newInput.attr('readonly', true);
             $("#"+parentID+"").append(newInput);
         }
+
+        function createTextAreaOnlyRead(id, text, className, parentID, group = ''){
+            var newInput = $('<textarea>');
+            newInput.attr("type", "text");
+            newInput.attr("id", id);
+            newInput.val(text);
+            newInput.addClass(className);
+            newInput.attr('name', group);
+            newInput.attr('readonly', true);
+            $("#"+parentID+"").append(newInput);
+            while (newInput.clientHeight < newInput.scrollHeight) {
+                $(newInput).height($(newInput).height()+5);
+            }
+        };
 
         function createInputDate(id, parentID){
             var newInput = $('<input>');
@@ -210,7 +224,7 @@ $_GET['bodyClass'] = '';
 
         function savePoll(){
             createDiv('divSave', 'newPoll');
-            createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+            if($("#pollTitle").val()){createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');}
             createButtons('Cancelar', 'cancelButton', 'createPoll', 'divSave');
             clickSavePoll();
         }
@@ -345,6 +359,14 @@ $_GET['bodyClass'] = '';
             });
             clickStudents();
         }
+        function onClickEditPoll(pollID){
+            $("#newPollForm").on("submit", function(){
+                createInputText('IDpoll', 'newPollForm');
+                $('#IDpoll').attr('name', 'IDpoll');
+                $('#IDpoll').val(pollID);
+                $('#IDpoll').attr("hidden",true);;
+            });
+        }
 
         function editingPoll(poll){
             $('#pollTitle').val(poll['title']);
@@ -356,6 +378,8 @@ $_GET['bodyClass'] = '';
             savePoll();
             studentsForPoll();
             studentPoll(poll);
+            $('#cancelButton').remove();
+            onClickEditPoll(poll['ID']);
         }
 
         function clickPenPoll(){
@@ -528,7 +552,7 @@ $_GET['bodyClass'] = '';
             createDiv('managementButtonsQuestion', 'divQuestions')
             createDiv('selectedQuestions', 'divQuestions')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-            questions.forEach(question => createInputOnlyRead(question['ID'], question['question'], 'question available', 'availableQuestions', ''));
+            questions.forEach(question => createTextAreaOnlyRead(question['ID'], question['question'], 'question available', 'availableQuestions', ''));
             createManagementButtons('addQuestion', 'deleteQuestion', 'questionButton', 'managementButtonsQuestion');
             clickManagementButtonsQuestions();
             clickQuestions();
@@ -542,6 +566,12 @@ $_GET['bodyClass'] = '';
             $('#pollTitle').on('input', function (e) {
                 if (/^\s/.test($('#pollTitle').val())) {
                     $('#pollTitle').val('');
+                }
+                console.log($('#pollTitle').val().length);
+                if($('#pollTitle').val().length > 0 && !$('#saveButton').length){
+                    createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+                }else if($('#pollTitle').val().length < 1){
+                    $('#saveButton').remove();
                 }
             });
             createInputDate('startDate', 'pollInfo');
@@ -781,8 +811,8 @@ $_GET['bodyClass'] = '';
         });
 
         //START PAGE
-        // showPolls();
-        newPoll();
+        showPolls();
+        //newPoll();
     });
 </script>
 <?php

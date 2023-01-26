@@ -759,6 +759,10 @@ dialog::backdrop  {
     margin: 1%;
 }
 
+#teacher #divQuestions > textarea{
+    margin: 1%;
+}
+
 
 #teacher #newPoll #divSave #newPollForm{
     width: 100%;
@@ -767,15 +771,22 @@ dialog::backdrop  {
 }
 
 #teacher #newPoll #divSave a{
-    width: 30%;
+    margin: 3%;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border-style: none;
+    box-shadow: 0 10px 25px rgb(92 99 105 / 50%);
 }
 
 #teacher #newPoll a#saveButton{
-    background-color: green;
+    background-color: #46e89f;
+    padding: 10px 35px;
 }
 
 #teacher #newPoll a#cancelButton{
-    background-color: red;
+    background-color: #f38585;
+    padding: 10px 35px;
 }
 
 #teacher #divTeachers > div > input, #divStudents > div > input, #divQuestions > div > input{

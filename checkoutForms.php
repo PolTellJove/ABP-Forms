@@ -173,8 +173,8 @@ function addQuestionsToPoll($questions, $pollID){
         if($checkQuestionsPoll){
             writeInLog("S", "'ID: ". $pollID." - Pregunta: ".$questions[$q]." ha esta afegida al formulari", $_SESSION["ID"]);
         }
-        return $checkQuestionsPoll;
     };
+    return $checkQuestionsPoll;
 }
 
 function addStudentsToPoll($students, $pollID){
@@ -186,10 +186,10 @@ function addStudentsToPoll($students, $pollID){
         writeInLog("SQL", "INSERT INTO `poll_question`(`questionID`, `pollID`) VALUES ('".$students[$s]."', '".$pollID."');", $_SESSION["ID"]);
         $checkStudentsPoll = $startSession->execute();
         if($checkStudentsPoll){
-            writeInLog("S", "'ID: ". $pollID." - Professor ".$students[$s]." ha esta afegit al formulari", $_SESSION["ID"]);
+            writeInLog("S", "'ID: ". $pollID." - Estudiant ".$students[$s]." ha esta afegit al formulari", $_SESSION["ID"]);
         }
-        return $checkStudentsPoll;
     };
+    return $checkStudentsPoll;
 }
     function savePoll(){
         try {
@@ -198,11 +198,19 @@ function addStudentsToPoll($students, $pollID){
 
             //Questions of Poll
             $questions = [];
-            if(isset($_POST['questions'])){$questions = $_POST['questions'];}
+            if(isset($_POST['questions'])){
+                foreach ($_POST['questions'] as $question) {
+                    array_push($questions, $question);
+                }
+            }
 
             //Students of Poll
             $students = [];
-            if(isset($_POST['students'])){$students = $_POST['students'];}
+            if(isset($_POST['students'])){
+                foreach ($_POST['students'] as $student) {
+                    array_push($students, $student);
+                }
+            }
 
             //CREATE POLL
             $startSession = connToDB()->prepare("INSERT INTO `poll`(`title`, `startDate`) VALUES (:title, :startDate);");
@@ -253,6 +261,49 @@ function addStudentsToPoll($students, $pollID){
             array_push($_SESSION['errors'],"displayMessage('Error:".$e->getMessage()."',$('.messageBox'),3);");
             header("Location: login.php");
         }
+    }
+
+    function editPoll(){
+        $startSession = connToDB()->prepare("DELETE FROM `poll_question` WHERE pollID = :pollID;");
+        $startSession->bindParam(':pollID', $_POST['IDpoll']);
+        $checkPoll = $startSession->execute();
+
+        $startSession = connToDB()->prepare("DELETE FROM `teacher_poll` WHERE pollID = :pollID;");
+        $startSession->bindParam(':pollID', $_POST['IDpoll']);
+        $startSession->execute();
+
+        $startSession = connToDB()->prepare("DELETE FROM `student_poll` WHERE pollID = :pollID;");
+        $startSession->bindParam(':pollID', $_POST['IDpoll']);
+        $startSession->execute();
+
+        $startSession = connToDB()->prepare("DELETE FROM `poll_question` WHERE pollID = :pollID;");
+        $startSession->bindParam(':pollID', $_POST['IDpoll']);
+        $startSession->execute();
+
+        $startSession = connToDB()->prepare("UPDATE `poll` SET `title`= :title,`startDate`= :startDate,`finishDate`= :finishDate WHERE poll.ID = :pollID");
+        $startSession->bindParam(':title', $_POST['pollTitle']);
+        $startSession->bindParam(':startDate', $_POST['startDate']);
+        $startSession->bindParam(':finishDate', $_POST['finishDate']);
+        $startSession->bindParam(':pollID', $_POST['IDpoll']);
+        $startSession->execute();
+
+        //Teachers of Poll
+        $teachers = $_POST['teachers'];
+
+        //Questions of Poll
+        $questions = [];
+        if(isset($_POST['questions'])){$questions = $_POST['questions'];}
+
+        //Students of Poll
+        $students = [];
+        if(isset($_POST['students'])){$students = $_POST['students'];}
+
+        addTeachersToPoll($teachers, $_POST['IDpoll']);
+        addQuestionsToPoll($questions, $_POST['IDpoll']);
+        addStudentsToPoll($students, $_POST['IDpoll']);
+
+        array_push($_SESSION['errors'], "displayMessage('Enquesta actualitzada correctament',$('.messageBox'),0);");
+        header("Location: teacher.php");
     }
 
 function saveOptionsofSimpleQuestions($questionId, $lastId)
@@ -359,7 +410,10 @@ if ((isset($_POST["questionTitle"]) && (!empty($_POST["questionTitle"]))) && (is
 
 //Create new poll
 if(isset($_POST['pollTitle'])){
-    savePoll();
-    
+    if($_POST['IDpoll']){
+        editPoll();
+    }else{
+        savePoll();
+    }
 }
 ?>
