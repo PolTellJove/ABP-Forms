@@ -14,6 +14,16 @@ if (!isset($_SESSION["ID"])) {
     header("Location: login.php");
 }
 
+function getOptionsOfActiveQuestions(){
+    $startSession = connToDB()->prepare("SELECT * FROM `question_option` qo INNER JOIN question q on qo.questionID = q.ID INNER JOIN option o on qo.optionID=o.ID WHERE q.active = 0;");
+    $startSession->execute();
+    $_SESSION['optionsQuestion'] = [];
+    foreach ($startSession as $options) {
+        array_push($_SESSION['optionsQuestion'], $options);
+    }
+}
+
+getOptionsOfActiveQuestions();
 $user = logUser();
 $_GET['titlePage'] = 'Teacher';
 $_GET['bodyID'] = 'teacher';
@@ -127,6 +137,8 @@ $_GET['bodyClass'] = '';
             }
         }
 
+        
+
         getPolls();
         getTypes();
         getOptions();
@@ -229,24 +241,135 @@ $_GET['bodyClass'] = '';
             clickSavePoll();
         }
          
-        //VIEW QUESTIONS
+        //MENU QUESTIONS
+        function editQuestion(questionID){
+            $('.button').removeClass('active');
+            $('#createQuestion').addClass('active');
+            $("#questions").remove();
+            var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
+            questions.forEach(question => {
+                if(question['ID'] == questionID){
+                    questionToEdit = question;
+                }
+            });
+
+            if(questionToEdit['typeID'] == '1'){
+                typeQuestion = "numèric";
+            }
+            else if (questionToEdit['typeID'] == '2'){
+                typeQuestion = "text";
+            }
+            else{
+                typeQuestion = "opció simple";
+            }
+            
+            createDiv("newQuestion", "divDinamic");
+            var types = [{0: questionToEdit['typeID'], 1: typeQuestion, ID: questionToEdit['typeID'], name: typeQuestion}];
+            createSelectForEditQuestion(types, "newQuestion");
+            $("#newQuestion").append("<br>");
+            createInput("text", "questionEditTitle", "newQuestion", "questionTitle", null, "Títol de la pregunta", null, null);
+            $("#questionTitle").val(questionToEdit['question']);
+            createDiv('buttonsOfNewQuestion', "newQuestion");
+            
+            if (questionToEdit['typeID'] == '2') {
+                deleteDiv("radioGroup");
+                deleteDiv("simpleOption");
+                createTextArea("taQuestion", "buttonsOfNewQuestion", "newQuestion");
+
+                createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
+                
+
+                $("#saveEditQuestion").on("click", function() {
+                    newTitle = $("#questionTitle").val();
+                    $("#teacher").append("<form id='formEditQuestion' action='checkoutForms.php' method='POST'><input hidden type='text' name='idQuestionEdit' id='idQuestionEdit'><input hidden type='text' name='titleEditQuestion' id='titleEditQuestion'><input hidden type='submit' name='sendEditQuestion' id='sendEditQuestion'> </form>");
+                    $("#idQuestionEdit").val(questionToEdit['ID']);
+                    $("#titleEditQuestion").val(newTitle);
+                    $("#formEditQuestion").submit();
+                });
+
+            } else if (questionToEdit['typeID'] == '1') {
+                deleteDiv("taQuestion");
+                deleteDiv("simpleOption");
+                var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
+                
+                createRadioButtons(options, "buttonsOfNewQuestion");
+                createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
+                
+
+                $("#saveEditQuestion").on("click", function() {
+                    newTitle = $("#questionTitle").val();
+                    $("#teacher").append("<form id='formEditQuestion' action='checkoutForms.php' method='POST'><input hidden type='text' name='idQuestionEdit' id='idQuestionEdit'><input hidden type='text' name='titleEditQuestion' id='titleEditQuestion'><input hidden type='submit' name='sendEditQuestion' id='sendEditQuestion'> </form>");
+                    $("#idQuestionEdit").val(questionToEdit['ID']);
+                    $("#titleEditQuestion").val(newTitle);
+                    $("#formEditQuestion").submit();
+                });
+
+            } else if (questionToEdit['typeID'] == '0') {
+                deleteDiv("taQuestion");
+                deleteDiv("radioGroup");
+                deleteDiv("simpleOption");
+            }
+            else if (questionToEdit['typeID'] == '3') {
+                deleteDiv("taQuestion");
+                deleteDiv("radioGroup");
+                
+                var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
+                optionsQuestion = [];
+                optionsQuestion2.forEach(element => {
+                    if(questionToEdit['ID'] == element['questionID']){
+                        optionsQuestion.push(element);
+                    }
+                });
+                createDiv('simpleOption', 'newQuestion');
+                for(let i = 0; i < optionsQuestion.length; i++) {
+                    createInput("text", "optionsEdit[]", "simpleOption", "optionTitle"+i+1, null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");
+                    $("#optionTitle"+i+1).val(optionsQuestion[i][7]);
+                }
+                createDiv('moreOptions', 'newQuestion');
+                $("#questionTitle").after($("#simpleOption"));
+                $("#buttonsOfNewQuestion").before($("#moreOptions"));
+                createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+                
+                $("#saveEditSimpleQuestion").on("click", function() {
+                    $("#teacher").append("<form id='formEditSimpleQuestion' action='checkoutForms.php' method='POST'>");
+                    $("#formEditSimpleQuestion").append("<input hidden type='text' name='titleSimpleOption' id='titleSimpleOption'>");
+                    $("#titleSimpleOption").val($("#questionTitle").val());
+                    for(let j = 0; j < optionsQuestion.length; j++) {
+                        $("#formEditSimpleQuestion").append("<input hidden type='text' name='idsOptions[]' id='idOptionQuestion"+j+1+"'>");
+                        $("#idOptionQuestion"+j+1).val(optionsQuestion[j][1]);
+                    }
+                    for(let i = 0; i < optionsQuestion.length; i++) {
+                        $("#formEditSimpleQuestion").append("<input hidden type='text' name='optionsQuestion[]' id='optionQuestion"+i+1+"'>");
+                        $("#optionQuestion"+i+1).val($("#optionTitle"+i+1).val());
+                    }
+                    $("#formEditSimpleQuestion").append("<input hidden type='text' name='idSimpleOption' id='idSimpleOption'>");
+                    $("#idSimpleOption").val(questionToEdit['ID']);
+                    $("#formEditSimpleQuestion").append("<input hidden type='submit' name='submitButton' id='submitButton'>");
+                    $("#formEditSimpleQuestion").submit();
+                });
+            }
+
+        }
+        function clickPen(){
+            $(".fa-pen").on("click", function() {
+                idQuestion = $(this).attr("id");
+                editQuestion(idQuestion);
+            });
+        }
+
         function showQuestions(){
             createDiv('questions', 'divDinamic')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
             questions.forEach(question => {
                 createP(question['ID'], question['question'], '', 'questions'); 
                 $("#questions").find("p:last").after("<i id='"+question['ID']+"' class='fa-solid fa-pen'></i>");
-                $("#questions").find("i:last").after("<i id='"+question['ID']+"' class='fa-solid fa-trash'></i>");
+                $("#questions").find("i:last").after("<i id='"+question['ID']+"' class='fa-solid fa-trash '></i>");
             });
             clickTrash();
+            clickPen();
             }
-        
-        function confirmDelete(){
-            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estas segur que vols esborrar?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
-            $('#teacher').append(popup);
-        }
 
-        function clickTrash(){
+            function clickTrash(){
             $(".fa-trash").on("click", function() {
                 idQuestion = $(this).attr("id");
                 confirmDelete();
@@ -254,6 +377,11 @@ $_GET['bodyClass'] = '';
                 deleteModal();
                 deleteQuestion(idQuestion);
             });
+        }
+        
+        function confirmDelete(){
+            var popup = "<dialog id='modalPublish'><div id='containerDialog'> <div class='titleDialog' id='divTitleDialog'><h2 id='titleDialog'>Estàs segur que vols esborrar?</h2></div><div id='btnsDialog' class='buttonsModal'><button id='btnPublish-no'>Cancel·lar</button><button id='btnPublish-yes'>Acceptar</button></form></div></div></dialog>";
+            $('#teacher').append(popup);
         }
 
         function deleteModal(){
@@ -620,6 +748,19 @@ $_GET['bodyClass'] = '';
 
         $.each(options, function (index, value) {
             select.append($("<option>").attr('id', options[index]['ID']).attr('value', options[index]['ID']).text(options[index]['name']))
+        })
+
+        $("#" + parentID).append(select);
+    }
+
+    function createSelectForEditQuestion(arrayOptions, parentID){
+        var select = $("<select>").attr('name', 'typeQuestion').attr('id', 'typeSelect');
+
+        var options = arrayOptions;
+
+        
+        $.each(options, function (index, value) {
+            select.append($("<option>").attr('id', options[index]['ID']).attr('value', options[index]['ID']).text(options[index]['name']).attr("disabled", "disabled").attr("selected","selected"))
         })
 
         $("#" + parentID).append(select);
