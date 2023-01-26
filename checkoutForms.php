@@ -5,7 +5,6 @@
 
     function login(){
         
-        $dbh = new PDO('mysql:host=localhost; dbname=abp_poll', "root", "");
         //recogida de datos en Variables
         $email = $_POST["userlog"];
         $password = $_POST["passlog"];

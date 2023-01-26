@@ -2,10 +2,10 @@
 require __DIR__ . '/log.php';
     function connToDB(){
         try {
-            $hostname = "localhost";
+            $hostname = "127.0.0.1";
             $dbname = "abp_poll";
-            $username = "root";
-            $pw = "";
+            $username = "new_IETI";
+            $pw = "ieti";
             $pdo = new PDO ("mysql:host=$hostname;dbname=$dbname","$username","$pw");
             } catch (PDOException $e) {
                 echo "Failed to get DB handle: " . $e->getMessage() . "\n";
