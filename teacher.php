@@ -32,9 +32,9 @@ $_GET['bodyClass'] = '';
         <div class="messageBox"></div>
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
-            <a class="button active" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
+            <a class="button" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
             <a class="button" id='questionList'><i class="fa-solid fa-list"></i> LLISTAT PREGUNTES</a>
-            <a class="button" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
+            <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
     <div id="divDinamic">
@@ -49,6 +49,33 @@ $_GET['bodyClass'] = '';
                     array_push($_SESSION['allPolls'], $poll);
                 }
         }
+        function getPoll($ID){
+            $startSession = connToDB()->prepare("SELECT * FROM `poll` WHERE poll.ID = :pollID;");
+            $startSession->bindParam(':pollID', $ID);
+            $startSession->execute();
+            $_SESSION['edtiPoll'] = [];
+            foreach ($startSession as $poll) {
+                array_push($_SESSION['allPolls'], $poll);
+            }
+        }
+
+        function getTeachersOfActivePolls(){
+            $startSession = connToDB()->prepare("SELECT teacherID, pollID FROM `teacher_poll` tp RIGHT JOIN poll p on tp.pollID = p.ID  WHERE p.active = 0;");
+            $startSession->execute();
+            $_SESSION['teachersPolls'] = [];
+            foreach ($startSession as $teachersOfPoll) {
+                array_push($_SESSION['teachersPolls'], $teachersOfPoll);
+            }
+        }
+
+        function getStudentsOfActivePolls(){
+            $startSession = connToDB()->prepare("SELECT studentID, pollID FROM `student_poll` sp RIGHT JOIN poll p on sp.pollID = p.ID  WHERE p.active = 0;");
+            $startSession->execute();
+            $_SESSION['studentsPolls'] = [];
+            foreach ($startSession as $studentsOfPoll) {
+                array_push($_SESSION['studentsPolls'], $studentsOfPoll);
+            }
+        }
 
         function getQuestions(){
             $startSession = connToDB()->prepare("SELECT * FROM `question` where active = 0;");
@@ -56,6 +83,15 @@ $_GET['bodyClass'] = '';
             $_SESSION['allQuestions'] = [];
             foreach ($startSession as $question) {
                 array_push($_SESSION['allQuestions'], $question);
+            }
+        }
+
+        function getQuestionsOfActivePolls(){
+            $startSession = connToDB()->prepare("SELECT questionID, pollID FROM `poll_question` pq RIGHT JOIN poll p on pq.pollID = p.ID  WHERE p.active = 0;");
+            $startSession->execute();
+            $_SESSION['questionsPolls'] = [];
+            foreach ($startSession as $questionsOfPoll) {
+                array_push($_SESSION['questionsPolls'], $questionsOfPoll);
             }
         }
 
@@ -72,9 +108,6 @@ $_GET['bodyClass'] = '';
             }
         }
 
-        function newQuestion(){
-            
-        }
         getQuestions();
         getPolls();
         getUsers();
@@ -99,6 +132,11 @@ $_GET['bodyClass'] = '';
         getOptions();
         getQuestions();
 
+        //For edit polls
+        getTeachersOfActivePolls();
+        getQuestionsOfActivePolls();
+        getStudentsOfActivePolls();
+
         ?>
     </div>
 </div>
@@ -110,7 +148,7 @@ $_GET['bodyClass'] = '';
             newInput.attr("type", "text");
             newInput.attr("id", id);
             newInput.attr("placeholder", "Titol de l'enquesta");
-            $("#"+parentID+"").append(newInput);
+            $("#"+parentID).append(newInput);
         }
 
         function createInputOnlyRead(id, text, className, parentID, group = ''){
@@ -123,6 +161,20 @@ $_GET['bodyClass'] = '';
             newInput.attr('readonly', true);
             $("#"+parentID+"").append(newInput);
         }
+
+        function createTextAreaOnlyRead(id, text, className, parentID, group = ''){
+            var newInput = $('<textarea>');
+            newInput.attr("type", "text");
+            newInput.attr("id", id);
+            newInput.val(text);
+            newInput.addClass(className);
+            newInput.attr('name', group);
+            newInput.attr('readonly', true);
+            $("#"+parentID+"").append(newInput);
+            while (newInput.clientHeight < newInput.scrollHeight) {
+                $(newInput).height($(newInput).height()+5);
+            }
+        };
 
         function createInputDate(id, parentID){
             var newInput = $('<input>');
@@ -172,7 +224,7 @@ $_GET['bodyClass'] = '';
 
         function savePoll(){
             createDiv('divSave', 'newPoll');
-            createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+            if($("#pollTitle").val()){createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');}
             createButtons('Cancelar', 'cancelButton', 'createPoll', 'divSave');
             clickSavePoll();
         }
@@ -237,17 +289,126 @@ $_GET['bodyClass'] = '';
         }
 
         //VIEW POLLS
+        function getTeachersPoll($ID){
+            var teachers = <?php echo json_encode($_SESSION['teachersPolls']); ?>;
+            teachersOfPoll = [];
+            teachers.forEach(teacher => {
+                if($ID == teacher['pollID']){
+                    teachersOfPoll.push(teacher['teacherID']);
+                }
+            });
+            return teachersOfPoll;
+        }
+
+        function teachersPoll(poll){
+            teachersofPoll = getTeachersPoll(poll['ID']);
+            teachersofPoll.forEach(teacher => {
+                element = $("#"+teacher).clone();
+                $("#"+teacher).remove();
+                element.removeClass('available').addClass('selected').css('background-color', '');
+                element.attr('name', 'teachers[]')
+                element.appendTo("#selectedTeachers");
+            });
+            clickTeachers();
+        }
+
+        function getQuestionPoll($ID){
+            var questions = <?php echo json_encode($_SESSION['questionsPolls']); ?>;
+            questionsOfPoll = [];
+            questions.forEach(question => {
+                if($ID == question['pollID']){
+                    questionsOfPoll.push(question['questionID']);
+                }
+            });
+            return questionsOfPoll;
+        }
+
+
+        function questionPoll(poll){
+            questionsofPoll = getQuestionPoll(poll['ID']);
+            questionsofPoll.forEach(question => {
+                element = $("#"+question).clone();
+                $("#"+question).remove();
+                element.removeClass('available').addClass('selected').css('background-color', '');
+                element.attr('name', 'questions[]')
+                element.appendTo("#selectedQuestions");
+            });
+            clickQuestions()
+        }
+
+        function getStudentPoll($ID){
+            var students = <?php echo json_encode($_SESSION['studentsPolls']); ?>;
+            studentsOfPoll = [];
+            students.forEach(student => {
+                if($ID == student['pollID']){
+                    studentsOfPoll.push(student['studentID']);
+                }
+            });
+            return studentsOfPoll;
+        }
+
+
+        function studentPoll(poll){
+            studentsofPoll = getStudentPoll(poll['ID']);
+            studentsofPoll.forEach(student => {
+                element = $("#"+student).clone();
+                $("#"+student).remove();
+                element.removeClass('available').addClass('selected').css('background-color', '');
+                element.attr('name', 'students[]')
+                element.appendTo("#selectedStudents");
+            });
+            clickStudents();
+        }
+        function onClickEditPoll(pollID){
+            $("#newPollForm").on("submit", function(){
+                createInputText('IDpoll', 'newPollForm');
+                $('#IDpoll').attr('name', 'IDpoll');
+                $('#IDpoll').val(pollID);
+                $('#IDpoll').attr("hidden",true);;
+            });
+        }
+
+        function editingPoll(poll){
+            $('#pollTitle').val(poll['title']);
+            $('#startDate').val(poll['startDate']);
+            $('#finishDate').val(poll['finishDate']);
+            teachersPoll(poll);
+            questionsForPoll();
+            questionPoll(poll);
+            savePoll();
+            studentsForPoll();
+            studentPoll(poll);
+            $('#cancelButton').remove();
+            onClickEditPoll(poll['ID']);
+        }
+
+        function clickPenPoll(){
+            $(".poll.fa-pen").on('click', function(){
+                $('.button').removeClass('active');
+                $('#createPoll').addClass('active');
+                $("#divDinamic").empty();
+                newPoll();
+                 //Get info of editing poll
+                var polls = <?php echo json_encode($_SESSION['allPolls']); ?>;
+                polls.forEach(poll => {
+                    if(poll['ID'] == $(this).attr('id')){
+                        editPoll = poll;
+                    }
+                });
+                editingPoll(editPoll);
+            })
+        }
+
         function showPolls(){
             createDiv('polls', 'divDinamic');
             var polls = <?php echo json_encode($_SESSION['allPolls']); ?>;
             polls.forEach(poll => {
                 createP(poll['ID'], poll['title'], '', 'polls');
-                $("#polls").find("p:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-pen'></i>");
+                $("#polls").find("p:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-pen poll'></i>");
                 $("#polls").find("i:last").after("<i id='"+poll['ID']+"' class='fa-solid fa-trash'></i>");
             });
-            clickTrashPoll();
-            
-                
+            clickPenPoll();
+            clickTrashPoll();         
         }
         
         
@@ -297,7 +458,7 @@ $_GET['bodyClass'] = '';
             clickManagementButtons('deleteTeacher', 'selected', 'available', 'availableTeachers', 'teacherButton', '');
             $('.teacherButton').on("click", function(){
                 if($('.userTeacher.selected').length == 1 && $('#divQuestions').length == 0){questionsForPoll();};
-                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();$('#divStudents').remove()};  
+                if(!$('.userTeacher.selected').length){$('#divQuestions').remove();$('#divSave').remove();$('#divStudents').remove();};  
                 clickTeachers();
             });
         }
@@ -325,7 +486,7 @@ $_GET['bodyClass'] = '';
             clickManagementButtons('deleteQuestion', 'selected', 'available', 'availableQuestions', 'questionButton', '');
             $('.questionButton').on("click", function(){
                 if($('.question.selected').length == 1 && $('#divStudents').length == 0){savePoll();studentsForPoll();} 
-                if(!$('.question.selected').length){$('#divSave').remove();$('#divStudents').remove()}
+                if(!$('.question.selected').length){$('#divSave').remove();$('#divStudents').remove();}
                 clickQuestions();
             });
         }
@@ -391,7 +552,7 @@ $_GET['bodyClass'] = '';
             createDiv('managementButtonsQuestion', 'divQuestions')
             createDiv('selectedQuestions', 'divQuestions')
             var questions = <?php echo json_encode($_SESSION['allQuestions']); ?>;
-            questions.forEach(question => createInputOnlyRead(question['ID'], question['question'], 'question available', 'availableQuestions', ''));
+            questions.forEach(question => createTextAreaOnlyRead(question['ID'], question['question'], 'question available', 'availableQuestions', ''));
             createManagementButtons('addQuestion', 'deleteQuestion', 'questionButton', 'managementButtonsQuestion');
             clickManagementButtonsQuestions();
             clickQuestions();
@@ -405,6 +566,12 @@ $_GET['bodyClass'] = '';
             $('#pollTitle').on('input', function (e) {
                 if (/^\s/.test($('#pollTitle').val())) {
                     $('#pollTitle').val('');
+                }
+                console.log($('#pollTitle').val().length);
+                if($('#pollTitle').val().length > 0 && !$('#saveButton').length){
+                    createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+                }else if($('#pollTitle').val().length < 1){
+                    $('#saveButton').remove();
                 }
             });
             createInputDate('startDate', 'pollInfo');
@@ -644,8 +811,8 @@ $_GET['bodyClass'] = '';
         });
 
         //START PAGE
-        // showPolls();
-        newPoll();
+        showPolls();
+        //newPoll();
     });
 </script>
 <?php
