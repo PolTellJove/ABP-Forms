@@ -1,6 +1,14 @@
 <?php
 session_start();
 include 'utilities.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'vendor/phpmailer/phpmailer/src/Exception.php';
+require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require 'vendor/phpmailer/phpmailer/src/SMTP.php';
+
+
 $_SESSION['errors'] = [];
 
 function login()
@@ -10,10 +18,7 @@ function login()
     $email = $_POST["userlog"];
     $password = $_POST["passlog"];
 
-    $dbh = new PDO('mysql:host=localhost; dbname=abp_poll', "root", "");
-    //recogida de datos en Variables
-    $email = $_POST["userlog"];
-    $password = $_POST["passlog"];
+    
 
     try {
         $stmn = connToDB()->prepare("SELECT * FROM user WHERE user.email = :email AND user.password = SHA2(:pw,256);");
@@ -455,6 +460,26 @@ function removeQuestion($id)
     }
 }
 
+function sendEmail($to, $subject, $messageContent){
+    $mail = new PHPMailer;
+$mail->isSMTP();
+$mail->Mailer = "smtp";
+$mail->SMTPDebug  = 1;  
+$mail->SMTPAuth   = TRUE;
+$mail->SMTPSecure = "tls";
+$mail->Port       = 587;
+$mail->Host       = "smtp.gmail.com";
+$mail->Username   = "rgarciasanchez.cf@iesesteveterradas.cat";
+$mail->Password   = "Rauliko200326";
+$mail->IsHTML(true);
+$mail->AddAddress($to);
+$mail->SetFrom("rgarciasanchez.cf@iesesteveterradas.cat", "Raul Garcia");
+$mail->Subject  = $subject;
+$mail->Body     = $messageContent;
+$mail->send();
+
+}
+
 if (isset($_POST['idQuestionToDelete'])) {
     removeQuestion($_POST['idQuestionToDelete']);
     header("Location: teacher.php");
@@ -520,17 +545,19 @@ if (isset($_POST['pollTitle'])) {
 if (isset($_POST['emailFor'])) {
     $userExist = false;
     foreach ($_SESSION['users'] as $key => $value) {
-        if ($key[$value] == $_POST['emailFor']) {
+        if ($_SESSION['users'][$key]["email"] == $_POST['emailFor']) {
             $userExist = true;
         }
     }
     if($userExist){
+        array_push($_SESSION['errors'], "displayMessage('ready. ',$('.messageBox'),1);");
+        sendEmail($_POST['emailFor'], "Recovery passoword", "Aqui va el link");
         writeInLog("I", $_POST['emailFor']."Correu electrònic trobat al intentar recuperar contrasenya");
     } 
     else {
         writeInLog("I", $_POST['emailFor']."Correu electrònic no trobat al intentar recuperar contrasenya");
     }
-    array_push($_SESSION['errors'], "displayMessage('Si el correu electònic introduit és correcte, rebràs un correu automàticament. ',$('.messageBox'),1);");
+    //array_push($_SESSION['errors'], "displayMessage('Si el correu electònic introduit és correcte, rebràs un correu automàticament. ',$('.messageBox'),1);");
     header("Location: forgot_password.php");
 }
 ?>

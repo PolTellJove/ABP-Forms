@@ -4,8 +4,8 @@ require __DIR__ . '/log.php';
         try {
             $hostname = "127.0.0.1";
             $dbname = "abp_poll";
-            $username = "root";
-            $pw = "";
+            $username = "admin";
+            $pw = "admin123";
             $pdo = new PDO ("mysql:host=$hostname;dbname=$dbname","$username","$pw");
             } catch (PDOException $e) {
                 echo "Failed to get DB handle: " . $e->getMessage() . "\n";

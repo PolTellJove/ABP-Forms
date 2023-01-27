@@ -18,14 +18,6 @@ function getUsers()
     }
 }
 getUsers();
-
-
-
-
-
-
-
-
 ?>
 
 
