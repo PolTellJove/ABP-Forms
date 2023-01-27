@@ -39,7 +39,7 @@ $_GET['bodyClass'] = '';
 
     <?php if ($user['role'] == 1) { ?>
         <br>
-        <div class="messageBox"></div>
+        <!-- <div class="messageBox"></div> -->
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
             <a class="button" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
