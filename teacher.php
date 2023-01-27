@@ -15,7 +15,7 @@ if (!isset($_SESSION["ID"])) {
 }
 
 function getOptionsOfActiveQuestions(){
-    $startSession = connToDB()->prepare("SELECT * FROM `question_option` qo INNER JOIN question q on qo.questionID = q.ID INNER JOIN option o on qo.optionID=o.ID WHERE q.active = 0;");
+    $startSession = connToDB()->prepare("SELECT * FROM abp_poll.question_option qo INNER JOIN question q on qo.questionID = q.ID INNER JOIN abp_poll.option o on qo.optionID=o.ID WHERE q.active = 0;");
     $startSession->execute();
     $_SESSION['optionsQuestion'] = [];
     foreach ($startSession as $options) {
@@ -47,6 +47,7 @@ $_GET['bodyClass'] = '';
             <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
+    <div class="messageBox"></div>
     <div id="divDinamic">
         <?php
 
@@ -236,8 +237,8 @@ $_GET['bodyClass'] = '';
 
         function savePoll(){
             createDiv('divSave', 'newPoll');
-            if($("#pollTitle").val()){createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');}
             createButtons('Cancelar', 'cancelButton', 'createPoll', 'divSave');
+            if($("#pollTitle").val()){createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');}
             clickSavePoll();
         }
          
@@ -736,6 +737,7 @@ $_GET['bodyClass'] = '';
                 }
                 if($('#pollTitle').val().length > 0 && !$('#saveButton').length){
                     createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+                    clickSavePoll();
                 }else if($('#pollTitle').val().length < 1){
                     $('#saveButton').remove();
                 }
