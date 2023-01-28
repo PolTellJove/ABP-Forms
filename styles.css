@@ -887,7 +887,7 @@ to {bottom: 0; opacity: 0;}
     font-size: 50px;
 }
 
-#forgotPassword #containerForgot {
+#forgotPassword #containerForgot, #containerForgot2 {
     grid-row: 2;
     display: inline;
     align-items: center;

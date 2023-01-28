@@ -475,7 +475,7 @@ $mail->IsHTML(true);
 $mail->AddAddress($to);
 $mail->SetFrom("rgarciasanchez.cf@iesesteveterradas.cat", "Raul Garcia");
 $mail->Subject  = $subject;
-$mail->Body     = $messageContent;
+$mail->Body = $messageContent;
 $mail->send();
 
 }
@@ -550,14 +550,81 @@ if (isset($_POST['emailFor'])) {
         }
     }
     if($userExist){
-        array_push($_SESSION['errors'], "displayMessage('ready. ',$('.messageBox'),1);");
-        sendEmail($_POST['emailFor'], "Recovery passoword", "Aqui va el link");
+        $preToken = md5("forgot");
+        $userIDEncrypt = md5(getIDUserRecoveredPassword($_POST['emailFor']));
+        $postToken = md5("finish");
+        $token = $preToken.$userIDEncrypt.$postToken;
+        $_SESSION['token'] = $token;
+        $_SESSION['emailUser'] = $_POST['emailFor'];
+        sendEmail($_POST['emailFor'], "Recovery passoword", "localhost:8080/forgot_password.php?".$token);
         writeInLog("I", $_POST['emailFor']."Correu electrònic trobat al intentar recuperar contrasenya");
     } 
     else {
         writeInLog("I", $_POST['emailFor']."Correu electrònic no trobat al intentar recuperar contrasenya");
     }
-    //array_push($_SESSION['errors'], "displayMessage('Si el correu electònic introduit és correcte, rebràs un correu automàticament. ',$('.messageBox'),1);");
+    array_push($_SESSION['errors'], "displayMessage('Si el correu electònic introduit és correcte, rebràs un correu automàticament. ',$('.messageBox'),1);");
     header("Location: forgot_password.php");
 }
+
+
+function getIDUserRecoveredPassword($email){
+    try {
+        $startSession = connToDB()->prepare("SELECT ID FROM abp_poll.user where email = :email");
+        $startSession->bindParam(":email", $email);
+        $done = $startSession->execute();
+
+        if ($done) {
+            writeInLog("S", "ID d'usuari que vol recuperar contrasenya trobat");
+        } else {
+            writeInLog("W", "ID d'usuari que vol recuperar contrasenya no trobat");
+        }
+        $idUserRecovered = $startSession->fetch();
+
+        return $idUserRecovered['ID'];    
+
+    } catch (\Throwable $th) {
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+    }
+}
+
+
+
+function updatePassword($id, $password){
+    echo $id;
+    echo $password;
+    try{
+        $startSession = connToDB()->prepare("UPDATE abp_poll.user SET password = :password1 where ID =:id");
+        $startSession->bindParam(":password1", $password);
+        $startSession->bindParam(":id", $id);
+        $done = $startSession->execute();
+
+        if ($done) {
+            writeInLog("S", "Contrasenya actualitzada correctament", $id);
+            array_push($_SESSION['errors'], "displayMessage('Contrasenya actualitzada correctament',$('.messageBox'),0);");
+        } else {
+            writeInLog("W", "Contrasenya no actualitzada correctament", $id);
+            array_push($_SESSION['errors'], "displayMessage('Contrasenya no actualitzada correctament',$('.messageBox'),2);");
+        }
+    }
+    catch (\Throwable $th){
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+    header("Location: login.php");
+}
+
+if(isset($_POST['recoverPassword1']) && isset($_POST['recoverPassword2'])){
+    if($_POST['recoverPassword1'] == $_POST['recoverPassword2']){
+        echo $_SESSION['emailUser'];
+        updatePassword(getIDUserRecoveredPassword($_SESSION['emailUser']), SHA2($_POST['recoverPassword1'],256));
+        array_push($_SESSION['errors'], "displayMessage('Contrasenya actualitzada correctament',$('.messageBox'),0);");
+        header("Location: login.php");
+    }
+    else if ($_POST['recoverPassword1'] != $_POST['recoverPassword2']){
+        array_push($_SESSION['errors'], "displayMessage('Las contrasenyes no coincideixen. ',$('.messageBox'),2);");
+    }
+
+}
+
+
 ?>
