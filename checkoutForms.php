@@ -600,28 +600,54 @@ function updatePassword($id, $password){
 
         if ($done) {
             writeInLog("S", "Contrasenya actualitzada correctament", $id);
-            array_push($_SESSION['errors'], "displayMessage('Contrasenya actualitzada correctament',$('.messageBox'),0);");
         } else {
             writeInLog("W", "Contrasenya no actualitzada correctament", $id);
-            array_push($_SESSION['errors'], "displayMessage('Contrasenya no actualitzada correctament',$('.messageBox'),2);");
         }
     }
     catch (\Throwable $th){
         writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
         array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
     }
-    header("Location: login.php");
 }
 
 if(isset($_POST['recoverPassword1']) && isset($_POST['recoverPassword2'])){
+    $specialChar = false;
+            $minusChar = false;
+            $mayusChar = false;
+    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     if($_POST['recoverPassword1'] == $_POST['recoverPassword2']){
-        echo $_SESSION['emailUser'];
-        updatePassword(getIDUserRecoveredPassword($_SESSION['emailUser']), SHA2($_POST['recoverPassword1'],256));
-        array_push($_SESSION['errors'], "displayMessage('Contrasenya actualitzada correctament',$('.messageBox'),0);");
-        header("Location: login.php");
+
+        if(strlen($_POST['recoverPassword1']) >= 8){
+            if(preg_match("/[A-Z]/", $_POST['recoverPassword1'])){
+                $mayusChar = true;
+            }
+            if(preg_match("/[a-z]/", $_POST['recoverPassword1'])){
+                $minusChar = true;
+            }
+            if(preg_match("/[\'^£$%&*()}{@#~?><>,|=_+¬-]/", $_POST['recoverPassword1'])){
+                $specialChar = true;
+            }
+        }
+        else{
+            array_push($_SESSION['errors'], "displayMessage('La contrasenya mínim ha de tenir 8 caràcters. ',$('.messageBox'),2);");
+            header("Location: forgot_password.php?".$_SESSION['token']);
+        }
+        if($specialChar == true && $minusChar == true && $mayusChar == true){
+            updatePassword(getIDUserRecoveredPassword($_SESSION['emailUser']), hash('sha256',$_POST['recoverPassword1']));
+            array_push($_SESSION['errors'], "displayMessage('Contrasenya actualitzada correctament',$('.messageBox'),0);");
+            header("Location: login.php");
+        }
+        
+        else{
+            array_push($_SESSION['errors'], "displayMessage('La contrasenya ha de tenir mínuscules i majúscules i al menys un caràcter especial. ',$('.messageBox'),2);");
+            header("Location: forgot_password.php?".$_SESSION['token']);
+        }
+
+        
     }
     else if ($_POST['recoverPassword1'] != $_POST['recoverPassword2']){
-        array_push($_SESSION['errors'], "displayMessage('Las contrasenyes no coincideixen. ',$('.messageBox'),2);");
+        array_push($_SESSION['errors'], "displayMessage('Les contrasenyes no coincideixen. ',$('.messageBox'),2);");
+        header("Location: forgot_password.php?".$_SESSION['token']);
     }
 
 }
