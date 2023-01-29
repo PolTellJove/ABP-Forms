@@ -346,7 +346,7 @@ $_GET['bodyClass'] = '';
                 createDiv('simpleOption', 'newQuestion');
                 for(let i = 0; i < optionsQuestion.length; i++) {
                     createInput("text", "optionsEdit[]", "simpleOption", "optionTitle"+i+1, null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");
-                    $("#optionTitle"+i+1).val(optionsQuestion[i][7]);
+                    $("#optionTitle"+i+1).val(optionsQuestion[i]['answer']);
                 }
                 createDiv('moreOptions', 'newQuestion');
                 $("#questionTitle").after($("#simpleOption"));
