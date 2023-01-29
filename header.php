@@ -17,7 +17,7 @@
 
         <?php
 
-        if (isset($user['username'])) {
+        if (isset($_SESSION['ID'])) {
             echo '
             <a class="buttonLogout" href="./logout.php">
             <i class="fa fa-solid fa-right-from-bracket"></i>
@@ -38,6 +38,14 @@
                 </a>
                 ';
         }
+        else if(strpos($url, 'stats.php')) {
+            echo '
+                <a class="anchorGoBack" href="./dashboard.php">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <div class="textGoBack">Dashboard</div>
+                </a>
+                ';
+        };
         ?>
 
 

@@ -8,7 +8,7 @@ $_GET['bodyClass'] = 'landing';
 <?php include 'header.php'; ?>
 <div id='divLanding'>
     <div id='buttons'>
-        <a class="button">ALUMNE</a>
+        <a class="button" href="get_polls.php">ALUMNE</a>
         <a class="button" href="login.php">PROFESSOR</a>
     </div>
     <div class="plane-container">

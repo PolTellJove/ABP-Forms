@@ -477,7 +477,6 @@ $mail->SetFrom("rgarciasanchez.cf@iesesteveterradas.cat", "Raul Garcia");
 $mail->Subject  = $subject;
 $mail->Body = $messageContent;
 $mail->send();
-
 }
 
 if (isset($_POST['idQuestionToDelete'])) {
@@ -542,6 +541,93 @@ if (isset($_POST['pollTitle'])) {
     }
 }
 
+function getPolls($email, $reply){
+    try {
+        $startSession = connToDB()->prepare("SELECT p.title from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = :id and sp.reply = :reply");
+        $startSession->bindParam(":id", getIDUserRecoveredPassword($email));
+        $startSession->bindParam(":reply", $reply);
+        $done = $startSession->execute();
+
+        if($reply == 0){
+            $_SESSION['pollsNoReply'] = [];
+            foreach ($startSession as $poll) {
+                array_push($_SESSION['pollsNoReply'], $poll);
+            }
+        }
+        else{
+            $_SESSION['pollsReply'] = [];
+            foreach ($startSession as $poll) {
+                array_push($_SESSION['pollsReply'], $poll);
+            }
+        }
+
+        if ($done) {
+            if($reply == 0){
+                writeInLog("SQL", "SELECT p.title from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = ".getIDUserRecoveredPassword($email)." and sp.reply =".$reply."", $_SESSION["ID"]);
+                writeInLog("S", "Enquestes no realitzades trobades correctament");
+            }
+            else{
+                writeInLog("SQL", "SELECT p.title from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = ".getIDUserRecoveredPassword($email)." and sp.reply =".$reply."", $_SESSION["ID"]);
+                writeInLog("S", "Enquestes realitzades trobades correctament");
+            }
+            
+        } else {
+            if($reply == 0){
+                writeInLog("SQL", "SELECT p.title from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = ".getIDUserRecoveredPassword($email)." and sp.reply =".$reply."", $_SESSION["ID"]);
+                writeInLog("S", "Enquestes no realitzades no trobades correctament");
+            }
+            else{
+                writeInLog("SQL", "SELECT p.title from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = ".getIDUserRecoveredPassword($email)." and sp.reply =".$reply."", $_SESSION["ID"]);
+                writeInLog("S", "Enquestes realitzades no trobades correctament");
+            }
+        }
+
+    } catch (\Throwable $th) {
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+    }
+
+}
+
+if(isset($_POST['userGetPoll'])){
+    $isUserStudent = false;
+    foreach ($_SESSION['emailStudents'] as $key => $value) {
+        if ($_SESSION['emailStudents'][$key]["email"] == $_POST['userGetPoll']) {
+            $isUserStudent = true;
+        }
+    }
+    if($isUserStudent) {
+        getPolls($_POST['userGetPoll'],0);
+        getPolls($_POST['userGetPoll'],1);
+
+        $listNoReply = "<ul>";
+        foreach ($_SESSION['pollsNoReply'] as $key => $value) {
+            $listNoReply .= "<li><a href='#'>".$_SESSION['pollsNoReply'][$key]['title']."</a></li>";
+        };
+        $listNoReply .= "</ul>";
+
+        $listReply = "<ul>";
+        foreach ($_SESSION['pollsReply'] as $key => $value) {
+            $listReply .= "<li><a href='#'>".$_SESSION['pollsReply'][$key]['title']."</a></li>";
+        };
+        $listReply .= "</ul>";
+        $message = "<html>
+        <body>
+        <div>Enquestes pendents: </div><div></div>".
+        $listNoReply
+        ."
+        <div>Enquestes realitzades:</div><div></div>".
+        $listReply
+        ."
+        </body>
+        </html>";
+        sendEmail($_POST['userGetPoll'], "Enquestes pendents", $message);
+    }
+    array_push($_SESSION['errors'], "displayMessage('Si el correu electònic introduit és correcte, rebràs un correu automàticament. ',$('.messageBox'),1);");
+    header("Location: get_polls.php");
+}
+
+
+
 if (isset($_POST['emailFor'])) {
     $userExist = false;
     foreach ($_SESSION['users'] as $key => $value) {
@@ -556,7 +642,13 @@ if (isset($_POST['emailFor'])) {
         $token = $preToken.$userIDEncrypt.$postToken;
         $_SESSION['token'] = $token;
         $_SESSION['emailUser'] = $_POST['emailFor'];
-        sendEmail($_POST['emailFor'], "Recovery passoword", "localhost:8080/forgot_password.php?".$token);
+        $linkToRecoverPassword = "<a href='http://localhost:8080/forgot_password.php?".$token."'>Canviar contrasenya</a>";
+        $message = "<html>
+        <body>
+        <div>Clica per canviar la contrasenya: </div><br>".$linkToRecoverPassword."
+        </body>
+        </html>";
+        sendEmail($_POST['emailFor'], "Canviar contrasenya", $message);
         writeInLog("I", $_POST['emailFor']."Correu electrònic trobat al intentar recuperar contrasenya");
     } 
     else {
@@ -566,7 +658,6 @@ if (isset($_POST['emailFor'])) {
     header("Location: forgot_password.php");
 }
 
-
 function getIDUserRecoveredPassword($email){
     try {
         $startSession = connToDB()->prepare("SELECT ID FROM abp_poll.user where email = :email");
@@ -574,6 +665,7 @@ function getIDUserRecoveredPassword($email){
         $done = $startSession->execute();
 
         if ($done) {
+            writeInLog("SQL", "SELECT ID FROM abp_poll.user where email = ".$email."", $_SESSION["ID"]);
             writeInLog("S", "ID d'usuari que vol recuperar contrasenya trobat");
         } else {
             writeInLog("W", "ID d'usuari que vol recuperar contrasenya no trobat");
@@ -590,8 +682,6 @@ function getIDUserRecoveredPassword($email){
 
 
 function updatePassword($id, $password){
-    echo $id;
-    echo $password;
     try{
         $startSession = connToDB()->prepare("UPDATE abp_poll.user SET password = :password1 where ID =:id");
         $startSession->bindParam(":password1", $password);
@@ -599,6 +689,7 @@ function updatePassword($id, $password){
         $done = $startSession->execute();
 
         if ($done) {
+            writeInLog("SQL", "UPDATE abp_poll.user SET password = ".$password." where ID =".$id."", $_SESSION["ID"]);
             writeInLog("S", "Contrasenya actualitzada correctament", $id);
         } else {
             writeInLog("W", "Contrasenya no actualitzada correctament", $id);
@@ -612,8 +703,8 @@ function updatePassword($id, $password){
 
 if(isset($_POST['recoverPassword1']) && isset($_POST['recoverPassword2'])){
     $specialChar = false;
-            $minusChar = false;
-            $mayusChar = false;
+    $minusChar = false;
+    $mayusChar = false;
     $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     if($_POST['recoverPassword1'] == $_POST['recoverPassword2']){
 
@@ -643,7 +734,6 @@ if(isset($_POST['recoverPassword1']) && isset($_POST['recoverPassword2'])){
             header("Location: forgot_password.php?".$_SESSION['token']);
         }
 
-        
     }
     else if ($_POST['recoverPassword1'] != $_POST['recoverPassword2']){
         array_push($_SESSION['errors'], "displayMessage('Les contrasenyes no coincideixen. ',$('.messageBox'),2);");

@@ -16,6 +16,7 @@ function getUsers()
     foreach ($startSession as $students) {
         array_push($_SESSION['users'], $students);
     }
+    writeInLog("SQL", "SELECT email FROM abp_poll.user where roleID != 3;");
 }
 getUsers();
 ?>
