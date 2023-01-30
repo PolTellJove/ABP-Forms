@@ -15,7 +15,7 @@ if (!isset($_SESSION["ID"])) {
 }
 
 function getOptionsOfActiveQuestions(){
-    $startSession = connToDB()->prepare("SELECT * FROM abp_poll.question_option qo INNER JOIN question q on qo.questionID = q.ID INNER JOIN abp_poll.option o on qo.optionID=o.ID WHERE q.active = 0;");
+    $startSession = connToDB()->prepare("SELECT * FROM abp_poll.question_option qo INNER JOIN abp_poll.question q on qo.questionID = q.ID INNER JOIN abp_poll.option o on qo.optionID=o.ID WHERE q.active = 0;");
     $startSession->execute();
     $_SESSION['optionsQuestion'] = [];
     foreach ($startSession as $options) {

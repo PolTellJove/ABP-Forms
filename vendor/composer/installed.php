@@ -1,6 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
+        'pretty_version' => 'dev-recoveryPasswordNew',
+        'version' => 'dev-recoveryPasswordNew',
+        'reference' => '4bc60bc564ca34bab9ee1d09a7eb42f749b974d1',
         'pretty_version' => 'dev-emailPendingSurveys',
         'version' => 'dev-emailPendingSurveys',
         'reference' => '52e2b6e0795836fb2f372d4062a78aa476aabebf',
@@ -11,6 +14,9 @@
     ),
     'versions' => array(
         '__root__' => array(
+            'pretty_version' => 'dev-recoveryPasswordNew',
+            'version' => 'dev-recoveryPasswordNew',
+            'reference' => '4bc60bc564ca34bab9ee1d09a7eb42f749b974d1',
             'pretty_version' => 'dev-emailPendingSurveys',
             'version' => 'dev-emailPendingSurveys',
             'reference' => '52e2b6e0795836fb2f372d4062a78aa476aabebf',
