@@ -10,8 +10,8 @@ require 'vendor/phpmailer/phpmailer/src/SMTP.php';
         try {
             $hostname = "127.0.0.1";
             $dbname = "abp_poll";
-            $username = "root";
-            $pw = "";
+            $username = "admin";
+            $pw = "admin123";
             $pdo = new PDO ("mysql:host=$hostname;dbname=$dbname","$username","$pw");
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
@@ -70,11 +70,11 @@ require 'vendor/phpmailer/phpmailer/src/SMTP.php';
         $mail->SMTPSecure = "tls";
         $mail->Port       = 587;
         $mail->Host       = "smtp.gmail.com";
-        $mail->Username   = "alariosalmendros.cf@iesesteveterradas.cat";
-        $mail->Password   = "";
+        $mail->Username   = "rgarciasanchez.cf@iesesteveterradas.cat";
+        $mail->Password   = "Rauliko200326";
         $mail->IsHTML(true);
         $mail->AddAddress($to);
-        $mail->SetFrom("alariosalmendros.cf@iesesteveterradas.cat", "Alex Larios");
+        $mail->SetFrom("rgarciasanchez.cf@iesesteveterradas.cat", "Raul Garcia");
         $mail->Subject  = $subject;
         $mail->Body = $messageContent;
         $mail->send();
