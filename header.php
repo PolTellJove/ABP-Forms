@@ -34,7 +34,7 @@
             echo '
                 <a class="anchorGoBack" href="./dashboard.php">
                 <i class="fa-solid fa-arrow-left-long"></i>
-                <div class="textGoBack">Dashboard</div>
+                <div class="textGoBack">DASHBOARD</div>
                 </a>
                 ';
         }
@@ -42,7 +42,7 @@
             echo '
                 <a class="anchorGoBack" href="./dashboard.php">
                 <i class="fa-solid fa-arrow-left-long"></i>
-                <div class="textGoBack">Dashboard</div>
+                <div class="textGoBack">DASHBOARD</div>
                 </a>
                 ';
         };

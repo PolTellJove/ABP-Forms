@@ -81,6 +81,7 @@ header .buttonLogout {
 
 header .buttonLogout:hover {
     width: 100px;
+    transition: 1.5s
 }
 
 header .buttonLogout:hover .logout {
@@ -178,6 +179,7 @@ dialog{
     width: 120px;
     box-shadow: none !important;
     padding-left: 15px;
+    transition: 1.5s
 }
 
 .textGoBack {
@@ -282,6 +284,7 @@ i.fa.fa-close {
 
 .closeMessageBtn:hover i {
     color: rgb(65, 65, 65);
+    transition: 1.5s
 }
 
 /* End of Messages */
@@ -387,6 +390,7 @@ i.fa.fa-close {
 .login .submitBtn:hover {
     background-color: #2a463a;
     transform: translateY(-2px);
+    transition: 1.5s
 }
 
 /* Dashbaord CSS */
@@ -411,10 +415,11 @@ i.fa.fa-close {
 }
 
 #dashboard .button:hover {
-    color: black;
+    color: white;
     background-color: #546A7B;
     transform: scale(1.2);
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    transition: 1.5s
 }
 
 #dashboard #divDashboard {
@@ -487,6 +492,7 @@ i.fa.fa-close {
     background-color: #546A7B;
     transform: scale(1.1);
     box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    transition: 1.5s
 }
 
 #teacher a.button.active {
@@ -624,6 +630,7 @@ i.fa.fa-close {
 
 #teacher #saveQuestion:hover,#saveEditQuestion:hover,#saveEditSimpleQuestion:hover,#btnPublish-yes:hover {
     background-color: #38b67d;
+    transition: 1.5s
 }
 
 #teacher #clearForm,#btnPublish-no {
@@ -633,6 +640,7 @@ i.fa.fa-close {
 
 #teacher #clearForm:hover,#btnPublish-no:hover {
     background-color: #ad5f5f;
+    transition: 1.5s
 }
 
 #teacher #newQuestion {
@@ -825,6 +833,14 @@ i.fa.fa-close {
     cursor: pointer
 }
 
+#landing .button:hover{
+    color: white;
+    background-color: #546A7B;
+    transform: scale(1.2);
+    box-shadow: 0 10px 25px rgba(92, 99, 105, 1);
+    transition: 1.5s
+}
+
 /* Animations to make messages (displayMessages) */
 @keyframes fadein {
     from {
@@ -980,6 +996,7 @@ to {bottom: 0; opacity: 0;}
 #forgotPassword .submitBtn:hover {
     background-color: #2a463a;
     transform: translateY(-2px);
+    transition: 1.5s
 }
 
 /*CSS stats.php*/
@@ -1118,4 +1135,5 @@ to {bottom: 0; opacity: 0;}
 #getPolls .submitBtn:hover {
     background-color: #2a463a;
     transform: translateY(-2px);
+    transition: 1.5s
 }
