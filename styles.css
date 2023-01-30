@@ -8,7 +8,9 @@ html, body
 {
 	height: 100%;
 }
-
+header{
+    display: block;
+}
 header .headerTitle {
     display: flex;
 }
@@ -135,8 +137,8 @@ body {
     background-color: #C6C5B9;
     min-height: 100vh;
     margin: 0px;
-    display: grid;
-    grid-template-rows: 10% 85% 5%;
+    display: flex;
+    flex-direction: column;
     font-family: Tahoma, sans-serif;
 }
 
@@ -194,6 +196,35 @@ dialog{
 .anchorGoBack:hover .textGoBack {
     opacity: .9;
 }
+
+/* Breadcrumbs Style */
+ul.breadcrumbs {
+    padding: 10px 16px;
+    list-style: none;
+    background-color: #eee;
+  }
+
+  ul.breadcrumbs li {
+    display: inline;
+    font-size: 18px;
+  }
+
+  ul.breadcrumbs li+li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+  }
+
+  ul.breadcrumbs li a {
+    color: #0275d8;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  ul.breadcrumbs li a:hover {
+    color: #01447e;
+    text-decoration: underline;
+  }
 
 /* Styles of messages */
 .messageBox {
@@ -414,6 +445,11 @@ i.fa.fa-close {
     transition: all .2s ease-in-out;
 }
 
+#dashboard{
+    display: flex;
+    flex-direction: column;
+}
+
 #dashboard .button:hover {
     color: white;
     background-color: #546A7B;
@@ -426,6 +462,7 @@ i.fa.fa-close {
     grid-row: 2;
     display: inline;
     align-items: center;
+    min-height: 70%;
 }
 
 #dashboard #divButtons {

@@ -10,9 +10,9 @@ require 'vendor/phpmailer/phpmailer/src/SMTP.php';
 
 
 $_SESSION['errors'] = [];
+$_SESSION['breadcrumbs '] = [];
 
-function login()
-{
+ function login(){
 
     //recogida de datos en Variables
     $email = $_POST["userlog"];
@@ -209,10 +209,10 @@ function saveSimpleQuestion()
 function addSimpleOptions($arrayOptions)
 {
     try {
-        $lastQuestionId = connToDB()->prepare("select max(id) as id from question;");
+        $lastQuestionId = connToDB()->prepare("select max(id) as id from abp_poll.question;");
         $lastQuestionId->execute();
         $lastIdQuestion = $lastQuestionId->fetch();
-        $lastOptionId = connToDB()->prepare("select max(id) as id from option");
+        $lastOptionId = connToDB()->prepare("select max(id) as id from abp_poll.option");
         $lastOptionId->execute();
         $lastIdOption = $lastOptionId->fetch();
 
@@ -221,9 +221,10 @@ function addSimpleOptions($arrayOptions)
         // $lastIdQuestion["id"];
 
         foreach ($arrayOptions as $key => $value) {
-            $startSession = connToDB()->prepare("INSERT INTO option (answer) values (:answer);");
+            $startSession = connToDB()->prepare("INSERT INTO abp_poll.option (answer) values (:answer);");
             $startSession->bindParam(":answer", $value);
             $done = $startSession->execute();
+            writeInLog("S", "INSERT INTO abp_poll.option (answer) values (".$value.");", $_SESSION["ID"]);
         }
 
         if ($done) {
@@ -415,13 +416,12 @@ function saveOptionsofSimpleQuestions($questionId, $lastId)
 {
     try {
 
-        $currentOptionId = connToDB()->prepare("select max(id) as id from option");
+        $currentOptionId = connToDB()->prepare("select max(id) as id from abp_poll.option");
         $currentOptionId->execute();
         $currentOptionId = $currentOptionId->fetch();
 
         for ($i = $lastId; $i <= $currentOptionId["id"]; $i++) {
             $startSession = connToDB()->prepare("INSERT INTO question_option (questionID,optionID) values (:questionID, :optionID);");
-            // echo "INSERT INTO question_option (questionID,optionID) values (".$questionId.", ".$i.");";
             $startSession->bindParam(':questionID', $questionId);
             $startSession->bindParam(':optionID', $i);
             $done = $startSession->execute();

@@ -18,8 +18,11 @@ if (PHP_VERSION_ID < 50600) {
         $err,
         E_USER_ERROR
     );
+    echo 'Composer 2.3.0 dropped support for autoloading on PHP <5.6 and you are running '.PHP_VERSION.', please upgrade PHP or use Composer 2.2 LTS via "composer self-update --2.2". Aborting.'.PHP_EOL;
+    exit(1);
 }
 
 require_once __DIR__ . '/composer/autoload_real.php';
 
 return ComposerAutoloaderInit44da96072fb7420109460fa20ff57652::getLoader();
+return ComposerAutoloaderInitba79b909a94825f9ae6468f70b41c40f::getLoader();
