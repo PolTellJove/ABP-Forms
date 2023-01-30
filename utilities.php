@@ -5,6 +5,7 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/phpmailer/phpmailer/src/Exception.php';
 require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require 'vendor/phpmailer/phpmailer/src/SMTP.php';
+    
     function connToDB(){
         try {
             $hostname = "127.0.0.1";
@@ -70,7 +71,7 @@ require 'vendor/phpmailer/phpmailer/src/SMTP.php';
         $mail->Port       = 587;
         $mail->Host       = "smtp.gmail.com";
         $mail->Username   = "alariosalmendros.cf@iesesteveterradas.cat";
-        $mail->Password   = "metajets";
+        $mail->Password   = "";
         $mail->IsHTML(true);
         $mail->AddAddress($to);
         $mail->SetFrom("alariosalmendros.cf@iesesteveterradas.cat", "Alex Larios");
