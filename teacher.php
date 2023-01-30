@@ -32,9 +32,6 @@ $_GET['bodyClass'] = '';
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
-<script type="text/javascript">
-
-</script>
 <div id='divTeacher'>
 
     <?php if ($user['role'] == 1) { ?>

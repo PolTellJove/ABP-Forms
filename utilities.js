@@ -63,4 +63,17 @@ function displayMessage(missageContent, elementFather,codeMessage = 3){
 
     errorMissageId = errorMissageId + 1;
 
+
+    //Create elements
+    function createInputOnlyRead(id, text, className, parentID, group = ''){
+        var newInput = $('<input>');
+        newInput.attr("type", "text");
+        newInput.attr("id", id);
+        newInput.val(text);
+        newInput.addClass(className);
+        newInput.attr('name', group);
+        newInput.attr('readonly', true);
+        $("#"+parentID+"").append(newInput);
+    }
+
 }

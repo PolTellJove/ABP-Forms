@@ -1175,5 +1175,23 @@ to {bottom: 0; opacity: 0;}
     transition: 1.5s
 }
 
+
+#reply #divReply #divQuestionsToReply{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+}
+
+#reply #divReply #divQuestionsToReply > div{
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+}
+
+#reply #divReply #divQuestionsToReply > div > label{
+    width: 100%;
+}
 /*CSS responsive*/
 
