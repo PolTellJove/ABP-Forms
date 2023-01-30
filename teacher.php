@@ -271,13 +271,12 @@ $_GET['bodyClass'] = '';
             createInput("text", "questionEditTitle", "newQuestion", "questionTitle", null, "Títol de la pregunta", null, null);
             $("#questionTitle").val(questionToEdit['question']);
             createDiv('buttonsOfNewQuestion', "newQuestion");
-            createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+            
             
             if (questionToEdit['typeID'] == '2') {
                 deleteDiv("radioGroup");
                 deleteDiv("simpleOption");
                 createTextArea("taQuestion", "buttonsOfNewQuestion", "newQuestion");
-
                 createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
                 
 
@@ -293,9 +292,8 @@ $_GET['bodyClass'] = '';
                 deleteDiv("taQuestion");
                 deleteDiv("simpleOption");
                 var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
-                
-                createRadioButtons(options, "buttonsOfNewQuestion");
                 createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
+                createRadioButtons(options, "buttonsOfNewQuestion");
                 
 
                 $("#saveEditQuestion").on("click", function() {
@@ -306,6 +304,18 @@ $_GET['bodyClass'] = '';
                     $("#formEditQuestion").submit();
                 });
 
+                $("#questionTitle").on("input", function() {
+                    if($('#saveEditQuestion').length == 0){
+                        createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
+                    }
+                    if (/^\s/.test($(this).val())) {
+                        $(this).val('');
+                    }
+                    if($(this).val().length == 0){
+                        $('#saveEditQuestion').remove();
+                    }
+                });
+
             } else if (questionToEdit['typeID'] == '0') {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
@@ -314,7 +324,7 @@ $_GET['bodyClass'] = '';
             else if (questionToEdit['typeID'] == '3') {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
-
+                createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
 
                 function clickSaveEditPoll(){
                     $("#saveEditSimpleQuestion").on("click", function() {
