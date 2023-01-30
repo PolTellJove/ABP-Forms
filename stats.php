@@ -82,6 +82,7 @@ getPolls($_SESSION['ID']);
         optionsPoll.forEach(element => {
             if(element['type'] == 1){
                 createP(element['questionUser'], element['answerText'], element['optionUser'], 'polls');
+                $("#polls").find("p:last").after("   -> "+element['number']);
             }
             
         });
@@ -90,11 +91,12 @@ getPolls($_SESSION['ID']);
         optionsPoll.forEach(element => {
             if(element['type'] == 3){
                 createP(element['questionUser'], element['answerText'], element['optionUser'], 'polls');
+                $("#polls").find("p:last").after("   -> "+element['number']);
             }
             
         });
         $("#polls").append("<h3>Respostes obertes:</h3>");
-        $("#polls").append('<button type="button" class="collapsible">Open Collapsible</button><div id="content" class="content">');
+        $("#polls").append('<button type="button" style="text-align:center" class="collapsible">Veure respostes obertes</button><div id="content" class="content">');
         var optionsPollCollapsable = <?php echo json_encode($_SESSION['optionsQuestionCollapsable']);?>;
         optionsPollCollapsable.forEach(element => {
             if(element['type'] == 2){
