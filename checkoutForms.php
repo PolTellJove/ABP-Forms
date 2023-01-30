@@ -2,12 +2,6 @@
 session_start();
 include 'utilities.php';
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-require 'vendor/phpmailer/phpmailer/src/Exception.php';
-require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require 'vendor/phpmailer/phpmailer/src/SMTP.php';
-
 
 $_SESSION['errors'] = [];
 $_SESSION['breadcrumbs '] = [];
@@ -460,24 +454,6 @@ function removeQuestion($id)
     }
 }
 
-function sendEmail($to, $subject, $messageContent){
-    $mail = new PHPMailer;
-$mail->isSMTP();
-$mail->Mailer = "smtp";
-$mail->SMTPDebug  = 1;  
-$mail->SMTPAuth   = TRUE;
-$mail->SMTPSecure = "tls";
-$mail->Port       = 587;
-$mail->Host       = "smtp.gmail.com";
-$mail->Username   = "rgarciasanchez.cf@iesesteveterradas.cat";
-$mail->Password   = "Rauliko200326";
-$mail->IsHTML(true);
-$mail->AddAddress($to);
-$mail->SetFrom("rgarciasanchez.cf@iesesteveterradas.cat", "Raul Garcia");
-$mail->Subject  = $subject;
-$mail->Body = $messageContent;
-$mail->send();
-}
 
 if (isset($_POST['idQuestionToDelete'])) {
     removeQuestion($_POST['idQuestionToDelete']);
@@ -640,9 +616,10 @@ if (isset($_POST['emailFor'])) {
         $userIDEncrypt = md5(getIDUserRecoveredPassword($_POST['emailFor']));
         $postToken = md5("finish");
         $token = $preToken.$userIDEncrypt.$postToken;
+        $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
         $_SESSION['token'] = $token;
         $_SESSION['emailUser'] = $_POST['emailFor'];
-        $linkToRecoverPassword = "<a href='http://localhost:8080/forgot_password.php?".$token."'>Canviar contrasenya</a>";
+        $linkToRecoverPassword = "<a href='$path/forgot_password.php?".$token."'>Canviar contrasenya</a>";
         $message = "<html>
         <body>
         <div>Clica per canviar la contrasenya: </div><br>".$linkToRecoverPassword."
