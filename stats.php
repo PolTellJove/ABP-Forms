@@ -76,22 +76,70 @@ getPolls($_SESSION['ID']);
 
     function showStatsPoll(){
         createDiv('polls', 'divDinamic');
+        var numberResponses = <?php echo json_encode($_SESSION['numberOfResponses']);?>;
+        var halfNumericOptions = 0;
+        var totalResponses = 0;
+        numberResponses.forEach(element3 => {
+            if(element3['answer'] =="Totalment d'acord"){
+                halfNumericOptions += 5 * element3['numberReply']
+            }
+            else if(element3['answer'] == "D'acord"){
+                halfNumericOptions += 4 * element3['numberReply']
+            }
+            else if(element3['answer'] == "Neutral"){
+                halfNumericOptions += 3 * element3['numberReply'];
+            }
+            else if(element3['answer'] == "En desacord"){
+                halfNumericOptions += 2 * element3['numberReply'];
+            }
+            else if(element3['answer'] == 'Totalment en desacord'){
+                halfNumericOptions += 1 * element3['numberReply'];
+            }
+            totalResponses +=1;
+        });
+        var media = Math.trunc(halfNumericOptions / totalResponses);
+        if(media == 5){
+            media = "Totalment d'acord";
+        }
+        else if(media == 4){
+            media = "D'acord";
+        }
+        else if(media == 3){
+            media = "Neutral";
+        }
+        else if(media == 2){
+            media = "En desacord";
+        }
+        else if(media == 1){
+            media  = "Totalment en desacord";
+        }
+        
         var optionsPoll = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
         $("#polls").append("<h1>"+optionsPoll[0]['idPoll']+"</h1>");
         $("#polls").append("<h3>Preguntes númeriques:</h3>");
         optionsPoll.forEach(element => {
             if(element['type'] == 1){
                 createP(element['questionUser'], element['answerText'], element['optionUser'], 'polls');
-                $("#polls").find("p:last").after("   -> "+element['number']);
+                numberResponses.forEach(element2 => {
+                    if (element2['answer'] == element['answerText']){
+                        $("#polls").find("p:last").after("<i class='fa fa-archive' aria-hidden='true'></i>"+element2['numberReply']);
+                    }
+                });
+                
             }
             
         });
+        createP("halfNumeric", 'La mitjana és -> '+media, '', 'polls');
         console.log(optionsPoll);
         $("#polls").append("<h3>Opció simple:</h3>");
         optionsPoll.forEach(element => {
             if(element['type'] == 3){
                 createP(element['questionUser'], element['answerText'], element['optionUser'], 'polls');
-                $("#polls").find("p:last").after("   -> "+element['number']);
+                numberResponses.forEach(element2 => {
+                    if (element2['answer'] == element['answerText']){
+                        $("#polls").find("p:last").after("<i class='fa fa-archive' aria-hidden='true'></i>"+element2['numberReply']);
+                    }
+                });
             }
             
         });
@@ -103,6 +151,7 @@ getPolls($_SESSION['ID']);
                 createP(element['questionUser'], element['answerAreaText'], element['optionUser'], 'content');
             }
         });
+
         var coll = $(".collapsible");
         var i;
 
