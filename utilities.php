@@ -71,7 +71,7 @@ require 'vendor/phpmailer/phpmailer/src/SMTP.php';
         $mail->Port       = 587;
         $mail->Host       = "smtp.gmail.com";
         $mail->Username   = "alariosalmendros.cf@iesesteveterradas.cat";
-        $mail->Password   = "";
+        $mail->Password   = "metajets";
         $mail->IsHTML(true);
         $mail->AddAddress($to);
         $mail->SetFrom("alariosalmendros.cf@iesesteveterradas.cat", "Alex Larios");

@@ -2,16 +2,27 @@
 session_start();
 include 'utilities.php';
 $user = logUser();
+$_SESSION['questionsOfPoll'] = [];
+$_SESSION['poll'] = [];
 $_GET['titlePage'] = 'Reply Poll';
 $_GET['bodyID'] = 'reply';
 $_GET['bodyClass'] = 'reply';
-$_GET['pollID'] = 5;
-$_GET['teacherID'] = 32;
-$_GET['studentID'] = 27;
 ?><!DOCTYPE html>
 <html lang="en">
 <!-- FUNCTIONS -->
 <?php 
+    function checkToken(){
+        $pre = md5("REPLY");
+        $userIDEncrypt = md5($_GET['s'].$_GET['p'].$_GET['t']);
+        $post = md5("POLL");
+        $token = $pre.$userIDEncrypt.$post;
+        if($token == $_GET['k']){
+            getPoll($_GET['p']);
+        }else{
+            return false;
+        }
+    }
+
     function getQuestionsOfPoll($ID){
         $startSession = connToDB()->prepare("SELECT q.ID as questionID, q.question as question, q.typeID as typeID,
         GROUP_CONCAT(qo.optionID,'::', o.answer SEPARATOR '{#}') as answers
@@ -38,9 +49,7 @@ $_GET['studentID'] = 27;
         }
         getQuestionsOfPoll($ID);
     }
-
-    getPoll($_GET['pollID'])
-
+    checkToken();
 ?>
 <script>
     //Create elements
@@ -105,9 +114,9 @@ $_GET['studentID'] = 27;
             function onClickSave(){
                 $('#saveButton').on('click', function(){
                     $('#formReplyPoll').append('<input type="hidden" name="replyPoll" value="" />');
-                    $('#formReplyPoll').append('<input type="hidden" name="teacher" value="<?php echo $_GET['teacherID']; ?>" />');
-                    $('#formReplyPoll').append('<input type="hidden" name="student" value="<?php echo $_GET['studentID']; ?>" />');
-                    $('#formReplyPoll').append('<input type="hidden" name="poll" value="<?php echo $_GET['pollID']; ?>" />');
+                    $('#formReplyPoll').append('<input type="hidden" name="teacher" value="<?php echo $_GET['t']; ?>" />');
+                    $('#formReplyPoll').append('<input type="hidden" name="student" value="<?php echo $_GET['s']; ?>" />');
+                    $('#formReplyPoll').append('<input type="hidden" name="poll" value="<?php echo $_GET['p']; ?>" />');
                     $('#formReplyPoll').submit();
                 });
             }
@@ -145,7 +154,6 @@ $_GET['studentID'] = 27;
                     questionHasAnswer(question['questionID']);
                 }
             }
-
             nextQuestion();
         </script>
         </div>
