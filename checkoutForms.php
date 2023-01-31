@@ -768,4 +768,88 @@ if(isset($_POST['replyPoll'])){
         array_push($_SESSION['errors'], "displayMessage('Enquesta no contestada',$('.messageBox'),3);");
     }
 }
+
+function getQuestionsPoll($idPoll){
+    try{
+        $startSession = connToDB()->prepare("SELECT DISTINCT p.title as idPoll, ua.questionID as questionUser, ua.optionID as optionUser, ua.answer as answerAreaText, o.answer as answerText, q.typeID as type from user_answer ua left join abp_poll.option o on ua.optionID=o.id inner join poll p on ua.pollID=p.ID inner join abp_poll.question q on q.ID=ua.questionID where p.ID = :id");
+        $startSession->bindParam(":id", $idPoll);
+        $done = $startSession->execute();
+
+        $_SESSION['optionsQuestion'] = [];
+        foreach ($startSession as $option) {
+            array_push($_SESSION['optionsQuestion'], $option);
+        }
+
+        if ($done) {
+            writeInLog("SQL", "SELECT DISTINCT p.title as idPoll, ua.questionID as questionUser, ua.optionID as optionUser, ua.answer as answerAreaText, o.answer as answerText, q.typeID as type from user_answer ua left join abp_poll.opt
+            ion o on ua.optionID=o.id inner join poll p on ua.pollID=p.ID inner join abp_poll.question q on q.ID=ua.questionID where p.ID = ".$idPoll."", $_SESSION["ID"]);
+            writeInLog("S", "Opcions de la pregunta recuperades correctament", $_SESSION["ID"]);
+        } else {
+            writeInLog("W", "Opcions de la pregunta no recuperades correctament", $_SESSION["ID"]);
+        }
+    }
+    catch(\Throwable $th){
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+}
+
+function getQuestionsPollCollapsable($idPoll){
+    try{
+        $startSession = connToDB()->prepare("SELECT p.title as idPoll, ua.questionID as questionUser, ua.optionID as optionUser, ua.answer as answerAreaText, o.answer as answerText, q.typeID as type from user_answer ua left join 
+        abp_poll.option o on ua.optionID=o.id inner join poll p on ua.pollID=p.ID inner join abp_poll.question q on q.ID=ua.questionID where p.ID = :id;");
+        $startSession->bindParam(":id", $idPoll);
+        $done = $startSession->execute();
+
+        $_SESSION['optionsQuestionCollapsable'] = [];
+        foreach ($startSession as $option) {
+            array_push($_SESSION['optionsQuestionCollapsable'], $option);
+        }
+
+        if ($done) {
+            writeInLog("SQL", "SELECT DISTINCT p.title as idPoll, ua.questionID as questionUser, ua.optionID as optionUser, ua.answer as answerAreaText, o.answer as answerText, q.typeID as type from user_answer ua left join abp_poll.opt
+            ion o on ua.optionID=o.id inner join poll p on ua.pollID=p.ID inner join abp_poll.question q on q.ID=ua.questionID where p.ID = ".$idPoll."", $_SESSION["ID"]);
+            writeInLog("S", "Opcions de la pregunta recuperades correctament", $_SESSION["ID"]);
+        } else {
+            writeInLog("W", "Opcions de la pregunta no recuperades correctament", $_SESSION["ID"]);
+        }
+    }
+    catch(\Throwable $th){
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+}
+
+function getNumberOfResponses($idPoll){
+    try{
+        $startSession = connToDB()->prepare("SELECT ua.pollId,ua.optionID,ab.answer,count(*) as numberReply from user_answer ua, abp_poll.option ab where ua.optionID = ab.ID and ua.pollID=:id group by(optionID)");
+        $startSession->bindParam(":id", $idPoll);
+        $done = $startSession->execute();
+
+        $_SESSION['numberOfResponses'] = [];
+        foreach ($startSession as $option) {
+            array_push($_SESSION['numberOfResponses'], $option);
+        }
+
+        if ($done) {
+            writeInLog("SQL", "SELECT ua.pollId,ua.optionID,ab.answer,count(*) from user_answer ua, abp_poll.option ab where ua.optionID = ab.ID and ua.pollID=".$idPoll." group by(optionID)", $_SESSION["ID"]);
+            writeInLog("S", "Numero d'opció repetides d'enquesta recuperat correctament", $_SESSION["ID"]);
+        } else {
+            writeInLog("W", "Numero d'opció repetides d'enquesta no recuperat correctament", $_SESSION["ID"]);
+        }
+    }
+    catch(\Throwable $th){
+        writeInLog("E", "Error en la conexió amb la base de dades:" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Error en la conexió amb la base de dades:" . $th . "',$('.messageBox'),3);");
+    }
+}
+
+
+
+if(isset($_POST['idPoll'])){
+    getQuestionsPoll($_POST['idPoll']);
+    getQuestionsPollCollapsable($_POST['idPoll']);
+    getNumberOfResponses($_POST['idPoll']);
+    header("Location: stats.php?poll=".$_POST['idPoll']);
+}
 ?>

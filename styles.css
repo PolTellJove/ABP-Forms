@@ -639,6 +639,34 @@ i.fa.fa-close {
     width: 90%;
 }
 
+#polls .collapsible {
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 17px;
+  }
+  
+#polls .active, .collapsible:hover {
+    background-color: #555;
+  }
+
+#polls .fa-archive{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+  
+#polls .content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: rgb(158, 157, 157);
+  }
+
 #teacher #radioButton {
     padding: 1%;
 }
@@ -1047,10 +1075,14 @@ to {bottom: 0; opacity: 0;}
 #stats #divDinamic p {
     border: 1px solid black;
     background-color: white;
-    text-transform: lowercase;
     border-radius: 2px;
     padding: 5px 0px;
     border: 3px solid #62929E;
+}
+
+#stats #halfNumeric {
+    font-style: italic;
+    width: 35% !important;
 }
 
 #stats #divDinamic p::first-letter {
