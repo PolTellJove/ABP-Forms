@@ -726,25 +726,25 @@ if(isset($_POST['replyPoll'])){
         if($question[2]){
             try{
                 if($question[1] == 'n2'){ //OPEN ANSWER
-                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (".$_POST['poll'].", ".$question[2].",".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
+                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (".$_POST['poll'].", ".$question[2].", ".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
 
-                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
+                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
                     $startSession->bindParam(":question", $question[2]);
                     $startSession->bindParam(":teacher", $_POST['teacher']);
                     $startSession->bindParam(":student", $_POST['student']);
-                    $startSession->bindParam(":student", $_POST['poll']);
+                    $startSession->bindParam(":poll", $_POST['poll']);
                     $startSession->bindParam(":answer", $value);
                     $startSession->execute();
 
 
                 }else if($question[1] == 'n1' || $question[1] == 'n3'){ //OPTION ANSWER
-                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(`pollID`, `questionID`, `optionID`, `studentID`, `teacherID`) VALUES (".$_POST['poll'].", ".$question[2].",".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
+                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID, optionID, studentID, teacherID) VALUES (".$_POST['poll'].", ".$question[2].", ".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
 
-                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(`pollID`, `questionID`, `optionID`, `studentID`, `teacherID`) VALUES (:poll, :question, :answer, :student, :teacher);");
+                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID, optionID, studentID, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
                     $startSession->bindParam(":question", $question[2]);
                     $startSession->bindParam(":teacher", $_POST['teacher']);
                     $startSession->bindParam(":student", $_POST['student']);
-                    $startSession->bindParam(":student", $_POST['poll']);
+                    $startSession->bindParam(":poll", $_POST['poll']);
                     $startSession->bindParam(":answer", $value);
                     $startSession->execute();
                 }
@@ -753,6 +753,19 @@ if(isset($_POST['replyPoll'])){
                 array_push($_SESSION['errors'], "displayMessage('Preguntes no desades',$('.messageBox'),3);");
             }
         }
+    }
+    try{
+        writeInLog("SQL", "UPDATE abp_poll.student_poll sp INNER JOIN teacher_poll tp on sp.pollID = tp.pollID set sp.reply = 1 WHERE sp.pollID = ".$_POST['poll']." AND sp.studentID = ".$_POST['student']." AND tp.teacherID = ".$_POST['teacher'].";", $_POST['student']);
+
+        $startSession = connToDB()->prepare("UPDATE abp_poll.student_poll sp INNER JOIN teacher_poll tp on sp.pollID = tp.pollID set sp.reply = 1 WHERE sp.pollID = :poll AND sp.studentID = :student AND tp.teacherID = :teacher;");
+        $startSession->bindParam(":teacher", $_POST['teacher']);
+        $startSession->bindParam(":student", $_POST['student']);
+        $startSession->bindParam(":poll", $_POST['poll']);
+        $startSession->execute();
+
+    }catch (\Throwable $th){
+        writeInLog("E", "NO S'HA POGUT RESPONDRE LA ENQUESTA" . $th, $_SESSION["ID"]);
+        array_push($_SESSION['errors'], "displayMessage('Enquesta no contestada',$('.messageBox'),3);");
     }
 }
 ?>
