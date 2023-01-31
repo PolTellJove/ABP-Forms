@@ -1175,12 +1175,24 @@ to {bottom: 0; opacity: 0;}
     transition: 1.5s
 }
 
+#reply #divReply{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+}
 
 #reply #divReply #divQuestionsToReply{
     width: 100%;
     display: flex;
     justify-content: center;
     flex-flow: column;
+    box-shadow: 0 10px 25px rgb(92 99 105);
+    border-radius: 5px;
+    margin-bottom: 2%;
+    align-items: center;
+    padding-top: 1%;
 }
 
 #reply #divReply #divQuestionsToReply > div{
@@ -1188,10 +1200,46 @@ to {bottom: 0; opacity: 0;}
     justify-content: center;
     flex-flow: column;
     align-items: center;
+    padding: 15px 30px;
+    border: 1px solid black;
+    margin-bottom: 1%;
+    border-radius: 3px;
+    width: 50%;
 }
 
 #reply #divReply #divQuestionsToReply > div > label{
     width: 100%;
 }
+
+#reply #divReply #divQuestionsToReply > div > h3{
+    width: 100%;
+}
+
+#reply #divReply #divQuestionsToReply > div > textarea{
+    width: 100%;
+    min-height: 80px;
+}
+
+#reply #divReply h1{
+    text-align: center;
+}
+
+#reply a#saveButton.button{
+    background-color: #46e89f;
+    padding: 10px 35px;
+    width: 70%;
+    text-align: center;
+    margin: 3%;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border-style: none;
+    box-shadow: 0 10px 25px rgb(92 99 105 / 50%);
+}
+
+#reply form#formReplyPoll{
+    width: 100%;
+}
+
 /*CSS responsive*/
 

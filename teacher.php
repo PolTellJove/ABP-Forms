@@ -322,15 +322,28 @@ $_GET['bodyClass'] = '';
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
                 createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
-
+                var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
+                optionsQuestion = [];
+                optionsQuestion2.forEach(element => {
+                    if(questionToEdit['ID'] == element['questionID']){
+                        optionsQuestion.push(element);
+                    }
+                });
                 function clickSaveEditPoll(){
+                    var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
+                    optionsQuestion = [];
+                    optionsQuestion2.forEach(element => {
+                        if(questionToEdit['ID'] == element['questionID']){
+                            optionsQuestion.push(element);
+                        }
+                    });
                     $("#saveEditSimpleQuestion").on("click", function() {
                         $("#teacher").append("<form id='formEditSimpleQuestion' action='checkoutForms.php' method='POST'>");
                         $("#formEditSimpleQuestion").append("<input hidden type='text' name='titleSimpleOption' id='titleSimpleOption'>");
                         $("#titleSimpleOption").val($("#questionTitle").val());
                         for(let j = 0; j < optionsQuestion.length; j++) {
                             $("#formEditSimpleQuestion").append("<input hidden type='text' name='idsOptions[]' id='idOptionQuestion"+j+1+"'>");
-                            $("#idOptionQuestion"+j+1).val(optionsQuestion[j][1]);
+                            $("#idOptionQuestion"+j+1).val(optionsQuestion[j]['optionID']);
                         }
                         for(let i = 0; i < optionsQuestion.length; i++) {
                             $("#formEditSimpleQuestion").append("<input hidden type='text' name='optionsQuestion[]' id='optionQuestion"+i+1+"'>");
@@ -342,14 +355,7 @@ $_GET['bodyClass'] = '';
                         $("#formEditSimpleQuestion").submit();
                     });
                 }
-
-                var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
-                optionsQuestion = [];
-                optionsQuestion2.forEach(element => {
-                    if(questionToEdit['ID'] == element['questionID']){
-                        optionsQuestion.push(element);
-                    }
-                });
+                clickSaveEditPoll();
                 createDiv('simpleOption', 'newQuestion');
                 for(let i = 0; i < optionsQuestion.length; i++) {
                     createInput("text", "optionsEdit[]", "simpleOption", "optionTitle"+i+1, null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");

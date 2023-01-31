@@ -51,10 +51,10 @@ function updateOptions()
 {
     try {
         for ($i = 0; $i < count($_POST['optionsQuestion']); $i++) {
-            echo $i;
-            $startSession = connToDB()->prepare("UPDATE option SET answer = :title WHERE ID = :id;");
+            $startSession = connToDB()->prepare("UPDATE abp_poll.option SET answer = :title WHERE ID = :id;");
             $startSession->bindParam(':title', $_POST['optionsQuestion'][$i]);
             $startSession->bindParam(':id', $_POST['idsOptions'][$i]);
+            echo "UPDATE abp_poll.option SET answer = ".$_POST['optionsQuestion'][$i]." WHERE ID = ".$_POST['idsOptions'][$i].";";
             $done = $startSession->execute();
         }
         $startSession->close();
@@ -719,5 +719,40 @@ if(isset($_POST['recoverPassword1']) && isset($_POST['recoverPassword2'])){
 
 }
 
+if(isset($_POST['replyPoll'])){
+    $questionsID = [];
+    foreach ($_POST as $key => $value) {
+        $question = explode("-", $key);
+        if($question[2]){
+            try{
+                if($question[1] == 'n2'){ //OPEN ANSWER
+                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (".$_POST['poll'].", ".$question[2].",".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
 
+                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
+                    $startSession->bindParam(":question", $question[2]);
+                    $startSession->bindParam(":teacher", $_POST['teacher']);
+                    $startSession->bindParam(":student", $_POST['student']);
+                    $startSession->bindParam(":student", $_POST['poll']);
+                    $startSession->bindParam(":answer", $value);
+                    $startSession->execute();
+
+
+                }else if($question[1] == 'n1' || $question[1] == 'n3'){ //OPTION ANSWER
+                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(`pollID`, `questionID`, `optionID`, `studentID`, `teacherID`) VALUES (".$_POST['poll'].", ".$question[2].",".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
+
+                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(`pollID`, `questionID`, `optionID`, `studentID`, `teacherID`) VALUES (:poll, :question, :answer, :student, :teacher);");
+                    $startSession->bindParam(":question", $question[2]);
+                    $startSession->bindParam(":teacher", $_POST['teacher']);
+                    $startSession->bindParam(":student", $_POST['student']);
+                    $startSession->bindParam(":student", $_POST['poll']);
+                    $startSession->bindParam(":answer", $value);
+                    $startSession->execute();
+                }
+            }catch (\Throwable $th){
+                writeInLog("E", "NO S'HA POGUT DESAR LA RESPOSTA DEL ALUMNE" . $th, $_SESSION["ID"]);
+                array_push($_SESSION['errors'], "displayMessage('Preguntes no desades',$('.messageBox'),3);");
+            }
+        }
+    }
+}
 ?>
