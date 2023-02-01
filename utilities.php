@@ -10,8 +10,8 @@ require 'vendor/phpmailer/phpmailer/src/SMTP.php';
         try {
             $hostname = "127.0.0.1";
             $dbname = "abp_poll";
-            $username = "admin";
-            $pw = "admin123";
+            $username = "poltelljove";
+            $pw = "polito";
             $pdo = new PDO ("mysql:host=$hostname;dbname=$dbname","$username","$pw");
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             } catch (PDOException $e) {

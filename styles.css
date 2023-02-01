@@ -10,6 +10,7 @@ html, body
 }
 header{
     display: block;
+    min-height: 15%;
 }
 header .headerTitle {
     display: flex;
@@ -19,7 +20,7 @@ header.headerTitle h1 {
     font-size: 30px;
     text-align: center;
     line-height: 1.5em;
-    padding-bottom: 45px;
+    padding-bottom: 2%;
     color: black;
 }
 
@@ -92,12 +93,13 @@ header .buttonLogout:hover .logout {
 
 /* Footer Styling */
 footer {
-    width: 100%;
     position: relative;
+    display: block;
     background-color: #b4b2a5;
     color: #393D3F;
     grid-row: 3;
     line-height: 20px;
+    width: 100%;
 }
 
 footer .containerBody {
@@ -106,19 +108,21 @@ footer .containerBody {
     justify-content: space-evenly;
     font-size: 13px;
     gap: 20px;
+    padding-inline: 1%;
 }
 
 footer .containerBody .presentacio {
     margin: 0;
     width: 33%;
     border-right: dashed #C6C5B9;
+    padding-right: 1%;
 }
 
 footer .containerBody .contacte {
     padding: 0;
     width: 33%;
     border-right: dashed #C6C5B9;
-
+    padding-right: 1%;
 }
 
 footer .pCopyright {
@@ -127,12 +131,12 @@ footer .pCopyright {
     border-top: dashed #C6C5B9;
     text-align: center;
     color: black;
+    padding-inline: 1%;
 }
 
 /* General Body */
 body {
     position: relative;
-    min-width: 100vh;
     padding-bottom: 50px;
     background-color: #C6C5B9;
     min-height: 100vh;
@@ -199,7 +203,6 @@ dialog{
 
 /* Breadcrumbs Style */
 ul.breadcrumbs {
-    padding: 10px 16px;
     list-style: none;
     background-color: #eee;
   }
@@ -326,12 +329,15 @@ i.fa.fa-close {
 .login .title {
     text-align: center;
     font-size: 50px;
+    margin-top: 5%;
 }
 
 .login #containerLogin {
     grid-row: 2;
     display: inline;
     align-items: center;
+    position: relative;
+    min-height: 85%;
 }
 
 .login .loginForm {
@@ -462,7 +468,8 @@ i.fa.fa-close {
     grid-row: 2;
     display: inline;
     align-items: center;
-    min-height: 70%;
+    position: relative;
+    min-height: 85%;
 }
 
 #dashboard #divButtons {
@@ -486,6 +493,7 @@ i.fa.fa-close {
     width: 600px;
     left: 50%;
     margin-left: -300px;
+    margin-top: 5%;
 }
 
 /* Teacher CSS */
@@ -499,6 +507,8 @@ i.fa.fa-close {
     grid-row: 2;
     display: inline;
     align-items: center;
+    position: relative;
+    min-height: 135%;
 }
 
 #teacher #divButtons {
@@ -508,6 +518,7 @@ i.fa.fa-close {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin-top: 5%;
 }
 
 #teacher .button {
@@ -870,8 +881,10 @@ i.fa.fa-close {
 
 #landing #divLanding {
     grid-row: 2;
+    position: relative;
     display: inline;
     align-items: center;
+    min-height: 85%;
 }
 
 #landing #buttons{
@@ -928,9 +941,10 @@ to {bottom: 0; opacity: 0;}
 
 .plane-container img {
     width: 120px;
-    height: 120px;
+    height: 100%;
     margin-top: 15%;
     margin-left: 5%;
+    display: block;
 }
   
 .plane-container img {
@@ -966,12 +980,15 @@ to {bottom: 0; opacity: 0;}
 #forgotPassword .title {
     text-align: center;
     font-size: 50px;
+    margin-top: 5%;
 }
 
 #forgotPassword #containerForgot, #containerForgot2 {
     grid-row: 2;
     display: inline;
     align-items: center;
+    position: relative;
+    min-height: 85%;
 }
 
 #forgotPassword .forgotForm {
@@ -1109,12 +1126,15 @@ to {bottom: 0; opacity: 0;}
 #getPolls .title {
     text-align: center;
     font-size: 50px;
+    margin-top: 5%;
 }
 
 #getPolls #containergetPolls {
     grid-row: 2;
     display: inline;
     align-items: center;
+    position: relative;
+    min-height: 85%;
 }
 
 #getPolls .getPollsForm {
@@ -1274,3 +1294,36 @@ to {bottom: 0; opacity: 0;}
 }
 
 /*CSS responsive*/
+
+
+@media only screen and (max-width: 800px), only screen and (max-height: 600px){
+
+    header{
+        display: block;
+        min-height: 10%;
+    }
+
+    header.headerTitle h1 {
+        padding-bottom: 0.5%;
+    }
+
+    #landing #divLanding {
+        min-height: 80%;
+        margin-top: 10%;
+    }
+
+    .plane-container img {
+        width: 60px;
+    }
+
+    .login .title {
+        font-size: 30px;
+        margin-top: 5%;
+    }
+
+    .login #containerLogin {
+        min-height: 75%;
+        margin-top: 15%;
+    }
+
+}
