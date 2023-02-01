@@ -8,9 +8,12 @@ include 'utilities.php';
 
 <div id="divDinamic">
 <?php
+if($_SESSION['role'] != 2){
+    header("Location: dashboard.php");
+}
 function getPolls($id)
 {
-    $startSession = connToDB()->prepare("SELECT p.id, p.title, sum(sp.reply) as reply from poll p inner join teacher_poll tp on p.ID=tp.pollID INNER JOIN student_poll sp on sp.pollID=tp.pollID where tp.teacherID = :id group by p.id;
+    $startSession = connToDB()->prepare("SELECT p.id, p.title, sum(sp.reply) as reply from poll p inner join teacher_poll tp on p.ID=tp.pollID INNER JOIN student_poll sp on sp.pollID=tp.pollID where tp.teacherID = :id and p.active =0 group by p.id;
     ");
     $startSession->bindParam(":id", $id);
     $done = $startSession->execute();

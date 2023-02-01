@@ -38,7 +38,13 @@
                 $token = generateTokenToReplyPoll($user['userID'], $user['pollID'], $user['pollID']);
                 $URL = createURLtoReply($user['userID'], $user['pollID'], $user['pollID'], $token);
                 $linkToPoll = '<a href="'.$URL.'">'.$user['poll'].'</a>';
-                sendEmail($user['email'], 'Enquesta pendent', $linkToPoll);
+                $message = "<html>
+                <body>
+                <div>< style='color: black !important'>Hola alumne, et falta per respondre aquesta enquesta:</div><br>"
+                .$linkToPoll."
+                </body>
+                </html>";
+                sendEmail($user['email'], 'Enquesta pendent', $message);
             }
         }catch (PDOException $e) {
             writeInLog("E", "Error:" . $e->getMessage());

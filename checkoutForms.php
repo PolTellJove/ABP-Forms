@@ -588,10 +588,10 @@ if(isset($_POST['userGetPoll'])){
         $listReply .= "</ul>";
         $message = "<html>
         <body>
-        <div>Enquestes pendents: </div><div></div>".
+        <div style='color: black !important'>Hola alumne <br><br> Enquestes pendents: </div><div></div>".
         $listNoReply
         ."
-        <div>Enquestes realitzades:</div><div></div>".
+        <div style='color: black !important'>Enquestes realitzades:</div><div></div>".
         $listReply
         ."
         </body>
@@ -619,10 +619,13 @@ if (isset($_POST['emailFor'])) {
         $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
         $_SESSION['token'] = $token;
         $_SESSION['emailUser'] = $_POST['emailFor'];
-        $linkToRecoverPassword = "<a href='$path/forgot_password.php?".$token."'>Canviar contrasenya</a>";
+        $linkToRecoverPassword = "<a style='padding: 20px; background-color: #00BFFF; color: white !important; font-weight: bold; border-radius: 10px; text-decoration:none;' href='$path/forgot_password.php?".$token."'>Canviar contrasenya</a>";
         $message = "<html>
         <body>
-        <div>Clica per canviar la contrasenya: </div><br>".$linkToRecoverPassword."
+        <p style='color:black !important;'>Hola usuari,</p>
+        <p style='color:black !important;'>Si estàs intentant canviar la contrasenya fés clic al botó.</p><br>
+        <br>".$linkToRecoverPassword."
+        <br><br>
         </body>
         </html>";
         sendEmail($_POST['emailFor'], "Canviar contrasenya", $message);
