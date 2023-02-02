@@ -24,7 +24,6 @@
     function createURLtoReply($studentID, $pollID, $token){
         $parametersURL = "?s=".$studentID."&p=".$pollID."&k=$token";
         //$path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
-        echo $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
         $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "/view_poll.php";
         $URL = $path.$parametersURL;
         return $URL;
@@ -42,7 +41,7 @@
                 $linkToPoll = '<a href="'.$URL.'">'.$user['poll'].'</a>';
                 $message = "<html>
                 <body>
-                <div>< style='color: black !important'>Hola alumne, et falta per respondre aquesta enquesta:</div><br>"
+                <div style='color: black !important'>Hola ".$user['user'].", encara no has respost aquesta enquesta:</div><br>"
                 .$linkToPoll."
                 </body>
                 </html>";

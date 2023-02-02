@@ -10,7 +10,7 @@ include 'utilities.php';
 <?php
 function getStudents()
 {
-    $startSession = connToDB()->prepare("SELECT email FROM abp_poll.user where roleID = 3;");
+    $startSession = connToDB()->prepare("SELECT ID, email, username FROM abp_poll.user where roleID = 3;");
     $startSession->execute();
     $_SESSION['emailStudents'] = [];
     foreach ($startSession as $students) {

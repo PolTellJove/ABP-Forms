@@ -13,7 +13,7 @@ $_GET['bodyClass'] = 'reply';
 <?php 
     function checkToken(){
         $pre = md5("REPLY");
-        $userIDEncrypt = md5($_GET['s'].$_GET['p'].$_GET['t']);
+        $userIDEncrypt = md5($_GET['s'].$_GET['p']);
         $post = md5("POLL");
         $token = $pre.$userIDEncrypt.$post;
         if($token == $_GET['k']){
@@ -39,9 +39,14 @@ $_GET['bodyClass'] = 'reply';
         }
     }
 
+    getAnswersOfQuestion(){
+        
+    }
+
     function getPoll($ID){
-        $startSession = connToDB()->prepare("SELECT p.title as title FROM abp_poll.poll p WHERE p.ID = :pollID;");
+        $startSession = connToDB()->prepare("SELECT p.title as title, p.startDate as start, p.finishDate as finish, sp.reply as reply, sp.studentID FROM abp_poll.poll p INNER JOIN student_poll sp on p.ID = sp.pollID WHERE p.ID = :pollID AND sp.studentID =;");
         $startSession->bindParam(':pollID', $ID);
+        $startSession->bindParam(':studentID', $_GET['s']);
         $startSession->execute();
         $_SESSION['poll'] = [];
         foreach ($startSession as $poll) {
@@ -154,7 +159,15 @@ $_GET['bodyClass'] = 'reply';
                     questionHasAnswer(question['questionID']);
                 }
             }
-            nextQuestion();
+            if($_SESSION['poll']['start'] > date("Y-m-d h:m:s")){
+                echo "Enquesta encara no disponible. S'obrirà el ".$_SESSION['poll']['start'];
+            }else if($_SESSION['poll']['reply'] == 0 && $_SESSION['poll']['finish'] > date("Y-m-d h:m:s")){
+                echo "Enquesta caducada";
+            }else if($_SESSION['poll']['start'] < date("Y-m-d h:m:s") && $_SESSION['poll']['finish'] < date("Y-m-d h:m:s") && $_SESSION['poll']['reply'] == 0){
+                nextQuestion();
+            }else if($_SESSION['poll']['reply'] == 1){
+
+            }
         </script>
         </div>
     </forms>
