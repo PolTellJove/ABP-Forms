@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /home/raul/Escritorio/ABP-Forms
-php /home/raul/Escritorio/ABP-Forms/cron.php
+cd C:/xampp/htdocs/ABP-Forms
+php C:/xampp/htdocs/ABP-Forms/cron.php

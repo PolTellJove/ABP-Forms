@@ -10,8 +10,8 @@ $_SESSION['breadcrumb'] = [];
 <?php include 'header.php'; ?>
 <div id='divLanding'>
     <div id='buttons'>
-        <a class="button" href="get_polls.php">ALUMNE</a>
-        <a class="button" href="login.php">PROFESSOR</a>
+        <a class="button" id="alumne" href="get_polls.php">ALUMNE</a>
+        <a class="button" id="professor" href="login.php">PROFESSOR</a>
     </div>
     <div class="plane-container">
         <img src="./images/paperPlane.png" alt="Paper Plane" />

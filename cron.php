@@ -40,7 +40,7 @@
                 $linkToPoll = '<a href="'.$URL.'">'.$user['poll'].'</a>';
                 $message = "<html>
                 <body>
-                <div>< style='color: black !important'>Hola alumne, et falta per respondre aquesta enquesta:</div><br>"
+                <div style='color: black !important'>Hola alumne, et falta per respondre aquesta enquesta:</div><br>"
                 .$linkToPoll."
                 </body>
                 </html>";

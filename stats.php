@@ -13,8 +13,7 @@ if($_SESSION['role'] != 2){
 }
 function getPolls($id)
 {
-    $startSession = connToDB()->prepare("SELECT p.id, p.title, sum(sp.reply) as reply from poll p inner join teacher_poll tp on p.ID=tp.pollID INNER JOIN student_poll sp on sp.pollID=tp.pollID where tp.teacherID = :id and p.active =0 group by p.id;
-    ");
+    $startSession = connToDB()->prepare("SELECT p.id, p.title, sum(sp.reply) as reply from poll p inner join teacher_poll tp on p.ID=tp.pollID INNER JOIN student_poll sp on sp.pollID=tp.pollID where tp.teacherID = :id and p.active =0 group by p.id;");
     $startSession->bindParam(":id", $id);
     $done = $startSession->execute();
     if ($done) {

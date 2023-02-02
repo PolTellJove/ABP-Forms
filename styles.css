@@ -230,7 +230,7 @@ ul.breadcrumbs {
   }
 
 /* Styles of messages */
-.messageBox {
+#login .messageBox {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -241,6 +241,19 @@ ul.breadcrumbs {
     width: 100%;
     margin-bottom: 10px;
     margin-top: 60px;
+}
+
+#dashboard .messageBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    gap: 5px;
+    /* position: fixed; */
+    bottom: 10%;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 120px;
 }
 
 .displayMessage {
@@ -473,7 +486,7 @@ i.fa.fa-close {
 }
 
 #dashboard #divButtons {
-    margin-top: 10%;
+    margin-top: 5%;
     width: auto;
     border-radius: 8px;
     display: flex;
@@ -493,7 +506,7 @@ i.fa.fa-close {
     width: 600px;
     left: 50%;
     margin-left: -300px;
-    margin-top: 5%;
+    margin-top: 2%;
 }
 
 /* Teacher CSS */
@@ -508,7 +521,7 @@ i.fa.fa-close {
     display: inline;
     align-items: center;
     position: relative;
-    min-height: 135%;
+    min-height: 320%;
 }
 
 #teacher #divButtons {
@@ -568,10 +581,8 @@ i.fa.fa-close {
 
 
 #teacher textarea {
-    resize: none;
     height: 70px;
     width: 60%;
-    min-width: 160px;
     border-radius: 5px;
 }
 
@@ -783,7 +794,7 @@ i.fa.fa-close {
 
 #teacher #pollInfo #pollTitle{
     display: flex;
-    width: 100%;
+    width: 97%;
     text-align: center;
 }
 
@@ -1087,6 +1098,7 @@ to {bottom: 0; opacity: 0;}
     width: 80%;
     margin: 5% 10%;
     text-align: center;
+    min-height: 85%;
 }
 
 #stats #divDinamic p {
@@ -1302,6 +1314,10 @@ to {bottom: 0; opacity: 0;}
         display: block;
         min-height: 10%;
     }
+    
+    header .buttonLogout{
+        margin-top: -110px;
+    }
 
     header.headerTitle h1 {
         padding-bottom: 0.5%;
@@ -1318,12 +1334,229 @@ to {bottom: 0; opacity: 0;}
 
     .login .title {
         font-size: 30px;
-        margin-top: 5%;
+        margin-top: 6%;
+    }
+
+    .login .messageBox {
+        margin-top: 1%;
     }
 
     .login #containerLogin {
         min-height: 75%;
+        margin-top: 8%;
+        margin-bottom: 5%;
+    }
+
+    #login .messageBox {
+        margin-top: 30px;
+    }
+    
+    #dashboard .messageBox {
+        margin-top: 140px;
+    }
+
+    #dashboard .titleContainer {
+        margin-top: 8%;
+    }
+    
+    #dashboard #divButtons {
+        margin-top: 10%;
+        height: 40%;
+    }
+
+    #dashboard #divDashboard {
+        min-height: 90%;
+    }
+
+    header .anchorGoBack {
+        margin-top: -110px;
+    }
+    
+    #teacher #divButtons {
+        margin-top: 12%;
+    }
+
+    #teacher #divTeacher {
+        min-height: 350%;
+    }
+
+    #stats #divDinamic{
+        min-height: 90%;
+    }
+
+    #getPolls .title {
         margin-top: 15%;
     }
 
+    #getPolls #containergetPolls {
+        min-height: 90%;
+    }
+
+}
+
+@media only screen and (max-width: 375px){
+
+    header{
+        display: block;
+        min-height: 10%;
+    }
+    
+    header .buttonLogout{
+        margin-top: -110px;
+    }
+
+    header.headerTitle h1 {
+        padding-bottom: 0.5%;
+    }
+
+    #landing #divLanding {
+        min-height: 85%;
+        margin-top: 10%;
+    }
+
+    .plane-container img {
+        width: 60px;
+    }
+
+    .login .title {
+        font-size: 30px;
+        margin-top: 20%;
+    }
+
+    .login .messageBox {
+        margin-top: 1%;
+    }
+
+    .login #containerLogin {
+        min-height: 85%;
+    }
+
+    #login .messageBox {
+        margin-top: 30px;
+    }
+    
+    #dashboard .messageBox {
+        margin-top: 130px;
+    }
+
+    #dashboard .titleContainer {
+        margin-top: 18%;
+        font-size: 12px;
+    }
+    
+    #dashboard #divButtons {
+        margin-top: 2%;
+        width: auto;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        min-height: 60%;
+    }
+
+    #dashboard #divButtons .button {
+        margin: 1%;
+        font-size: 17px;
+    }
+
+    #dashboard #divDashboard {
+        min-height: 90%;
+    }
+
+    header .anchorGoBack {
+        margin-top: -110px;
+    }
+    
+    #teacher #divButtons {
+        margin-top: 25%;
+        margin-left: 30%;
+        max-width: 40%;
+    }
+
+    #teacher #divButtons .button{
+        font-size: 10px;
+        max-width: 20%;
+    }
+
+    #teacher #divButtons .button i{
+        text-align: center;
+    }
+
+    #teacher #divTeacher {
+        min-height: 220%;
+    }
+
+    #stats #divDinamic{
+        min-height: 90%;
+    }
+
+    #teacher #divDinamic{
+        min-height: 90%;
+        margin-top: 10%;
+    }
+
+    ul.breadcrumbs li {
+        font-size: 15px;
+      }
+    
+    .plane-container {
+        margin-right: 12%;
+    }
+
+    #landing #buttons{
+        margin-top: 25%;
+        margin-left: 13%;
+    }
+
+    #landing .button {
+        margin: 5%;
+        padding: 10% 30% 10% 10%;
+    }
+
+    #landing #alumne{
+        margin: 5%;
+        padding: 10% 24% 10% 16%;
+    }
+
+    footer .containerBody .contacte {
+        padding: 0;
+        max-width: 33%;
+        border-right: dashed #C6C5B9;
+        padding-right: 1%;
+        text-overflow: clip;
+    }
+
+    #getPolls .title {
+        text-align: center;
+        font-size: 30px;
+        margin-top: 30%;
+    }
+
+    #getPolls #containergetPolls {
+        min-height: 90%;
+    }
+
+    #teacher #pollInfo #pollTitle{
+        width: 97%;
+    }
+
+    #teacher #availableTeachers input, #availableStudents input, #selectedTeachers input, #selectedStudents input{
+        width: 80%;
+        max-width:80px;
+    }
+
+    #teacher #availableQuestions textarea, #selectedQuestions textarea{
+        width: 90%;
+        max-width:90px;
+        overflow-wrap: break-word;
+    }
+
+    #teacher #managementButtonsTeacher, #managementButtonsStudent, #managementButtonsQuestion {
+        max-width: 30px;
+    }
+    
+    footer li{
+        overflow-wrap: break-word;
+    }
 }
