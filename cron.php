@@ -22,7 +22,7 @@
     }
 
     function createURLtoReply($studentID, $pollID, $token){
-        $parametersURL = "?s=".$studentID."&p=".$pollID."&k=$token";
+        $parametersURL = "?s=".$studentID."&p=".$pollID."&k=".$token;
         //$path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
         $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "/view_poll.php";
         $URL = $path.$parametersURL;
