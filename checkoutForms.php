@@ -519,7 +519,7 @@ if (isset($_POST['pollTitle'])) {
 
 function getPolls($email, $reply){
     try {
-        $startSession = connToDB()->prepare("SELECT p.title from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = :id and sp.reply = :reply");
+        $startSession = connToDB()->prepare("SELECT p.title, p.ID from poll p INNER JOIN student_poll sp on p.ID=sp.pollID where sp.studentID = :id and sp.reply = :reply");
         $startSession->bindParam(":id", getIDUserRecoveredPassword($email));
         $startSession->bindParam(":reply", $reply);
         $done = $startSession->execute();
@@ -563,21 +563,41 @@ function getPolls($email, $reply){
     }
 
 }
+function generateTokenToReplyPoll($studentID, $pollID,){
+    $pre = md5("REPLY");
+    $userIDEncrypt = md5($studentID.$pollID);
+    $post = md5("POLL");
+    $token = $pre.$userIDEncrypt.$post;
+    return $token;
+}
+
+function createURLtoReply($studentID, $pollID, $token){
+    $parametersURL = "?s=".$studentID."&p=".$pollID."&k=$token";
+    //$path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
+    $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "/view_poll.php";
+    $URL = $path.$parametersURL;
+    return $URL;
+}   
 
 if(isset($_POST['userGetPoll'])){
     $isUserStudent = false;
     foreach ($_SESSION['emailStudents'] as $key => $value) {
         if ($_SESSION['emailStudents'][$key]["email"] == $_POST['userGetPoll']) {
             $isUserStudent = true;
+            $userID = $_SESSION['emailStudents'][$key]["ID"];
+            $username = $_SESSION['emailStudents'][$key]["username"];
         }
     }
     if($isUserStudent) {
         getPolls($_POST['userGetPoll'],0);
         getPolls($_POST['userGetPoll'],1);
 
+
         $listNoReply = "<ul>";
         foreach ($_SESSION['pollsNoReply'] as $key => $value) {
-            $listNoReply .= "<li><a href='#'>".$_SESSION['pollsNoReply'][$key]['title']."</a></li>";
+            $token = generateTokenToReplyPoll($userID, $_SESSION['pollsNoReply'][$key]['ID']);
+            $URL = createURLtoReply($userID, $_SESSION['pollsNoReply'][$key]['ID'], $token);
+            $listNoReply .= "<li><a href='".$URL."'>".$_SESSION['pollsNoReply'][$key]['title']."</a></li>";
         };
         $listNoReply .= "</ul>";
 
@@ -588,7 +608,7 @@ if(isset($_POST['userGetPoll'])){
         $listReply .= "</ul>";
         $message = "<html>
         <body>
-        <div style='color: black !important'>Hola alumne <br><br> Enquestes pendents: </div><div></div>".
+        <div style='color: black !important'>".$username." <br><br> Enquestes pendents: </div><div></div>".
         $listNoReply
         ."
         <div style='color: black !important'>Enquestes realitzades:</div><div></div>".

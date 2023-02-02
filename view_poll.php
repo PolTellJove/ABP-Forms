@@ -7,17 +7,19 @@ $_SESSION['poll'] = [];
 $_GET['titlePage'] = 'Reply Poll';
 $_GET['bodyID'] = 'reply';
 $_GET['bodyClass'] = 'reply';
+$_SESSION['currentDate'] = strtotime(date("Y-m-d h:m:s"));
 ?><!DOCTYPE html>
 <html lang="en">
 <!-- FUNCTIONS -->
 <?php 
     function checkToken(){
         $pre = md5("REPLY");
-        $userIDEncrypt = md5($_GET['s'].$_GET['p'].$_GET['t']);
+        $userIDEncrypt = md5($_GET['s'].$_GET['p']);
         $post = md5("POLL");
         $token = $pre.$userIDEncrypt.$post;
         if($token == $_GET['k']){
             getPoll($_GET['p']);
+            getAnswersOfQuestion();
         }else{
             return false;
         }
@@ -39,9 +41,21 @@ $_GET['bodyClass'] = 'reply';
         }
     }
 
+    function getAnswersOfQuestion(){
+        $startSession = connToDB()->prepare("SELECT DISTINCT (ua.questionID) as question, ua.answer, ua.optionID as selectedOption FROM abp_poll.user_answer ua where studentID = :studentID AND pollID = :pollID;");
+        $startSession->bindParam(':pollID', $_GET['p']);
+        $startSession->bindParam(':studentID', $_GET['s']);
+        $startSession->execute();
+        $_SESSION['answers'] = [];
+        foreach ($startSession as $answer) {
+            array_push($_SESSION['answers'], $answer);
+        }
+    }
+
     function getPoll($ID){
-        $startSession = connToDB()->prepare("SELECT p.title as title FROM abp_poll.poll p WHERE p.ID = :pollID;");
+        $startSession = connToDB()->prepare("SELECT p.title as title, p.startDate as startDate, p.finishDate as finish, sp.reply as reply, sp.studentID FROM abp_poll.poll p INNER JOIN student_poll sp on p.ID = sp.pollID WHERE p.ID = :pollID AND sp.studentID = :studentID;");
         $startSession->bindParam(':pollID', $ID);
+        $startSession->bindParam(':studentID', $_GET['s']);
         $startSession->execute();
         $_SESSION['poll'] = [];
         foreach ($startSession as $poll) {
@@ -78,10 +92,20 @@ $_GET['bodyClass'] = 'reply';
             a.addClass(className); 
             $("#"+parentID+"").append(a); 
     };
+
+    function createP(id, text, parentID){
+            var p = $("<p/>").text(text);
+            p.attr('id', id);
+            $("#"+parentID+"").append(p);
+    }
     
     //INFORMATION OF POLL - QUESTIONS
     var questions = <?php echo json_encode($_SESSION['questionsOfPoll']);?>;
     var poll = <?php echo json_encode($_SESSION['poll']);?>;
+    var replyAnswers = <?php echo json_encode($_SESSION['answers']);?>;
+    var startDate = <?php echo json_encode(strtotime($_SESSION['poll'][0]['startDate']));?>;
+    var finishDate = <?php echo json_encode(strtotime($_SESSION['poll'][0]['finish']));?>;
+    var currentDate = <?php echo json_encode($_SESSION['currentDate']);?>;
 </script>
 <?php include 'header.php'; ?>
 <div id='divReply'>
@@ -136,6 +160,42 @@ $_GET['bodyClass'] = 'reply';
                 }
             }
 
+            function viewNextQuestion(){
+                while(questions.length){
+                    currentQuestion = questions.shift();
+                    createViewQuestion(currentQuestion);
+                }
+            }
+
+            function createViewQuestion(question){
+                createDiv('div'+question['questionID'], 'divQuestionsToReply');
+                $('#div'+question['questionID']).addClass('question');
+                $('#div'+question['questionID']).append('<h3 id="title'+question['questionID']+'" >'+question['question']+'</h3>');
+                
+                if(question['typeID'] != 2){
+                    answers = question['answers'].split("{#}");
+                    answers.forEach(answer => {
+                        answerData = answer.split("::");
+                        $('#div'+question['questionID']).append('<label for="rb'+answerData[0]+'"><input type="radio" id="rb'+answerData[0]+'" name="question-n'+question['typeID']+'-'+question['questionID']+'" value="'+answerData[0]+'">'+answerData[1]+'</label>');
+                        $('#rb'+answerData[0]).attr("disabled",true);
+                    });
+                    replyAnswers.forEach($answer => {
+                        if($answer['question'] == question['questionID']){
+                            $('#rb'+$answer['selectedOption']).prop("checked", true);
+                        }
+                    });
+                }else if(question['typeID'] == 2){
+                    createTextArea('ta'+question['questionID'], '', 'question', 'div'+question['questionID'], 'question-n'+question['typeID']+'-'+question['questionID']);
+                    replyAnswers.forEach($answer => {
+                        if($answer['question'] == question['questionID']){
+                            $('#ta'+question['questionID']).val($answer['answer']);
+                            $('#ta'+question['questionID']).attr('readonly', true);
+                        }
+                    });
+                    
+                }
+            }
+
             function createQuestion(question){
                 createDiv('div'+question['questionID'], 'divQuestionsToReply');
                 $('#div'+question['questionID']).addClass('question last');
@@ -154,7 +214,24 @@ $_GET['bodyClass'] = 'reply';
                     questionHasAnswer(question['questionID']);
                 }
             }
-            nextQuestion();
+            if(startDate > currentDate){
+                var timeStamp= startDate
+                var dateFormat= new Date(timeStamp);
+
+                createP('notStarted', "Enquesta encara no disponible. S'obrirà el " + 
+                    dateFormat.getDate()+
+                "/"+(dateFormat.getMonth()+1)+
+                "/"+dateFormat.getFullYear()+
+                " "+dateFormat.getHours()+
+                ":"+dateFormat.getMinutes()+
+                ":"+dateFormat.getSeconds(), 'divQuestionsToReply');
+            }else if(poll[0]['reply'] == 0 && finishDate < currentDate){
+                createP('finished', "Enquesta  no disponible", 'divQuestionsToReply');
+            }else if(startDate < currentDate && finishDate > currentDate && poll[0]['reply'] == 0){
+                nextQuestion();
+            }else if(poll[0]['reply'] == 1){
+                viewNextQuestion();
+            }
         </script>
         </div>
     </forms>
