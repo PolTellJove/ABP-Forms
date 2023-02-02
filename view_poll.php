@@ -229,8 +229,7 @@ $_SESSION['currentDate'] = strtotime(date("Y-m-d h:m:s"));
                 createP('finished', "Enquesta  no disponible", 'divQuestionsToReply');
             }else if(startDate < currentDate && finishDate > currentDate && poll[0]['reply'] == 0){
                 nextQuestion();
-            }else 
-            if(poll[0]['reply'] == 0){
+            }else if(poll[0]['reply'] == 1){
                 viewNextQuestion();
             }
         </script>
