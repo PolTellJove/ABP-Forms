@@ -719,54 +719,68 @@ if(isset($_POST['recoverPassword1']) && isset($_POST['recoverPassword2'])){
 
 }
 
+function getTeachersOfPoll($pollID){
+    $startSession = connToDB()->prepare("SELECT * FROM abp_poll.teacher_poll tp WHERE tp.pollID = :id");
+    $startSession->bindParam(":id", $pollID);
+    $startSession->execute();
+    $teachers = [];
+    foreach($startSession as $teacher){
+        array_push($teachers, $teacher);
+    }
+    return $teachers;
+}
+
 if(isset($_POST['replyPoll'])){
-    $questionsID = [];
-    foreach ($_POST as $key => $value) {
-        $question = explode("-", $key);
-        if($question[2]){
-            try{
-                if($question[1] == 'n2'){ //OPEN ANSWER
-                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (".$_POST['poll'].", ".$question[2].", ".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
-
-                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
-                    $startSession->bindParam(":question", $question[2]);
-                    $startSession->bindParam(":teacher", $_POST['teacher']);
-                    $startSession->bindParam(":student", $_POST['student']);
-                    $startSession->bindParam(":poll", $_POST['poll']);
-                    $startSession->bindParam(":answer", $value);
-                    $startSession->execute();
-
-
-                }else if($question[1] == 'n1' || $question[1] == 'n3'){ //OPTION ANSWER
-                    writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID, optionID, studentID, teacherID) VALUES (".$_POST['poll'].", ".$question[2].", ".$value.", ".$_POST['student'].", ".$_POST['teacher'].");", $_POST['student']);
-
-                    $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID, optionID, studentID, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
-                    $startSession->bindParam(":question", $question[2]);
-                    $startSession->bindParam(":teacher", $_POST['teacher']);
-                    $startSession->bindParam(":student", $_POST['student']);
-                    $startSession->bindParam(":poll", $_POST['poll']);
-                    $startSession->bindParam(":answer", $value);
-                    $startSession->execute();
+    $teachers = getTeachersOfPoll($_POST['poll']);
+    foreach($teachers as $teacher){
+        foreach ($_POST as $key => $value) {
+            $question = explode("-", $key);
+            if($question[2]){
+                try{
+                    if($question[1] == 'n2'){ //OPEN ANSWER
+                        writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID`, teacherID) VALUES (".$_POST['poll'].", ".$question[2].", ".$value.", ".$_POST['student'].", ".$teacher['teacherID'].");", $_POST['student']);
+    
+                        $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID,  answer, studentID, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
+                        $startSession->bindParam(":question", $question[2]);
+                        $startSession->bindParam(":teacher", $teacher['teacherID']);
+                        $startSession->bindParam(":student", $_POST['student']);
+                        $startSession->bindParam(":poll", $_POST['poll']);
+                        $startSession->bindParam(":answer", $value);
+                        $startSession->execute();
+    
+    
+                    }else if($question[1] == 'n1' || $question[1] == 'n3'){ //OPTION ANSWER
+                        writeInLog("SQL", "INSERT INTO abp_poll.user_answer(pollID, questionID, optionID, studentID, teacherID) VALUES (".$_POST['poll'].", ".$question[2].", ".$value.", ".$_POST['student'].", ".$teacher['teacherID'].");", $_POST['student']);
+    
+                        $startSession = connToDB()->prepare("INSERT INTO abp_poll.user_answer(pollID, questionID, optionID, studentID, teacherID) VALUES (:poll, :question, :answer, :student, :teacher);");
+                        $startSession->bindParam(":question", $question[2]);
+                        $startSession->bindParam(":teacher", $teacher['teacherID']);
+                        $startSession->bindParam(":student", $_POST['student']);
+                        $startSession->bindParam(":poll", $_POST['poll']);
+                        $startSession->bindParam(":answer", $value);
+                        $startSession->execute();
+                    }
+                }catch (\Throwable $th){
+                    writeInLog("E", "NO S'HA POGUT DESAR LA RESPOSTA DEL ALUMNE" . $th, $_SESSION["ID"]);
+                    array_push($_SESSION['errors'], "displayMessage('Preguntes no desades',$('.messageBox'),3);");
                 }
-            }catch (\Throwable $th){
-                writeInLog("E", "NO S'HA POGUT DESAR LA RESPOSTA DEL ALUMNE" . $th, $_SESSION["ID"]);
-                array_push($_SESSION['errors'], "displayMessage('Preguntes no desades',$('.messageBox'),3);");
             }
         }
+        try{
+            writeInLog("SQL", "UPDATE abp_poll.student_poll sp INNER JOIN teacher_poll tp on sp.pollID = tp.pollID set sp.reply = 1 WHERE sp.pollID = ".$_POST['poll']." AND sp.studentID = ".$_POST['student']." AND tp.teacherID = ".$teacher['teacherID'].";", $_POST['student']);
+    
+            $startSession = connToDB()->prepare("UPDATE abp_poll.student_poll sp INNER JOIN teacher_poll tp on sp.pollID = tp.pollID set sp.reply = 1 WHERE sp.pollID = :poll AND sp.studentID = :student AND tp.teacherID = :teacher;");
+            $startSession->bindParam(":teacher", $teacher['teacherID']);
+            $startSession->bindParam(":student", $_POST['student']);
+            $startSession->bindParam(":poll", $_POST['poll']);
+            $startSession->execute();
+    
+        }catch (\Throwable $th){
+            writeInLog("E", "NO S'HA POGUT RESPONDRE LA ENQUESTA" . $th, $_SESSION["ID"]);
+            array_push($_SESSION['errors'], "displayMessage('Enquesta no contestada',$('.messageBox'),3);");
+        }
     }
-    try{
-        writeInLog("SQL", "UPDATE abp_poll.student_poll sp INNER JOIN teacher_poll tp on sp.pollID = tp.pollID set sp.reply = 1 WHERE sp.pollID = ".$_POST['poll']." AND sp.studentID = ".$_POST['student']." AND tp.teacherID = ".$_POST['teacher'].";", $_POST['student']);
-
-        $startSession = connToDB()->prepare("UPDATE abp_poll.student_poll sp INNER JOIN teacher_poll tp on sp.pollID = tp.pollID set sp.reply = 1 WHERE sp.pollID = :poll AND sp.studentID = :student AND tp.teacherID = :teacher;");
-        $startSession->bindParam(":teacher", $_POST['teacher']);
-        $startSession->bindParam(":student", $_POST['student']);
-        $startSession->bindParam(":poll", $_POST['poll']);
-        $startSession->execute();
-
-    }catch (\Throwable $th){
-        writeInLog("E", "NO S'HA POGUT RESPONDRE LA ENQUESTA" . $th, $_SESSION["ID"]);
-        array_push($_SESSION['errors'], "displayMessage('Enquesta no contestada',$('.messageBox'),3);");
-    }
+    header("Location: index.php");
 }
 
 function getQuestionsPoll($idPoll){

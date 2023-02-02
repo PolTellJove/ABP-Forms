@@ -13,30 +13,32 @@
         }
     }
 
-    function generateTokenToReplyPoll($studentID, $pollID, $teacherID){
+    function generateTokenToReplyPoll($studentID, $pollID,){
         $pre = md5("REPLY");
-        $userIDEncrypt = md5($studentID.$pollID.$teacherID);
+        $userIDEncrypt = md5($studentID.$pollID);
         $post = md5("POLL");
         $token = $pre.$userIDEncrypt.$post;
         return $token;
     }
 
-    function createURLtoReply($studentID, $pollID, $steacherID,$token){
-        $parametersURL = "?s=".$studentID."&p=".$pollID."&t=".$steacherID."&k=$token";
-        $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
+    function createURLtoReply($studentID, $pollID, $token){
+        $parametersURL = "?s=".$studentID."&p=".$pollID."&k=$token";
+        //$path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
+        echo $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
+        $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "/view_poll.php";
         $URL = $path.$parametersURL;
         return $URL;
     }   
 
     function getPendingsPolls(){
         try {
-            $startSession = connToDB()->prepare("SELECT u.email as email, u.username as user, p.title as poll, p.ID as pollID, u.ID as userID, tp.teacherID as teacherID FROM abp_poll.user u INNER JOIN abp_poll.student_poll sp ON u.ID = sp.studentID INNER JOIN abp_poll.poll p ON sp.pollID = p.ID INNER JOIN teacher_poll tp on p.ID = tp.pollID WHERE sp.reply = 0 and sp.send = 0 LIMIT 5;");
+            $startSession = connToDB()->prepare("SELECT u.email as email, u.username as user, p.title as poll, p.ID as pollID, u.ID as userID, tp.teacherID as teacherID FROM abp_poll.user u INNER JOIN abp_poll.student_poll sp ON u.ID = sp.studentID INNER JOIN abp_poll.poll p ON sp.pollID = p.ID INNER JOIN teacher_poll tp on p.ID = tp.pollID WHERE p.active = 0 AND sp.reply = 0 and sp.send = 0 LIMIT 5;");
             $startSession->execute();
-            writeInLog("SQL", "SELECT u.email as email, u.username as user, p.title as poll, p.ID as pollID, u.ID as userID, tp.teacherID as teacherID FROM abp_poll.user u INNER JOIN abp_poll.student_poll sp ON u.ID = sp.studentID INNER JOIN abp_poll.poll p ON sp.pollID = p.ID INNER JOIN teacher_poll tp on p.ID = tp.pollID WHERE sp.reply = 0 and sp.send = 0 LIMIT 5;", 'CRON');
+            writeInLog("SQL", "SELECT u.email as email, u.username as user, p.title as poll, p.ID as pollID, u.ID as userID, tp.teacherID as teacherID FROM abp_poll.user u INNER JOIN abp_poll.student_poll sp ON u.ID = sp.studentID INNER JOIN abp_poll.poll p ON sp.pollID = p.ID INNER JOIN teacher_poll tp on p.ID = tp.pollID WHERE p.active = 0 AND sp.reply = 0 and sp.send = 0 LIMIT 5;", 'CRON');
             foreach($startSession as $user){
-                sendingPoll($user['userID'], $user['teacherID']);
-                $token = generateTokenToReplyPoll($user['userID'], $user['pollID'], $user['pollID']);
-                $URL = createURLtoReply($user['userID'], $user['pollID'], $user['pollID'], $token);
+                sendingPoll($user['userID'], $user['pollID']);
+                $token = generateTokenToReplyPoll($user['userID'], $user['pollID']);
+                $URL = createURLtoReply($user['userID'], $user['pollID'], $token);
                 $linkToPoll = '<a href="'.$URL.'">'.$user['poll'].'</a>';
                 sendEmail($user['email'], 'Enquesta pendent', $linkToPoll);
             }
