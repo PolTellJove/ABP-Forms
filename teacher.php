@@ -15,7 +15,7 @@ if (!isset($_SESSION["ID"])) {
 }
 
 function getOptionsOfActiveQuestions(){
-    $startSession = connToDB()->prepare("SELECT * FROM `question_option` qo INNER JOIN question q on qo.questionID = q.ID INNER JOIN option o on qo.optionID=o.ID WHERE q.active = 0;");
+    $startSession = connToDB()->prepare("SELECT * FROM abp_poll.question_option qo INNER JOIN abp_poll.question q on qo.questionID = q.ID INNER JOIN abp_poll.option o on qo.optionID=o.ID WHERE q.active = 0;");
     $startSession->execute();
     $_SESSION['optionsQuestion'] = [];
     foreach ($startSession as $options) {
@@ -32,14 +32,11 @@ $_GET['bodyClass'] = '';
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'header.php'; ?>
-<script type="text/javascript">
-
-</script>
 <div id='divTeacher'>
 
     <?php if ($user['role'] == 1) { ?>
         <br>
-        <div class="messageBox"></div>
+        <!-- <div class="messageBox"></div> -->
         <div id="divButtons">
             <a class="button" id='createQuestion'><i class="fa-regular fa-circle-question"></i> CREAR PREGUNTA</a>
             <a class="button" id='createPoll'><i class="fa-solid fa-square-poll-vertical"></i> CREAR ENQUESTA</a>
@@ -47,6 +44,7 @@ $_GET['bodyClass'] = '';
             <a class="button active" id='pollList'><i class="fa-solid fa-list"></i> LLISTAT ENQUESTES</a>
         </div>
     <?php } ?>
+    <div class="messageBox"></div>
     <div id="divDinamic">
         <?php
 
@@ -236,8 +234,8 @@ $_GET['bodyClass'] = '';
 
         function savePoll(){
             createDiv('divSave', 'newPoll');
-            if($("#pollTitle").val()){createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');}
             createButtons('Cancelar', 'cancelButton', 'createPoll', 'divSave');
+            if($("#pollTitle").val()){createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');}
             clickSavePoll();
         }
          
@@ -270,13 +268,12 @@ $_GET['bodyClass'] = '';
             createInput("text", "questionEditTitle", "newQuestion", "questionTitle", null, "Títol de la pregunta", null, null);
             $("#questionTitle").val(questionToEdit['question']);
             createDiv('buttonsOfNewQuestion', "newQuestion");
-            createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+            
             
             if (questionToEdit['typeID'] == '2') {
                 deleteDiv("radioGroup");
                 deleteDiv("simpleOption");
                 createTextArea("taQuestion", "buttonsOfNewQuestion", "newQuestion");
-
                 createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
                 
 
@@ -292,9 +289,8 @@ $_GET['bodyClass'] = '';
                 deleteDiv("taQuestion");
                 deleteDiv("simpleOption");
                 var options = <?php echo json_encode($_SESSION['arrayOptions']); ?>;
-                
-                createRadioButtons(options, "buttonsOfNewQuestion");
                 createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
+                createRadioButtons(options, "buttonsOfNewQuestion");
                 
 
                 $("#saveEditQuestion").on("click", function() {
@@ -305,6 +301,18 @@ $_GET['bodyClass'] = '';
                     $("#formEditQuestion").submit();
                 });
 
+                $("#questionTitle").on("input", function() {
+                    if($('#saveEditQuestion').length == 0){
+                        createInput("submit", null ,"buttonsOfNewQuestion", "saveEditQuestion", "Enviar", null, null, null);
+                    }
+                    if (/^\s/.test($(this).val())) {
+                        $(this).val('');
+                    }
+                    if($(this).val().length == 0){
+                        $('#saveEditQuestion').remove();
+                    }
+                });
+
             } else if (questionToEdit['typeID'] == '0') {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
@@ -313,16 +321,29 @@ $_GET['bodyClass'] = '';
             else if (questionToEdit['typeID'] == '3') {
                 deleteDiv("taQuestion");
                 deleteDiv("radioGroup");
-
-
+                createInput("submit", null ,"buttonsOfNewQuestion", "saveEditSimpleQuestion", "Enviar", null, null, null);
+                var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
+                optionsQuestion = [];
+                optionsQuestion2.forEach(element => {
+                    if(questionToEdit['ID'] == element['questionID']){
+                        optionsQuestion.push(element);
+                    }
+                });
                 function clickSaveEditPoll(){
+                    var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
+                    optionsQuestion = [];
+                    optionsQuestion2.forEach(element => {
+                        if(questionToEdit['ID'] == element['questionID']){
+                            optionsQuestion.push(element);
+                        }
+                    });
                     $("#saveEditSimpleQuestion").on("click", function() {
                         $("#teacher").append("<form id='formEditSimpleQuestion' action='checkoutForms.php' method='POST'>");
                         $("#formEditSimpleQuestion").append("<input hidden type='text' name='titleSimpleOption' id='titleSimpleOption'>");
                         $("#titleSimpleOption").val($("#questionTitle").val());
                         for(let j = 0; j < optionsQuestion.length; j++) {
                             $("#formEditSimpleQuestion").append("<input hidden type='text' name='idsOptions[]' id='idOptionQuestion"+j+1+"'>");
-                            $("#idOptionQuestion"+j+1).val(optionsQuestion[j][1]);
+                            $("#idOptionQuestion"+j+1).val(optionsQuestion[j]['optionID']);
                         }
                         for(let i = 0; i < optionsQuestion.length; i++) {
                             $("#formEditSimpleQuestion").append("<input hidden type='text' name='optionsQuestion[]' id='optionQuestion"+i+1+"'>");
@@ -334,18 +355,11 @@ $_GET['bodyClass'] = '';
                         $("#formEditSimpleQuestion").submit();
                     });
                 }
-
-                var optionsQuestion2 = <?php echo json_encode($_SESSION['optionsQuestion']);?>;
-                optionsQuestion = [];
-                optionsQuestion2.forEach(element => {
-                    if(questionToEdit['ID'] == element['questionID']){
-                        optionsQuestion.push(element);
-                    }
-                });
+                clickSaveEditPoll();
                 createDiv('simpleOption', 'newQuestion');
                 for(let i = 0; i < optionsQuestion.length; i++) {
                     createInput("text", "optionsEdit[]", "simpleOption", "optionTitle"+i+1, null, "AFEGEIX UNA OPCIÓ", null, "inputsForAddOption");
-                    $("#optionTitle"+i+1).val(optionsQuestion[i][7]);
+                    $("#optionTitle"+i+1).val(optionsQuestion[i]['answer']);
                 }
                 createDiv('moreOptions', 'newQuestion');
                 $("#questionTitle").after($("#simpleOption"));
@@ -736,6 +750,7 @@ $_GET['bodyClass'] = '';
                 }
                 if($('#pollTitle').val().length > 0 && !$('#saveButton').length){
                     createButtons('Guardar', 'saveButton', 'createPoll', 'divSave');
+                    clickSavePoll();
                 }else if($('#pollTitle').val().length < 1){
                     $('#saveButton').remove();
                 }

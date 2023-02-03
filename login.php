@@ -1,9 +1,9 @@
 <?php
 session_start();
+include 'utilities.php';
 $_GET['titlePage'] = 'Login';
 $_GET['bodyID'] = 'login';
-$_GET['bodyClass'] = 'login';
-include 'utilities.php'; 
+$_GET['bodyClass'] = 'login'; 
 ?><!DOCTYPE html>
 <html>
 <?php include 'header.php'; ?>
@@ -26,9 +26,9 @@ include 'utilities.php';
                 <label for="" class="label">Contrasenya</label>
             </div>
 
-            <a href="#">Heu oblidat la contrasenya?</a>
+            <a href="forgot_password.php">Heu oblidat la contrasenya?</a>
 
-            <button type="button" onclick="loginClient()" class="submitBtn">Entra</button>
+            <button type="button" onclick="loginClient()" class="submitBtn breadcrumb">Entra</button>
         </form>
     </div>
 </div>
