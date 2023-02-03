@@ -214,23 +214,20 @@ $_SESSION['currentDate'] = strtotime(date("Y-m-d h:m:s"));
                     questionHasAnswer(question['questionID']);
                 }
             }
-            if(startDate > currentDate){
-                var timeStamp= startDate
-                var dateFormat= new Date(timeStamp);
-
-                createP('notStarted', "Enquesta encara no disponible. S'obrirà el " + 
-                    dateFormat.getDate()+
-                "/"+(dateFormat.getMonth()+1)+
-                "/"+dateFormat.getFullYear()+
-                " "+dateFormat.getHours()+
-                ":"+dateFormat.getMinutes()+
-                ":"+dateFormat.getSeconds(), 'divQuestionsToReply');
-            }else if(poll[0]['reply'] == 0 && finishDate < currentDate){
-                createP('finished', "Enquesta  no disponible", 'divQuestionsToReply');
-            }else if(startDate < currentDate && finishDate > currentDate && poll[0]['reply'] == 0){
+            // if(startDate > currentDate){
+            //     createP('notStarted', "Enquesta encara no disponible.", 'divQuestionsToReply');
+            // }else if(poll[0]['reply'] == 0 && finishDate < currentDate){
+            //     createP('finished', "Enquesta  no disponible", 'divQuestionsToReply');
+            // }else if(poll[0]['reply'] == 0){
+            //     nextQuestion();
+            // }else if(poll[0]['reply'] == 1){
+            //     viewNextQuestion();
+            // }
+            
+            if(poll[0]['reply'] == 0){
                 nextQuestion();
             }else if(poll[0]['reply'] == 1){
-                viewNextQuestion();
+               viewNextQuestion();
             }
         </script>
         </div>

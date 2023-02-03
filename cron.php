@@ -13,7 +13,7 @@
         }
     }
 
-    function generateTokenToReplyPoll($studentID, $pollID,){
+    function generateTokenToReplyPoll($studentID, $pollID){
         $pre = md5("REPLY");
         $userIDEncrypt = md5($studentID.$pollID);
         $post = md5("POLL");
@@ -23,8 +23,7 @@
 
     function createURLtoReply($studentID, $pollID, $token){
         $parametersURL = "?s=".$studentID."&p=".$pollID."&k=".$token;
-        //$path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
-        $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "/view_poll.php";
+        $path = "alexlarios.es/view_poll.php";
         $URL = $path.$parametersURL;
         return $URL;
     }   

@@ -563,7 +563,8 @@ function getPolls($email, $reply){
     }
 
 }
-function generateTokenToReplyPoll($studentID, $pollID,){
+
+function generateTokenToReplyPoll($studentID, $pollID){
     $pre = md5("REPLY");
     $userIDEncrypt = md5($studentID.$pollID);
     $post = md5("POLL");
@@ -572,9 +573,8 @@ function generateTokenToReplyPoll($studentID, $pollID,){
 }
 
 function createURLtoReply($studentID, $pollID, $token){
-    $parametersURL = "?s=".$studentID."&p=".$pollID."&k=$token";
-    //$path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/" . $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/view_poll.php";
-    $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "/view_poll.php";
+    $parametersURL = "?s=".$studentID."&p=".$pollID."&k=".$token;
+    $path = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . ":/". $_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']) . "view_poll.php";
     $URL = $path.$parametersURL;
     return $URL;
 }   
@@ -597,7 +597,7 @@ if(isset($_POST['userGetPoll'])){
         foreach ($_SESSION['pollsNoReply'] as $key => $value) {
             $token = generateTokenToReplyPoll($userID, $_SESSION['pollsNoReply'][$key]['ID']);
             $URL = createURLtoReply($userID, $_SESSION['pollsNoReply'][$key]['ID'], $token);
-            $listNoReply .= "<li><a href='".$URL."'>".$_SESSION['pollsNoReply'][$key]['title']."</a></li>";
+            $listNoReply .= "<li><a href='".$URL."' id='linkPoll'>".$_SESSION['pollsNoReply'][$key]['title']."</a></li>";
         };
         $listNoReply .= "</ul>";
 
